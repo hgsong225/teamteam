@@ -50,9 +50,15 @@ class LocationList extends Component {
         this.props.selectLocation(selectedLocation);
     }
 
+    selectedMenu = () => {
+        const { selectedLocation } = this.props;
+
+        
+    }
+
     render() {
         console.log('LocationList에서 render 실행');
-        const { locations } = this.props;
+        const { locations, selectedLocation} = this.props;
         const Sido = locations.filter((location, i) => {
             if ((locations[i + 1] && location.sido_code !== locations[i + 1].sido_code) || !locations[i + 1]) {
                 return location;
@@ -78,47 +84,54 @@ class LocationList extends Component {
         );
 
         const list = processedLocation.map(
-            (location, i) => (
-                <AccordionItem
-                    key={i}
-                    name={location.sido_name}
-                >
-                    <AccordionItemTitle
+            (location, i) => {
+                return (
+                    <AccordionItem
+                        key={i}
+                        name={location.sido_name}
+                        expanded={selectedLocation.sido_name == location.sido_name && true}
                     >
-                        <Link
-                            href={{ pathname: '/post', query: { location: location.sido_name }}}
-                        >
-                            <a
-                                onClick={this.selectSido}
-                            >{location.sido_name}</a>
-                        </Link>
-                        <AccordionItemBody>
+                        <AccordionItemTitle>
+                            <Link
+                                href={{ pathname: '/post', query: { location: location.sido_name }}}
+                            >
+                                <a
+                                    onClick={this.selectSido}
+                                >{location.sido_name}</a>
+                            </Link>
                             {
-                                location.sigungus.map((sigungu, j) => (
-                                    <ul
-                                    key={j}
-                                    name={sigungu.sigungu_name}
-                                >
-                                    <li>
-                                        <Link
-                                            href={{ pathname: '/post', query: { location: location.sido_name, sigungu: sigungu.sigungu_name }}}
-                                        >
-                                            <a
-                                               onClick={() => this.selectSigungu(location.sido_name, sigungu.sigungu_name)}
-                                            >{sigungu.sigungu_name}</a>
-                                        </Link>
-                                    </li>
-                                </ul>
-                                ))
+                                location.sigungus.map((sigungu, j) => {
+                                    if (sigungu.sigungu_name !== "" && sigungu.sigungu_name !== "null") {
+                                        return (
+                                            <AccordionItemBody>
+                                                <ul
+                                                    key={j}
+                                                    name={sigungu.sigungu_name}
+                                                >
+                                                    <li>
+                                                        <Link
+                                                            href={{ pathname: '/post', query: { location: location.sido_name, sigungu: sigungu.sigungu_name }}}
+                                                        >
+                                                            <a
+                                                            onClick={() => this.selectSigungu(location.sido_name, sigungu.sigungu_name)}
+                                                            >{sigungu.sigungu_name}</a>
+                                                        </Link>
+                                                    </li>
+                                                </ul>
+                                            </AccordionItemBody>
+                                        );
+                                    }
+                                })
                             }
-                        </AccordionItemBody>
-                    </AccordionItemTitle>
-                </AccordionItem>
-            )
+                        </AccordionItemTitle>
+                    </AccordionItem>
+                );
+            }
         );
 
         return (
-            <Accordion>
+            <Accordion
+            >
                 {list}
             </Accordion>
         );

@@ -4,7 +4,7 @@ import Router from 'next/router';
 
 import fb from '../config/firebase';
 
-import Header from '../components/smart/layout/Header';
+import MainView from '../components/layout/MainView';
 
 class SignUp extends Component {
     state = {
@@ -44,34 +44,105 @@ class SignUp extends Component {
 
     render() {
         return (
-            <div>
-                <Header />
-                teamteam에 로그인하기
-                <form
-                    onSubmit={this.signIn}
-                >
-                    <label>이메일</label>
-                    <br />
-                    <input
-                        value={this.state.email}
-                        onChange={this.handleChange}
-                        name="email"
-                        type="email"
-                    />
-                    <br />
-                    <label>비밀번호</label>
-                    <br />
-                    <input
-                        value={this.state.password}
-                        onChange={this.handleChange}
-                        name="password"
-                        type="password"
-                    />
-                    <br />
-                    <button>로그인</button>
-                 </form>
-                 <Link href='/sign-up'><a>teamteam에 처음 오셨나요?</a></Link>
-            </div>
+            <MainView>
+                <style jsx>{`
+                    .sign-container {
+                        margin-left: 16px;
+                        margin-right: 16px;
+                        max-width: 550px;
+                    }
+                    form {
+                    }
+                    .page-title {
+                        margin-top: 3rem;
+                        margin-bottom: 3rem;
+                        font-size: 2rem;
+                    }
+                     input {
+                        box-sizing: border-box;
+                        margin-bottom: 0.5rem;
+                        padding: 10px;
+                        border: 1px solid #e0e0e0;
+                        width: 100%;
+                        border-radius: 4px;
+                        height: 50px;
+                        font-size: 1rem;
+                        color: #212121;
+                    }
+                    .section {
+                        margin-bottom: 2rem;
+                    }
+                    .section-contents {
+                        margin-bottom: 2rem;
+                    }
+                    .contents-title {
+                        font-size: 1rem;
+                        color: #9e9e9e;
+                    }
+                    .contents-desc {
+                        font-size: 0.8rem;
+                        color: #757575;
+                    }
+                    .button-box {
+                        display: flex;
+                        justify-content: space-between;
+                        align-items: center;
+                    }
+                    .button-box a {
+                        color: #212121;
+                    }
+                    input[type=submit] {
+                        width: 160px;
+                        background-color: #2196f3;
+                        color: #fff;
+                        cursor: pointer;
+                        outline: none;
+                    }
+                    input[type=submit]:hover {
+                        box-shadow: 0 6px 6px 0 rgba(0,0,0,0.24);
+                    }
+                `}</style>
+                <div className="sign-container">
+                    <p className="page-title">로그인</p>
+                    <form
+                        onSubmit={this.signIn}
+                    >
+                        <div className="section">
+                            <div className="section-contents">
+                                <p className="contents-title">이메일</p>
+                                <p className="contents-desc"></p>
+                                <input
+                                    value={this.state.email}
+                                    onChange={this.handleChange}
+                                    name="email"
+                                    type="email"
+                                />
+                            </div>
+                            <p className="error-msg"></p>
+                        </div>
+                        <div className="section">
+                            <div className="section-contents">
+                                <p className="contents-title">비밀번호</p>
+                                <p className="contents-desc"></p>
+                                <input
+                                    value={this.state.password}
+                                    onChange={this.handleChange}
+                                    name="password"
+                                    type="password"
+                                />
+                            </div>
+                            <p className="error-msg"></p>
+                        </div>
+                        <div className="button-box">
+                            <Link href='/sign-up'><a>teamteam에 처음 오셨나요?</a></Link>
+                            <input
+                                type="submit"
+                                value="로그인"
+                            />
+                        </div>
+                    </form>
+                </div>
+            </MainView>
         );
     }
 }

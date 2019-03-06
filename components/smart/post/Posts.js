@@ -128,14 +128,14 @@ class Posts extends Component {
             <div className="posts-container">
                 <style jsx>{`
                     .posts-container {
-                        width: 720px;
-                        max-width: 90rem;
+                        width: 100%;
+                        max-width: 720px;
                     }
                     .title {
 
                     }
                     .sub-title{
-                        font-size: 1.1rem;
+                        font-size: 1rem;
                     }
                 `}</style>
                 <h2 className="title">다가오는 매치</h2>

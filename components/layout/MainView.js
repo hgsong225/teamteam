@@ -16,7 +16,7 @@ class MainView extends Component {
                     .content {
                         display: flex;
                         justify-content: center;
-                        margin-top: 49px;
+                        margin-top: 64px;
                     }
                     .view-container {
                         display: flex;

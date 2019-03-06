@@ -2,11 +2,30 @@ import React, { Component } from 'react';
 
 import Header from './Header';
 import SideBarLeft from '../smart/SideBarLeft/SideBarLeft';
-import View from './View';
+import LayoutView from './LayoutView';
 
 class Layout extends Component {
     static defaultProps = {
         selectedLocation: {},
+    }
+
+    state = {
+    }
+
+    toggleMenu = () => {
+        const sidebar = "sidebar-left-container";
+        const mask = "mask";
+        let toggle_sidebar = document.getElementById(sidebar);
+        let toggle_mask = document.getElementById(mask);
+        console.log(toggle_sidebar.className);
+        console.log(toggle_mask.className);
+        if (toggle_sidebar.className === `${toggle_sidebar.className.split(' ')[0]} ${sidebar} toggle`) {
+            toggle_sidebar.className = `${toggle_sidebar.className.split(' ')[0]} ${sidebar}`;
+            toggle_mask.className = `${toggle_sidebar.className.split(' ')[0]} ${mask}`;
+          } else {
+            toggle_sidebar.className += " toggle";
+            toggle_mask.className += " toggle";
+          }
     }
     
     render() {
@@ -20,48 +39,74 @@ class Layout extends Component {
                         flex-direction: column;
                         margin-bottom: 80px;
                     }
-                    header {
-                    }
                     .content {
                         display: flex;
-                        margin-left: 280px;
-                        margin-top: 49px;
+                        margin-left: 304px;
+                        margin-right: 80px;
+                        margin-top: 65px;
                         width: auto;
+                        transition: margin .5s ease-out;
                     }
                     .content aside {
                         border-left:1px solid gray;
                     }
                     nav {
-                        width: 280px;
+                        margin-top: 65px;
                         height: 100vh;
                         position: fixed;
+                        overflow-y: hidden;
+                        background-color: #fff;
                     }
                     nav:hover {
-                        overflow-y: scroll;                        
+                        overflow-y: scroll;
                     }
                     nav::-webkit-scrollbar-track
                     {
                         border-radius: 10px;
                         background-color: #f1f1f1;
                     }
-                    
                     nav::-webkit-scrollbar
                     {
                         width: 8px;
                         border-radius: 10px;
-                        background-color: #fff;
+                    }
+                    nav:hover::-webkit-scrollbar
+                    {
                     }
                     nav::-webkit-scrollbar-thumb
                     {
                         border-radius: 10px;
+                    }
+                    nav:hover::-webkit-scrollbar-thumb {
                         background-color: #e0e0e0;
                     }
                     aside {
-                        flex: 5;
                     }
                     main {
                         flex: 7;
                         padding:10px;
+                    }
+                    @media screen and (max-width: 992px) {
+ 
+                    }
+                    @media screen and (max-width: 1200px) {
+                        .sidebar-left-container {
+                            margin-top: 0;
+                            z-index: 999;
+                            transform: translateX(-304px);
+                            box-shadow: 0 0 16px rgba(0,0,0,.28);
+                            transition: transform 1s ease-out;
+                        }
+                        .sidebar-left-container.toggle {
+                            transform: translateX(0px);
+                        }
+                        .content {
+                            margin-left: 0;
+                            margin-right: 0;
+                        }
+                        main {
+                            padding: 0 6px;
+                        }
                     }
                 `}</style>
                 <div className="container">
@@ -69,20 +114,23 @@ class Layout extends Component {
                         <Header />
                     </div>
                     <section>
-                        <nav className="sidebar-left-container">
+                        <nav className="sidebar-left-container" id="sidebar-left-container">
                             <SideBarLeft
                                     selectLocation={this.props.selectLocation}
                                     selectedLocation={selectedLocation}
                                 />
                         </nav>
                         <div className="content">
-                            <main>
-                                <View
+                            <main className="view-container">
+                                <LayoutView
                                    children={this.props.children}
                                 />
                             </main>
                             <aisde>
                             </aisde>
+                            <div id="mask" className="mask"
+                                onClick={this.toggleMenu}
+                            ></div>
                         </div>
                     </section>
                 </div>

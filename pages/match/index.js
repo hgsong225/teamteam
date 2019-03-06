@@ -41,7 +41,7 @@ class Match extends Component {
         const params = {
             id: url.query.id,
         };
-        axios.get('http://localhost:3333/match', {
+        axios.get('http://localhost:3333/api/match', {
             params,
         })
         .then((res) => {
@@ -61,7 +61,7 @@ class Match extends Component {
             uid: user.uid,
             id: url.query.id,
         };
-        axios.get('http://localhost:3333/match/applicants', {
+        axios.get('http://localhost:3333/api/match/applicants', {
             params,
         })
         .then((res) => {
@@ -81,7 +81,7 @@ class Match extends Component {
         
         console.log(applicant_status, iduser, match[0].idmatch);
 
-        axios.post('http://localhost:3333/match/applicant/status', {
+        axios.post('http://localhost:3333/api/match/applicant/status', {
             data: {
                 applicant_status,
                 idmatch: match[0].idmatch,
@@ -99,84 +99,126 @@ class Match extends Component {
         const { match, applicants } = this.state;
         return (
                 <Layout>
-                                    <style jsx>{`
-                    .post-container {
-                        width: 720px;
-                    }
-                    .post-box {
-                        width: 100%;
-                        padding: 0.8rem;
-                        border-bottom: 1px solid #e0e0e0;
-                    }
-                    #intro {
-                        width: 100%;
-                        height: 100%;
-                        padding: 0.8rem;
-                        background-color: #f1f1f1;
-                        border-radius: 4px;
-                    }
-                    .desc-title {
-                        font-size: 0.9rem;
-                        color: #9e9e9e;
-                    }
-                    .place {
-                        margin-bottom: 0rem;
-                    }
-                    .info {
-                        font-size: 1.2rem;
-                    }
-                    .address #copy{
-                        font-size: 0.9rem;
-                    }
-                    #copy {
-                        color: #42a5f5;
-                        cursor: pointer;
-                    }
-                    .button-box {
-                        text-align: center;
-                        margin-top: 20px;
-                        width: 100%;
-                    }
-                    .price {
-                        display: flex;
-                        width: 10rem;
-                        justify-content: center;
-                        align-items: center;
-                        font-size: 2rem;
-                    }
-                    .apply-button {
-                        cursor: pointer;
-                        display: inline-block;
-                        text-decoration: none;
-                        border: none;
-                        background-color: #1e88e5;
-                        font-size: 16px;
-                        color: white;
-                        padding: 8px 120px;
-                        text-align: center;
-                        box-shadow: 0 6px 6px 0 rgba(0,0,0,0.24);
-                    }
-                    .apply-button p {
-                        margin-bottom: 2px;
-                    }
-                    .apply {
-                        font-size: 1.2rem;
-                    }
-                    .price-text {
-                        font-size: 1rem;
-                    }
-                    .apply-button:hover {
-                        background-color: #42a5f5;
-                        box-shadow: 0 12px 12px 0 rgba(0,0,0,0.24)
-                    }
-                    
-                `}</style>
+                    <style jsx>{`
+                        .post-container {
+                            max-width: 720px;
+                        }
+                        .notice-box {
+                            margin-top: 2rem;
+                            margin-bottom: 2rem;
+                        }
+                        .notice {
+                            font-size: 2rem;
+                            margin: 0;
+                            margin-bottom: 2rem;
+                        }
+                        .post-box {
+                            margin-bottom: 1.5rem;
+                            padding: 0.5rem;
+                            border-bottom: 1px solid #e0e0e0;
+                        }
+                        #intro {
+                            height: 100%;
+                            padding: 0.9rem;
+                            background-color: #fafafa;
+                            border-radius: 4px;
+                            line-height: 1.5;
+                        }
+                        .desc-title {
+                            font-size: 0.9rem;
+                            color: #9e9e9e;
+                        }
+                        .place {
+                            margin-bottom: 0rem;
+                        }
+                        .info {
+                            font-size: 1.2rem;
+                        }
+                        .address #copy{
+                            font-size: 0.9rem;
+                        }
+                        #copy {
+                            color: #42a5f5;
+                            cursor: pointer;
+                        }
+                        .button-box {
+                            display: flex;
+                            justify-content: space-around;
+                            margin-top: 20px;
+                            width: 100%;
+                        }
+                        input[type=submit] {
+                            width: 160px;
+                            background-color: #2196f3;
+                            color: #fff;
+                            cursor: pointer;
+                            outline: none;
+                            border: none;
+                        }
+                        input[type=submit]:hover {
+                            box-shadow: 0 6px 6px 0 rgba(0,0,0,0.24);
+                        }
+                        select, input {
+                            margin-bottom: 0.5rem;
+                            width: 100%;
+                            max-width: 550px;
+                            height: 50px;
+                            font-size: 1rem;
+                            color: #212121;
+                            padding: 10px;
+                            border: 1px solid #e0e0e0;
+                            border-radius: 4px;
+                        }
+                        input {
+                            box-sizing: border-box;
+                        }
+                        .apply-button {
+                            width: 160px;
+                            outline: none;
+                            margin: 0;
+                            cursor: pointer;
+                            display: inline-block;
+                            text-decoration: none;
+                            border: none;
+                            background-color: #1e88e5;
+                            font-size: 16px;
+                            color: white;
+                            padding: 1px 120px;
+                            text-align: center;
+                            box-shadow: 0 6px 6px 0 rgba(0,0,0,0.24);
+                        }
+                        .apply {
+                            margin-bottom: 8px;
+                            font-size: 1.2rem;
+                        }
+                        .price-text {
+                            margin-top: 0px;
+                            font-size: 1rem;
+                        }
+                        .apply-button:hover {
+                            background-color: #42a5f5;
+                            box-shadow: 0 12px 12px 0 rgba(0,0,0,0.24)
+                        }
+                        @media screen and (max-width: 414px) {
+                            .button-box {
+                                z-index: 4;
+                                position: fixed;
+                                left: 0;
+                                bottom: 0;
+                                justify-content: center;
+                                width: 100%;
+                                padding: 20px 0;
+                                border-top: 1px solid #e1e1e1;
+                                background-color: #fafafa;
+                            }
+                        }
+                    `}</style>
                     <div className="post-container">
                         {
                             match.length > 0 &&
                             <div className="post">
-                                <div>
-                                    <h3>{match[0].apply_status}, {match[0].total_guest}명 남음</h3>
+                                <div className="notice-box">
+                                    <p className="notice">{match[0].apply_status}, {match[0].total_guest}명 남음</p>
                                 </div>
                                 <div id="intro">
                                     <p>{match[0].display_name}</p>
@@ -217,9 +259,10 @@ class Match extends Component {
                                     <div>
                                         <p className="desc-title">입금 계좌</p>
                                         <p className="info">신한 110-439-532672 팀팀</p>
-                                        <p>- 입금 확인 후 안내 메시지가 나갑니다.</p>
                                         <p>- 입금자 순으로 신청 확정됩니다.</p>
                                         <p>- 당일 경기 취소시 환불은 불가합니다.</p>
+                                        <p>- 입금 확인 후프로필에 등록하신 연락처로 경기 안내가 발송됩니다.</p>
+                                        <p>- 입금 확인 후 경기 주최자의 연락처가 공개됩니다.</p>
                                     </div>
                                 </div>
                                 {
@@ -285,10 +328,10 @@ class Match extends Component {
                                         <button>경기 삭제</button>
                                     </div>
                                     : <div className="button-box">
-                                        <button className="apply-button">
-                                            <p className="apply">신청하기</p>
-                                            <p className="price-text">10000원</p>
-                                        </button>
+                                        <input
+                                            value="신청하기"
+                                            type="submit"
+                                        />
                                     </div>
                                 )
                             }

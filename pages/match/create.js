@@ -5,7 +5,6 @@ import axios from 'axios';
 import fb from '../../config/firebase';
 import location from '../../config/location.json';
 
-import Header from '../../components/layout/Header';
 import MainView from '../../components/layout/MainView';
 
 class CreateMatch extends Component {
@@ -49,7 +48,7 @@ class CreateMatch extends Component {
         this.authListener();
         // script가 완전히 불러와 질 때 검색 가능하게.
         const script = document.createElement("script");
-        // document.body.appendChild(script);
+        document.body.appendChild(script);
         // script.onload = () => {
         //     setTimeout(() => {
         //         const places = daum && new daum.maps.services.Places();
@@ -137,6 +136,7 @@ class CreateMatch extends Component {
     addPlace = (e) => {
         e.preventDefault();
         this.setState({
+            places: [],
             selected_place: [JSON.parse(e.target.value)],
         });
     }
@@ -305,23 +305,222 @@ class CreateMatch extends Component {
             <MainView>
                 <div className="create-container">
                     <style jsx>{`
+                        .error-msg {
+                            margin-top: 0;
+                            color: #f44336;
+                        }
+                        .create-container {
+                            margin-left: 16px;
+                            margin-right: 16px;
+                            max-width: 550px;
+                        }
                         .page-title {
-                            font-size: 1.5rem;
+                            margin-top: 3rem;
                             margin-bottom: 3rem;
+                            font-size: 2rem;
                         }
                         .section {
+                            margin-bottom: 2rem;
                             border-bottom: 1px solid #e0e0e0;
+                        }
+                        .section-contents {
+                            margin-bottom: 2rem;
                         }
                         .section-title {
                             display: none;
+                            margin-bottom: 0.5rem;
                             font-size: 1.2rem;
-                        }
-                        .section-contents {
-                            margin-bottom: 3rem;
                         }
                         .contents-title {
                             font-size: 1rem;
+                            color: #9e9e9e;
+                        }
+                        .contents-desc {
+                            font-size: 0.8rem;
                             color: #757575;
+                        }
+                        .radio-label {
+                            display: inline-block;
+                            position: relative;
+                            margin-top: 0.5rem;
+                            margin-bottom: 0.5rem;
+                            padding-left: 2rem;
+                            padding-right: 2rem;
+                            cursor: pointer;
+                            font-size: 1.1rem;
+                            user-select: none;
+                        }
+                        .radio-label input {
+                            display: none;
+                        }
+                        .radio-label .checkmark {
+                            display: inline-block;
+                            width: 1.5rem;
+                            height: 1.5rem;
+                            background-color: #e0e0e0;
+                            position: absolute;
+                            left: 0;
+                            top: 0;
+                            border-radius: 50%;
+                        }
+                        .radio-label:hover .checkmark {
+                            background-color: #bdbdbd;
+                        }
+                        .radio-label input:checked + .checkmark {
+                            background-color: #e0e0e0;
+                        }
+                        .radio-label input:checked + .checkmark:after {
+                            content: "";
+                            height: 1rem;
+                            width: 1rem;
+                            background-color: #2196f3;
+                            position: absolute;
+                            top: 50%;
+                            left: 50%;
+                            border-radius: 50%;
+                            transform: translate(-50%, -50%);
+                        }
+                        select, input {
+                            margin-bottom: 0.5rem;
+                            width: 100%;
+                            max-width: 550px;
+                            height: 50px;
+                            font-size: 1rem;
+                            color: #212121;
+                            padding: 10px;
+                            border: 1px solid #e0e0e0;
+                            border-radius: 4px;
+                        }
+                        input {
+                            box-sizing: border-box;
+                        }
+                        .add-location-button {
+                            background-color: #fff;
+                            border: none;
+                            min-width: 24px;
+                            min-height: 24px;
+                            color: #2196f3;
+                            outline: none;
+                            cursor: pointer;
+                        }
+                        .selected-button-box {
+                            width: 100%;
+                            max-width: 500px;
+                        }
+                        .selected-button {
+                            display: inline-block;
+                            margin-right: 1rem;
+                            margin-bottom: 1rem;
+                            box-sizing: border-box;
+                            padding: 8px;
+                            border-radius: 4px;
+                            background-color: #f5f5f5;
+                        }
+                        .selected-button span{
+                            font-size: 0.8rem;
+                        }
+                        .selected-button button {
+                            margin: 0;
+                            min-width: 16px;
+                            min-height: 16px;
+                            display: inline-block;
+                            border: none;
+                            outline: none;
+                            border-left: 
+                            color: #212121;
+                            font-weight: bold;
+                            background-color: #f5f5f5;
+                        }
+                        .search-result-box {
+                            border: none;
+                            background-color: #f5f5f5;
+                            border-radius: 4px;
+                        }
+                        .search-result-place-box {
+                            border: none !important;
+                            border-bottom: 16px solid #fff !important;
+                        }
+                        .search-result-place {}
+                        .search-result-place-box button {
+                            color: #2196f3 !important;
+                        }
+                        .selected-place-box, .search-result-place-box {
+                            display: flex;
+                            justify-content: space-between;
+                            padding: 16px;
+                            border-radius: 4px;
+                            background-color: #f5f5f5;
+                        }
+                        .selected-place {
+                            display: flex;
+                            flex-direction: column;
+                        }
+                        .selected-place p:nth-child(1), .search-result-place p:nth-child(1) {
+                            font-size: 1rem;
+                        }
+                        .selected-place p:nth-child(2), .search-result-place p:nth-child(2) {
+                            font-size: 0.8rem;
+                        }
+                        .selected-place-box button, .search-result-place-box button {
+                            margin: 0;
+                            border: none;
+                            min-width: 24px;
+                            min-height: 24px;
+                            background-color: #f5f5f5;
+                            color: #f50057;
+                        }
+                        textarea {
+                            width: 100%;
+                            height: 160px;
+                            padding: 20px 20px;
+                            box-sizing: border-box;
+                            border: 1px solid #e0e0e0;
+                            border-radius: 4px;
+                            background-color: #f5f5f5;
+                            resize: none;
+                            color: #212121;
+                            line-height: 1.5;
+                        }
+                        .price-box {
+                            position: relative;
+                        }
+                        #price-unit {
+                            position: absolute;
+                            color: #9e9e9e;
+                            display: block;
+                            right: 20px;
+                            top: 15px;
+                            z-index: 3;
+                        }
+                        .button-box {
+                            display: flex;
+                            justify-content: flex-end;
+                            align-items: center;
+                        }
+                        input[type=submit] {
+                            width: 160px;
+                            background-color: #2196f3;
+                            color: #fff;
+                            cursor: pointer;
+                            outline: none;
+                            border: none;
+                        }
+                        input[type=submit]:hover {
+                            box-shadow: 0 6px 6px 0 rgba(0,0,0,0.24);
+                        }
+
+                        @media screen and (max-width: 414px) {
+                            .button-box {
+                                z-index: 4;
+                                position: fixed;
+                                left: 0;
+                                bottom: 0;
+                                justify-content: center;
+                                width: 100%;
+                                padding: 20px 0;
+                                border-top: 1px solid #e1e1e1;
+                                background-color: #fafafa;
+                            }
                         }
                     `}</style>
                     <p className="page-title">빠르게 경기를 생성해 팀팀 게스트를 초대하세요!</p>
@@ -336,15 +535,18 @@ class CreateMatch extends Component {
                                     this.state.sports.map(sports => {
                                         return (
                                             <label
+                                                className="radio-label"
                                                 key={sports.category}
-                                            >
+                                            >{sports.category}
                                                 <input
+                                                    className="input-radio"
                                                     onChange={this.handleSelectedChange}
                                                     type="radio"
                                                     name="selected_sports_category"
                                                     value={sports.category}
                                                     checked={this.state.selected_sports_category === sports.category}
-                                    />{sports.category}
+                                            />
+                                                <span className="checkmark"></span>
                                             </label>
                                         );
                                     })
@@ -406,50 +608,56 @@ class CreateMatch extends Component {
                                     })
                                 }
                                 </select>
-                                <select
-                                    onChange={this.handleChange}
-                                    name="selected_sigungu"
-                                >
                                 {
-                                    locations.map((location) => {
-                                        if (this.state.selected_sido == location.sido_name) {
-                                            return (
-                                                <option
-                                                    key={location.sigungu_code}
-                                                    value={location.sigungu_name}
-                                                >
-                                                    {location.sigungu_name}
-                                                </option>
-                                                );
-                                        }
-                                    })
+                                    (this.state.selected_sigungu !== "" && this.state.selected_sigungu !== "null") &&
+                                    <select
+                                        onChange={this.handleChange}
+                                        name="selected_sigungu"
+                                    >
+                                    {
+                                        locations.map((location) => {
+                                            if (this.state.selected_sido == location.sido_name) {
+                                                return (
+                                                    <option
+                                                        key={location.sigungu_code}
+                                                        value={location.sigungu_name}
+                                                    >
+                                                        {location.sigungu_name}
+                                                    </option>
+                                                    );
+                                            }
+                                        })
+                                    }
+                                    </select>
                                 }
-                                </select>
                                 <button
+                                    className="add-location-button"
                                     onClick={this.addLocation}
                                 >
                                     추가
                                 </button>
-                                <p style={{color: "red"}}>{this.state.errors.selected_location}</p>
+                                <p className="error-msg">{this.state.errors.selected_location}</p>
+                                <div className="selected-button-box">
                                     {
-                                        this.state.selected_location.map(location => {
-                                            return (
-                                                <div>
-                                                    <span>{`${location.sido} ${location.sigungu}`}</span>
-                                                    {
-                                                        this.state.selected_location.length > 0 &&
-                                                        <button
-                                                            onClick={this.removeLocation}
-                                                            name={location.sido}
-                                                            value={location.sigungu}
-                                                        >
-                                                            삭제
-                                                        </button>
-                                                    }
-                                                </div>
-                                            );
-                                        })
-                                    }
+                                            this.state.selected_location.map(location => {
+                                                return (
+                                                    <div className="selected-button">
+                                                        <span>{`${location.sido} ${location.sigungu}`}</span>
+                                                        {
+                                                            this.state.selected_location.length > 0 &&
+                                                            <button
+                                                                onClick={this.removeLocation}
+                                                                name={location.sido}
+                                                                value={location.sigungu}
+                                                            >
+                                                                x
+                                                            </button>
+                                                        }
+                                                    </div>
+                                                );
+                                            })
+                                        }
+                                </div>
                             </div>
                             <div className="section-contents">
                                 <h3 className="contents-title">경기 날짜</h3>
@@ -464,37 +672,39 @@ class CreateMatch extends Component {
                             </div>
                             <div className="section-contents">
                                 <h3 className="contents-title">경기 시간</h3>
-                                <div>
-                                    <label></label>
+                                <p className="contents-desc">경기 시작</p>
                                     <input
                                         onChange={this.handleChange}
-                                        type="radio"
-                                        name="match_time_type"
-                                        value="2"
-                                        checked={this.state.match_time_type === '2'}
-                                    /> 2시간
-                                    <label></label>
-                                    <input
-                                        onChange={this.handleChange}
-                                        type="radio"
-                                        name="match_time_type"
-                                        value="3"
-                                        checked={this.state.match_time_type === '3'}
-                                    /> 3시간
-                                </div>
-                                <label>몇 시에 시작하시나요?</label>
-                                <br />
-                                <input
-                                    onChange={this.handleChange}
-                                    type="time"
-                                    name="match_start_time"
-                                    step="1800"
-                                    value={this.state.match_start_time+":00"}
-                                /> ~
-                                <span>{this.state.match_end_time}:00</span>
+                                        type="time"
+                                        name="match_start_time"
+                                        step="1800"
+                                        value={this.state.match_start_time+":00"}
+                                    />
+                                    <label className="radio-label">2시간
+                                        <input
+                                            onChange={this.handleChange}
+                                            type="radio"
+                                            name="match_time_type"
+                                            value="2"
+                                            checked={this.state.match_time_type === '2'}
+                                        />
+                                        <span className="checkmark"></span>
+                                    </label>
+                                    <label className="radio-label">3시간
+                                        <input
+                                            onChange={this.handleChange}
+                                            type="radio"
+                                            name="match_time_type"
+                                            value="3"
+                                            checked={this.state.match_time_type === '3'}
+                                        />
+                                        <span className="checkmark"></span>
+                                    </label>
+                                <p>{this.state.match_end_time}시 경기 종료</p>
                             </div>
                             <div className="section-contents">
                                 <h3 className="contents-title">경기장</h3>
+                                {this.state.selected_place.length < 1 && <p className="contents-desc">경기장을 입력하세요.</p>}
                                 <input
                                     onChange={this.searchPlaces}
                                     type="search"
@@ -504,43 +714,43 @@ class CreateMatch extends Component {
                                 <div>
                                     {
                                         this.state.selected_place.length > 0
-                                        ? this.state.selected_place.map(place => {
+                                        && this.state.selected_place.map(place => {
                                             return (
-                                                <div
-                                                    style={{
-                                                        fontWeight: "bold"
-                                                    }}
-                                                >
-                                                    <span>{place.place_name}</span>
+                                                <div className="selected-place-box">
+                                                    <div className="selected-place">
+                                                        <p>{place.place_name}</p>
+                                                        <p>{place.address_name}</p>
+                                                    </div>
                                                     <button
                                                         onClick={this.removePlace}
                                                     >
                                                         삭제
                                                     </button>
-                                                    <p style={{ fontSize: "12px" }}>{place.address_name}</p>
                                                 </div>
                                             )
                                         })
-                                        : <span> 경기장을 입력하세요.</span>
                                     }
-                                    <p style={{color: "red"}}>{this.state.errors.selected_place}</p>
+                                    <p className="error-msg">{this.state.errors.selected_place}</p>
                                 </div>
-                                <div>
+                                <div className="search-result-box">
                                     {
                                         this.state.places.length > 0 &&
                                         this.state.places.map(place => {
                                             return (
                                                 <div
+                                                    className="search-result-place-box"
                                                     key={place.place_id}
                                                 >
-                                                    <span>{place.place_name}</span>
+                                                    <div className="search-result-place">
+                                                        <p>{place.place_name}</p>
+                                                        <p>{place.address_name}</p>
+                                                    </div>
                                                     <button
                                                         onClick={this.addPlace}
                                                         value={JSON.stringify(place)}
                                                     >
                                                         선택
                                                     </button>
-                                                    <p style={{ fontSize: "12px" }}>{place.address_name}</p>
                                                 </div>
                                             );
                                         })
@@ -558,7 +768,7 @@ class CreateMatch extends Component {
                                     name="phone"
                                     value={this.state.phone}
                                 />
-                                <p style={{color: "red"}}>{this.state.errors.phone}</p>
+                                <p className="error-msg">{this.state.errors.phone}</p>
 
                                 {/* <input
                                     type="radio"
@@ -574,8 +784,6 @@ class CreateMatch extends Component {
                                     type="text"
                                     placeholder="참가하시는 분들에게 간단하게 전할 말이나 주의 할 사항을 알려주세요."
                                     value={this.state.contents}
-                                    rows="8"
-                                    cols="100"
                                 />
                             </div>
                         </div>
@@ -583,30 +791,35 @@ class CreateMatch extends Component {
                             <h2 className="section-title">입금 안내</h2>
                             <div className="section-contents">
                                 <h3 className="contents-title">참가비</h3>
-                                <input
-                                    onChange={this.handleChange}
-                                    type="text"
-                                    name="fee"
-                                    value={this.state.fee}
-                                />
-                                원
-                                <p style={{color: "red"}}>{this.state.errors.fee}</p>
+                                <div className="price-box">
+                                    <input
+                                        onChange={this.handleChange}
+                                        type="text"
+                                        name="fee"
+                                        value={this.state.fee}
+                                    />
+                                    <span id="price-unit">원</span>
+                                </div>
+                                <p className="error-msg">{this.state.errors.fee}</p>
                             </div>
                             <div className="section-contents">
                                 <h3 className="contents-title">입금 계좌</h3>
+                                <p className="contents-desc">참가비를 입금 받을 계좌를 입력해주세요. <br />경기 종료 후 24시간 이내 참가비에 수수료 20%를 제외한 금액이 입금됩니다.</p>
                                 <input
                                     onChange={this.handleChange}
                                     type="text"
                                     name="deposit_account"
                                     value={this.state.deposit_account}
                                 />
+                                <p className="error-msg">{this.state.errors.deposit_account}</p>
                             </div>
-                            <p style={{color: "red"}}>{this.state.errors.deposit_account}</p>
                         </div>
-                        <input
-                            type="submit"
-                            value="경기 생성"
-                        />
+                        <div className="button-box">
+                            <input
+                                type="submit"
+                                value="경기 생성"
+                            />
+                        </div>
                     </form>
                 </div>
             </MainView>

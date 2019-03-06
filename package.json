@@ -5,15 +5,18 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "next",
+    "dev": "nodemon ssr-server.js",
     "build": "next build",
-    "start": "NODE_ENV=production node server.js"
+    "start": "NODE_ENV=production node server.js",
+    "export": "next export",
+    "deploy": "npm run build && npm run export"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
     "@zeit/next-css": "^1.0.1",
     "axios": "^0.18.0",
+    "cors": "^2.8.5",
     "express": "^4.16.4",
     "firebase": "^5.7.2",
     "mysql": "^2.16.0",
@@ -21,5 +24,8 @@
     "react": "^16.6.3",
     "react-accessible-accordion": "^2.4.5",
     "react-dom": "^16.6.3"
+  },
+  "devDependencies": {
+    "nodemon": "^1.18.10"
   }
 }

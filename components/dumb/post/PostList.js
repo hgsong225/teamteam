@@ -64,51 +64,89 @@ class PostList extends Component {
                         display: flex;
                         justify-content: space-around;
                         width: 100%;
-                        height: 10rem;
+                        height: 5rem;
+                        padding: 6px 0;
                         background-color: #f1f1f1;
                         margin-bottom: 1rem;
                         align-items: center;
                     }
-                    
+                    .match_date {
+                        margin-top: 2rem;
+                        font-size: 1.2rem;
+                        font-weight: 600;
+                        color: #424242;
+                    }
                     .match-time {
                         display: flex;
                         justify-content: center;
                         align-items: center;
-                        color: #212121;
+                        height: 80%;
+                        padding: 0 6px;
+                        color: #424242;
                         font-size: 1.5rem;
                         font-weight: 600;
                         letter-spacing: 0.25rem;
                     }
                     .match-place {
                         display: flex;
+                        height: 80%;
+                        padding: 0 6px;
                         justify-content: center;
                         flex-direction: column;
                         color: #212121;
-                        font-size: 1.2rem;
                     }
                     .place {
+                        margin: 0;
+                        padding-bottom: 0.5rem;
                         width: 100%;
+                        font-size: 1rem;
                     }
-                    .type {
+                    .match-type {
+                        margin: 0;
                         width: 100%;
+                        font-size: 0.8rem;
+                        color: #757575;
                     }
                     .match-apply {
                         display: flex;
                         justify-content: center;
                         align-items: center;
+                        padding: 0 6px;
                     }
                     .match-apply-button {
+                        margin: 0;
                         cursor: pointer;
                         text-decoration: none;
                         border: none;
                         background-color: #2196f3;
-                        font-size: 1rem;
                         color: white;
-                        padding: 8px 40px;
+                        padding: 1px 40px;
+                    }
+                    .apply, .price {
+                        margin: 0;
+                    }
+                    .apply {
+                        margin-top: 0.5rem;
+                        font-size: 1rem;
+                    }
+                    .price {
+                        margin-top: 0.5rem;
+                        margin-bottom: 0.5rem;
                     }
                     
                     .match-apply-button:hover {
                         background-color: #42a5f5;
+                    }
+                    
+                    @media screen and (max-width: 457px) {
+                        .match-apply-button {
+                            padding: 1px 20px;
+                        }
+                    }
+                    @media screen and (max-width: 375px) {
+                        .match-apply-button {
+                            padding: 1px 20px;
+                        }
                     }
                 `}</style>
                 <ul>
@@ -160,8 +198,8 @@ class PostList extends Component {
                                                                         type="submit"
                                                                         value="신청하기"
                                                                     >
-                                                                        <p>신청하기</p>
-                                                                        <p>{post.match_fee}원</p>
+                                                                        <p className="apply">신청하기</p>
+                                                                        <p className="price">{post.match_fee}원</p>
                                                                     </button>
                                                             }
                                                         </div>

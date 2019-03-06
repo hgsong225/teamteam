@@ -65,7 +65,7 @@ class Post extends Component {
                 sido_name,
                 sigungu_name,
             };
-            axios.get('http://localhost:3333/post/location', {
+            axios.get('http://localhost:3333/api/post/location', {
                 params,
             })
             .then((res) => {

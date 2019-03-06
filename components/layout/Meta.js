@@ -5,6 +5,7 @@ export default () => (
     <Head>
       <meta name="viewport" content="width=device-width, initial-scale=1" />
       <meta charSet="utf-8" />
+      <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous"></link>
     </Head>
     <style jsx global>{`
          body { 
@@ -62,9 +63,34 @@ export default () => (
             -o-transition: all 200ms cubic-bezier(0.390, 0.500, 0.150, 1.360);
             transition: all 200ms cubic-bezier(0.390, 0.500, 0.150, 1.360);
             display: block;
-            margin: 20px auto;
             text-decoration: none;
             border-radius: 4px;
+            outline: none;
+        }
+        .mask {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            z-index: 10;
+            left: 0;
+            top: 0;
+            background-color: #000;
+            display: none;
+        }
+        .mask.toggle {
+            display: block;
+            opacity: 0.2;
+            transition: .5s ease-out;
+        }
+        @media screen and (max-width: 457px) {
+            html {
+                font-size: 14px;
+            }
+        }
+        @media screen and (min-width: 1201px) {
+            .mask.toggle {
+                display: none !important;
+            }
         }
     `}</style>
   </div>
