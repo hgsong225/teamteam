@@ -114,6 +114,7 @@ class PostList extends Component {
                         padding: 0 6px;
                     }
                     .match-apply-button {
+                        z-index: 1;
                         margin: 0;
                         cursor: pointer;
                         text-decoration: none;
@@ -162,7 +163,6 @@ class PostList extends Component {
                                     : false;
                 
                                     return (
-
                                             <li className="match-list">
                                                 {
                                                     isSameDate == true
@@ -190,7 +190,7 @@ class PostList extends Component {
                                                             {
                                                                 post.applicant_status != null
                                                                 ? post.applicant_status
-                                                                : 
+                                                                : // 신청 상태, 취소
                                                                     <button
                                                                         className="match-apply-button"
                                                                         onClick={this.handlePrompt}

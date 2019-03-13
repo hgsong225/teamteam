@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import Router from 'next/router';
+import axios from 'axios';
+
 import fb from '../config/firebase';
 
 import MainView from '../components/layout/MainView';
@@ -10,8 +12,39 @@ class SignUp extends Component {
         email: '',
         password: '',
         password2: '',
-        phone: '',
         checkPassword: false,
+        phone: '',
+        phoneValidating: false, // true, false, processing
+        userCertificationNumber: '',
+        certificationNumber: '',
+        isSameCertificationNumber: false, // true, false, difference
+        effectiveTime: 180,
+        errors: {},
+    }
+ 
+    componentWillUnmount () {
+        clearInterval(this.intervalId);
+    }
+
+    timer = () => {
+        if (this.state.effectiveTime > 0) {
+            this.setState({
+                effectiveTime: this.state.effectiveTime - 1,
+            })
+        } else {
+            clearInterval(this.intervalId);
+            this.setState({
+                effectiveTime: 300,
+                phoneValidating: false,
+                certificationNumber: '',
+            })
+        }
+    }
+
+    componentWillUnmount () {
+        if (this.state.effectiveTime == 0) {
+            clearInterval(this.myInterval);
+        }
     }
 
     handleChange = (e) => {
@@ -19,45 +52,164 @@ class SignUp extends Component {
             [e.target.name]: e.target.value,
         });
 
-        if ((this.state.password !== '' && this.state.password2 !== '') && (this.state.password == this.state.password2)) {
+        // if ((this.state.password !== '' && this.state.password2 !== '') && (this.state.password == this.state.password2)) {
+        //     this.setState({
+        //         checkPassword: true,
+        //     })
+        // }
+    }
+
+    validatePhoneNumber = () => {
+        if (this.state.phone.length > 0) {
+            this.intervalId = setInterval(this.timer, 1000);
             this.setState({
-                checkPassword: true,
+                phoneValidating: 'processing', // 인증 중
+                effectiveTime: 180,
+            });
+            const { phone } = this.state;
+            const data = {
+                phoneNumber: phone,
+            };
+            console.log(phone);
+    
+            axios.post('http://localhost:3333/api/auth/smsVerification', {
+                data,
+            })
+            .then((res) => {
+                console.log(res.data);
+                this.setState({
+                    certificationNumber: res.data.certificationNumber,
+                });
+            })
+            .catch((error) => {
+                console.log(error);
+                this.setState({
+                    phoneValidating: false, // 인증 전
+                    errors: {
+                        phone: '',
+                    }
+                });
+            });
+        } else {
+            this.setState({
+                errors: {
+                    phone: "전화번호를 입력하고 인증을 완료하세요.",
+                }
+            });
+        }
+    }
+
+    compareCertificationNumber = () => {
+        const { userCertificationNumber, certificationNumber } = this.state;
+        if (userCertificationNumber == certificationNumber) {
+            clearInterval(this.intervalId);            
+            return this.setState({
+                isSameCertificationNumber: true,
+                phoneValidating: true,
+                errors: {
+                    phone: '',
+                }
+            });
+        } else if (userCertificationNumber !== certificationNumber) {
+            return this.setState({
+                isSameCertificationNumber: 'difference',
             })
         }
     }
 
+    handleValidation = () => {
+        let errors = {};
+        let formIsValid = true;
+        const {
+            name,
+            email,
+            password,
+            password2,
+            checkPassword,
+            phone,
+            phoneValidating, // true, false, processing
+            userCertificationNumber,
+            certificationNumber,
+            isSameCertificationNumber, // true, false, difference
+            effectiveTime,
+        } = this.state;
+
+        if (!name.length > 0) {
+            formIsValid = false;
+            errors["name"] = "이름을 기입하세요.";
+        }
+        if (!email.length > 0) {
+            formIsValid = false;
+            errors["email"] = "이메일을 입력하세요.";
+        }
+        if (password.length < 5 || password2.length < 5 || (!password.length > 0 && !password2.length > 0)) {
+            formIsValid = false;
+            errors["password"] = "비밀번호를 입력하세요. 6자 이상";
+        }
+        if (password !== password2) {
+            formIsValid = false;
+            errors["password"] = "비밀번호가 다릅니다.";
+        }
+        if (!phone.length > 0  || (!phone.length > 0 && phoneValidating !== true) || phoneValidating !== true) {
+            formIsValid = false;
+            errors["phone"] = "전화번호를 입력하고 인증을 완료하세요.";
+        }
+        
+        this.setState({ errors, });
+
+        return formIsValid;
+    }
+
     signUp = (e) => {
         e.preventDefault();
-
-        fb.auth().createUserWithEmailAndPassword(this.state.email, this.state.password)
-        .then((user) => {
-            console.log('회원가입에 성공했습니다.', user);
-            const { email } = user.user.providerData[0];
-            const firstDisplayName = email.split('@')[0];
-
-            fb.auth().currentUser.updateProfile({
-                displayName: firstDisplayName,
-            }).then(res => {
-                Router.push('/');
-            });
-            this.setState({
-                name: '',
-                email: '',
-                passwsord: '',
-                passwsord2: '',
-                phone: '',
-                checkPassword: false,
+        if (this.handleValidation()) {
+            fb.auth().createUserWithEmailAndPassword(this.state.email, this.state.password)
+            .then((user) => {
+                console.log('회원가입에 성공했습니다.', user);
+                const { email } = user.user.providerData[0];
+                const firstDisplayName = email.split('@')[0];
+    
+                // promise all로 순서 관리.
+                fb.auth().currentUser.updateProfile({
+                    displayName: firstDisplayName,
+                }).then(res => {
+                    const data = {
+                        fb_uid: user.uid,
+                        email,
+                        phone: this.state.phone,
+                        display_name: firstDisplayName,
+                    };
+                    axios.post('http://localhost:3333/api/auth/user', {
+                        data,
+                    })
+                    .then((res) => {
+                        Router.push('/');
+                    })
+                    .catch((error) => {
+                        console.log(error);
+                        this.setState({
+                            phoneValidating: false, // 인증 전
+                        });
+                    });
+                });
+                // const insertUserDataTomySQL = () => {
+    
+                // }
             })
-        })
-        .catch(err => {
-            console.log(err);
-        });
+            .catch(err => {
+                console.log(err);
+            });   
+        }
     }
 
     render() {
         return (
                 <MainView>
                 <style jsx>{`
+                    .error-msg {
+                        font-size: 0.8rem;
+                        color: #f44336;
+                    }
                     .sign-container {
                         margin-left: 16px;
                         margin-right: 16px;
@@ -101,6 +253,21 @@ class SignUp extends Component {
                         font-size: 0.8rem;
                         color: #757575;
                     }
+                    .validate-phone {
+                        color: #2196f3;
+                        cursor: pointer;
+                        border: none;
+                        background-color: #fff;
+                    }
+                    .validating-phone, .validated-phone {
+                        margin-top: 0;
+                    }
+                    .validating-phone, .different-certification-number {
+                        color: #f44336;
+                    }
+                    .validated-phone {
+                        color: #212121;
+                    }
                     .button-box {
                         display: flex;
                         justify-content: flex-end;
@@ -127,7 +294,12 @@ class SignUp extends Component {
                     >
                         <div className="section">
                                 <div className="section-contents">
-                                    <p className="contents-title">이름</p>
+                                    <p className="contents-title">
+                                        이름
+                                        {
+                                            this.state.errors.name && <span className="error-msg"> - {this.state.errors.name}</span>
+                                        }
+                                    </p>
                                     <input
                                         value={this.state.name}
                                         onChange={this.handleChange}
@@ -135,11 +307,16 @@ class SignUp extends Component {
                                         type="text"
                                     />
                                 </div>
-                                <p className="error-msg"></p>
                             </div>
                             <div className="section">
                                 <div className="section-contents">
-                                    <p className="contents-title">이메일</p>
+                                    <p className="contents-title">
+                                        이메일
+                                        {
+                                            this.state.errors.email &&
+                                            <span className="error-msg"> - {this.state.errors.email}</span>
+                                        }
+                                    </p>
                                     <input
                                         value={this.state.email}
                                         onChange={this.handleChange}
@@ -147,11 +324,16 @@ class SignUp extends Component {
                                         type="email"
                                     />
                                 </div>
-                                <p className="error-msg"></p>
                             </div>
                             <div className="section">
                                 <div className="section-contents">
-                                    <p className="contents-title">비밀번호</p>
+                                    <p className="contents-title">
+                                        비밀번호
+                                        {
+                                            this.state.errors.password &&
+                                            <span className="error-msg"> - {this.state.errors.password}</span>
+                                        }
+                                    </p>
                                     <input
                                         value={this.state.password}
                                         onChange={this.handleChange}
@@ -166,20 +348,78 @@ class SignUp extends Component {
                                         type="password"
                                     />
                                 </div>
-                                <p className="error-msg"></p>
                             </div>
                             <div className="section">
                                 <div className="section-contents">
-                                    <p className="contents-title">휴대폰 번호</p>
+                                    <p className="contents-title">
+                                        휴대폰 번호
+                                        {
+                                            this.state.errors.phone &&
+                                            <span className="error-msg"> - {this.state.errors.phone}</span>
+                                        }
+                                    </p>
                                     <input
+                                        className="phone-input"
                                         placeholder="'-'를 제외하고 입력해주세요."
                                         value={this.state.phone}
                                         onChange={this.handleChange}
                                         name="phone"
                                         type="number"
+                                        disabled={this.state.phoneValidating === true ? true : false}
                                     />
+                                    {
+                                        (this.state.phoneValidating == false || this.state.effectiveTime == 0 ) &&
+                                        <button
+                                            className="validate-phone"
+                                            onClick={this.validatePhoneNumber}
+                                        >
+                                            인증 요청
+                                        </button>
+                                    }
+                                    {
+                                        this.state.phoneValidating == "processing" &&
+                                        <div>
+                                            <p
+                                                className="validating-phone"
+                                                onClick={this.validatePhoneNumber}
+                                            >
+                                                재발송 - {`${parseInt((this.state.effectiveTime % 3600) / 60)}분 ${this.state.effectiveTime % 60}초`}
+                                            </p>
+                                            <input
+                                                placeholder="인증번호 6자리 입력"
+                                                value={this.state.userCertificationNumber}
+                                                onChange={this.handleChange}
+                                                name="userCertificationNumber"
+                                            />
+                                            {
+                                                this.state.isSameCertificationNumber == "difference" &&
+                                                <div>
+                                                    <p className="different-certification-number">
+                                                        인증번호가 다릅니다.
+                                                    </p>
+                                                    <button
+                                                        onClick={this.compareCertificationNumber}
+                                                        className="validate-phone"
+                                                    >
+                                                        확인
+                                                    </button>
+                                                </div>
+                                            }
+                                            {
+                                                this.state.isSameCertificationNumber == false &&
+                                                <button
+                                                    onClick={this.compareCertificationNumber}
+                                                    className="validate-phone"
+                                                >
+                                                    확인
+                                                </button>
+                                            }
+                                        </div>
+                                    }
+                                    {
+                                        this.state.phoneValidating == true && <p className="validated-phone">인증 완료</p>
+                                    }
                                 </div>
-                                <p className="error-msg"></p>
                             </div>
                             <div className="button-box">
                                 <input

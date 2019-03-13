@@ -131,6 +131,7 @@ class LocationList extends Component {
 
         return (
             <Accordion
+                accordion={true}
             >
                 {list}
             </Accordion>

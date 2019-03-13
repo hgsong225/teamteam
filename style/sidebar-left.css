@@ -17,9 +17,9 @@ ul {
 
 .accordion {
     box-sizing: border-box;
-    margin-bottom: 2rem;
-    padding-bottom: 24px;
-    border-bottom: 1px solid #e0e0e0;
+    /* margin-bottom: 2rem; */
+    /* padding-bottom: 24px; */
+    /* border-bottom: 1px solid #e0e0e0; */
     /* border: 1px solid rgba(0, 0, 0, 0.1); */
     border-radius: 2px;
 }
@@ -73,7 +73,7 @@ ul {
     /* background-color: #fafafa; */
     padding: 20px;
     display: block;
-    /* animation: fadein 0.35s ease-in; */
+    animation: move-down 1.5s ease-in;
 }
 
 .accordion__body:hover {
@@ -88,7 +88,7 @@ ul {
 .accordion__body--hidden {
     display: none;
     opacity: 0;
-    animation: fadein 0.35s ease-in;
+    animation: move-up 1.5s ease-in;
 }
 
 .accordion__title > *:last-child,

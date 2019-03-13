@@ -66,10 +66,8 @@ class Header extends Component {
                             box-sizing: border-box;
                             visibility: hidden;
                             opacity: 0;
-                            transition: visibility 0.5s, opacity .5s ease-out;
                         }
                         .menu {
-                            display: block;
                             box-sizing: border-box;
                             padding: 20px 20px;
                             font-size: 24px;
@@ -94,7 +92,7 @@ class Header extends Component {
                         .logo {
                             display: flex !important;
                             align-items: center;
-                            margin-left: 20px;
+                            margin-left: 40px;
                             padding: 0 !important;
                             height: 64px;
                             cursor: pointer;
@@ -133,19 +131,16 @@ class Header extends Component {
                                 display: none !important;
                             }
                             .logo {
-                                transform: translateX(60px);
-                                transition: all .8s ease-out;
-                            }
-                        }
-                        @media screen and (max-width: 1200px) {
-                            .logo {
-                                transform: translateX(60px);
+                                margin: auto;
                                 transition: all .8s ease-out;
                             }
                             .menu-box {
                                 visibility: visible;
                                 opacity: 1;
-                                transition: visibility 1s, opacity 2s ease-out;
+                            }
+                        }
+                        @media screen and (max-width: 1200px) and (min-width: 993px) {
+                            .logo {
                             }
                         }
                     `}</style>

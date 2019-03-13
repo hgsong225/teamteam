@@ -163,7 +163,7 @@ class Match extends Component {
                             width: 100%;
                             max-width: 550px;
                             height: 50px;
-                            font-size: 1rem;
+                            font-size: 16px;
                             color: #212121;
                             padding: 10px;
                             border: 1px solid #e0e0e0;
@@ -269,7 +269,7 @@ class Match extends Component {
                                     this.state.user !== null &&
                                     (
                                         match[0].fb_uid == this.state.user.uid &&
-                                        <div>
+                                        <div className="post-box">
                                             <h3>신청 상태</h3>
                                             <p>신청 상태는 호스트만 볼 수 있습니다.</p>
                                             <table>
@@ -279,39 +279,45 @@ class Match extends Component {
                                                         <th>신청 일시</th>
                                                         <th>신청 상태</th>
                                                         <th>입금 상태</th>
+                                                        <th></th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
                                                     {
                                                         applicants.length > 0 &&
                                                         applicants.map((applicant, i) => {
-                                                        return (
-                                                            <tr
-                                                                key={i * 2}
-                                                            >
-                                                                <td>{applicant.name}</td>
-                                                                <td>{applicant.apply_time}</td>
-                                                                <td>{applicant.applicant_status}</td>
-                                                                <td>{applicant.payment_status}</td>
-                                                                <td>
-                                                                    <button
-                                                                        onClick={this.handleApplicant}
-                                                                        name={applicant.user_iduser}
-                                                                        value="승인"
-                                                                    >
-                                                                        수락
-                                                                    </button>
-                                                                    <button
-                                                                        onClick={this.handleApplicant}
-                                                                        name={applicant.user_iduser}
-                                                                        value="거절"
-                                                                    >
-                                                                        거절
-                                                                    </button>
-                                                                </td>
-                                                            </tr>
-                                                        );
-                                                    })}
+                                                            return (
+                                                                <tr
+                                                                    key={i * 2}
+                                                                >
+                                                                    <td>{applicant.name}</td>
+                                                                    <td>{applicant.apply_time}</td>
+                                                                    <td>{applicant.applicant_status}</td>
+                                                                    <td>{applicant.payment_status}</td>
+                                                                    <td>
+                                                                        <button
+                                                                            onClick={this.handleApplicant}
+                                                                            name={applicant.user_iduser}
+                                                                            value="승인"
+                                                                        >
+                                                                            수락
+                                                                        </button>
+                                                                        <button
+                                                                            onClick={this.handleApplicant}
+                                                                            name={applicant.user_iduser}
+                                                                            value="거절"
+                                                                        >
+                                                                            거절
+                                                                        </button>
+                                                                    </td>
+                                                                </tr>
+                                                            );
+                                                        })
+                                                    }
+                                                    {
+                                                        applicants.length == 0 &&
+                                                        <div>신청자가 없습니다.</div>
+                                                    }
                                                 </tbody>
                                             </table>
                                         </div>
@@ -327,8 +333,10 @@ class Match extends Component {
                                         <button>수정하기</button>
                                         <button>경기 삭제</button>
                                     </div>
+                                    // 신청 취소, 신청 상태 보여주기
                                     : <div className="button-box">
                                         <input
+                                            className="apply"
                                             value="신청하기"
                                             type="submit"
                                         />

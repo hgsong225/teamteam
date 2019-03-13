@@ -15,7 +15,7 @@ class Posts extends Component {
     state = {
         user: null,
         depositor: '',
-        willApplyMatch: [],
+        willBeAppliedMatch: [],
         postList: [],
         selectedFilter: '전체', // default: 전체
         filterList: [
@@ -92,29 +92,36 @@ class Posts extends Component {
     }
 
     applyMatch = async (e, depositor) => {
-        const idmatch = e.target.name;
+        const { user, willBeAppliedMatch } = this.state;
         const { posts } = this.props;
-        const selectedMatch = posts.filter(post => post.idmatch == idmatch);
-        await this.setState({ depositor, willApplyMatch: selectedMatch, });
-        const state = await this.getState();
-        const { user, willApplyMatch } = state;
-
-        const data = {
-            idmatch: willApplyMatch[0].idmatch,
-            uid: user.uid,
-            depositor,
-            match_has_user_fee: willApplyMatch[0].match_fee,
+        console.log('tlqkf', e.target);
+        // await this.setState({ depositor, willBeAppliedMatch: selectedMatch, });
+        // const state = await this.getState();
+        
+        if (user !== null && e.target.name !== undefined) {
+            const idmatch = e.target.name;
+            const selectedMatch = posts.filter(post => post.idmatch == idmatch);
+            console.log(user, idmatch, selectedMatch);
+            if (selectedMatch.length > 0) {
+                const data = {
+                    idmatch: selectedMatch[0].idmatch,
+                    uid: user.uid,
+                    depositor,
+                    match_has_user_fee: selectedMatch[0].match_fee,
+                }
+        
+                axios.post('http://localhost:3333/api/match/apply', {
+                    data,
+                })
+                .then((res) => {
+                    console.log(res.data);
+                    alert('신청 완료');
+                })
+                .catch((error) => {
+                    console.log(error);
+                });
+            }
         }
-
-        axios.post('http://localhost:3333/match/apply', {
-            data,
-        })
-        .then((res) => {
-            console.log(res.data);
-        })
-        .catch((error) => {
-            console.log(error);
-        });
     }
     
     render() {

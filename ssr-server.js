@@ -1,8 +1,11 @@
 const express = require('express');
 const next = require('next');
 const mysql = require('mysql');
-const dbConfig = require('./config/db.js');
 var cors = require('cors');
+const request = require('request');
+
+const dbConfig = require('./config/db.js');
+const nCloud = require('./config/ncloud.js');
 
 const dev = process.env.NODE_ENV !== 'production';
 const app = next({ dev });
@@ -63,7 +66,7 @@ app.prepare()
         server.post('/api/match/apply', (req, res) => {
             try {
                 const data = req.body.data;
-                console.log(data);
+                console.log('/api/match/apply', data);
                 // (user_iduser, 
                 //     apply_time, 
                 //     depositor, 
@@ -189,10 +192,11 @@ app.prepare()
             }
         });
         
-        server.get('/api/match/me/remove', (req, res) => { // 내경기 불러오기
+        server.delete('/api/match/me/remove', (req, res) => { // 내경기 불러오기
             try {
                 const { idpost } = req.query;
-                const query = `DELETE FROM post WHERE idpost = ${idpost}`;
+                console.log('remove', req.query);
+                const query = `DELETE FROM post WHERE idpost = '${idpost}'`;
         
                 connection.query(query, (err, rows) => {
                     if (err) throw err;
@@ -453,6 +457,86 @@ app.prepare()
                 connection.query(query, (err, rows) => {
                     if (err) throw err;
                     res.send(rows);
+                });
+            } catch (error) {
+                res.status(500).json({ error: error.toString() });
+            }
+        });
+
+        server.get('/api/auth/user', (req, res) => { // get user information from mysql
+            try {
+                const data = req.query;
+                console.log(data);
+                const query = `SELECT * FROM \`user\` WHERE fb_uid = '${data.uid}'`;
+
+                connection.query(query, (err, rows) => {
+                    if (err) throw err;
+                    res.send(rows);
+                });
+            } catch (error) {
+                res.status(500).json({ error: error.toString() });
+            }
+        });
+
+        server.post('/api/auth/user', (req, res) => { // 최초 회원가입
+            try {
+                const {
+                    fb_uid,
+                    email,
+                    phone,
+                    display_name
+                } = req.body.data;
+                const query = `INSERT INTO user (fb_uid, email, phone, display_name) VALUES ('${fb_uid}', '${email}', '${phone}', '${display_name}')`;
+
+                connection.query(query, (err, rows) => {
+                    if (err) throw err;
+                    res.send(rows);
+                });
+            } catch (error) {
+                res.status(500).json({ error: error.toString() });
+            }
+        });
+
+        server.post('/api/auth/smsVerification', (req, res) => {
+            try {
+                const phoneNumber = req.body.data.phoneNumber;
+                const CERTIFICATION_NUMBER = '123456';
+                request.post({
+                    json: true,
+                    url: `https://api-sens.ncloud.com/v1/sms/services/${nCloud.sms.SERVICE_ID}/messages`,
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-NCP-auth-key': `${nCloud.ACCESS_KEY_ID}`,
+                        'X-NCP-service-secret': `${nCloud.sms.SERVICE_SECRET_KEY}`
+                    },
+                    body: {
+                        type: 'sms',
+                        from: `${nCloud.sms.PHONE_NUMBER}`,
+                        to: [`${phoneNumber}`],
+                        content: `[teamteam] 인증번호는 ${CERTIFICATION_NUMBER} 입니다.`
+                    }
+                }, (err, response, body) => {
+                    if (err) {
+                        res.status(500).json({ err: err.toString() });
+                    } else {
+                        const messageId = body.messages[0].messageId;
+                        request.get({
+                            url: `https://api-sens.ncloud.com/v1/sms/services/${nCloud.sms.SERVICE_ID}/messages/${messageId}`,
+                            headers: {
+                                'X-NCP-auth-key': `${nCloud.ACCESS_KEY_ID}`,
+                                'X-NCP-service-secret': `${nCloud.sms.SERVICE_SECRET_KEY}`           
+                            }
+                        }, (err, response, body) => {
+                            if (err) {
+                                res.status(500).json({ err: err.toString() });
+                            } else {
+                                res.send({
+                                    body,
+                                    certificationNumber: CERTIFICATION_NUMBER,
+                                });
+                            }
+                        })
+                    }
                 });
             } catch (error) {
                 res.status(500).json({ error: error.toString() });

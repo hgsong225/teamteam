@@ -37,7 +37,8 @@ class Layout extends Component {
                     .container{
                         display: flex;
                         flex-direction: column;
-                        margin-bottom: 80px;
+                        min-height: 100vh;
+                        padding-bottom: 80px;
                     }
                     .content {
                         display: flex;
@@ -86,13 +87,19 @@ class Layout extends Component {
                         flex: 7;
                         padding:10px;
                     }
-                    @media screen and (max-width: 992px) {
- 
-                    }
-                    @media screen and (max-width: 1200px) {
+                    @media screen and (max-width: 375px) {
                         .sidebar-left-container {
                             margin-top: 0;
                             z-index: 999;
+                            transform: translateX(-304px);
+                            box-shadow: 0 0 16px rgba(0,0,0,.28);
+                            transition: transform 1s ease-out;
+                        }
+                    }
+                    @media screen and (max-width: 992px) {
+                        .sidebar-left-container {
+                            z-index: 999;
+                            margin-top: 0;
                             transform: translateX(-304px);
                             box-shadow: 0 0 16px rgba(0,0,0,.28);
                             transition: transform 1s ease-out;
@@ -105,7 +112,7 @@ class Layout extends Component {
                             margin-right: 0;
                         }
                         main {
-                            padding: 0 6px;
+                            padding: 0 8px;
                         }
                     }
                 `}</style>

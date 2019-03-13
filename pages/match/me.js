@@ -88,10 +88,18 @@ class Me extends Component {
         })
     }
 
+    handleCancleApply = (e) => { // 신청 취소 버튼
+
+    }
+
+    handleEdit = (e) => { // 경기 수정 버튼
+        e.preventDefault();
+    }
+
     handleRemove = (e) => { // 유저가 나인지 정확히 확인 할 것
         e.preventDefault();
         const { posts } = this.state;
-        const idpost = Number(e.target.name);
+        const idpost = e.target.getAttribute('name');
         const params = {
             idpost,
         };
@@ -101,7 +109,7 @@ class Me extends Component {
                 posts: posts.filter(post => post.idpost !== idpost),
             });
             
-            axios.get('http://localhost:3333/api/match/me/remove', {
+            axios.delete('http://localhost:3333/api/match/me/remove', {
                 params,
             })
             .then((res) => {
@@ -120,6 +128,7 @@ class Me extends Component {
       }
 
     render() {
+        console.log(this.state.posts);
         return (
             <div>
                 <Layout>
@@ -223,21 +232,40 @@ class Me extends Component {
                         .match-apply-button:hover {
                             background-color: #42a5f5;
                         }
+                        .status-box-remove {
+                            display: flex;
+                            justify-content: center;
+                        }
+                        .edit-match, .remove-match {
+                            cursor: pointer;
+                            margin: 0 .5rem;
+                        }
+                        .edit-match {
+                            color: #2196f3;
+                        }
+                        .remove-match {
+                            color: #f44336;
+                        }
                     `}</style>
                         <div className="title-box">
                             <h3 className="title">다가오는 내 매치</h3>
-                            <p className="page-desc">입금을 완료해야 참여 확정됩니다!<br />경기는 입금 선착순으로 마감되니 신청 후 바로 입금해주세요.</p>
+                            <p className="page-desc">
+                                입금계좌 - 신한은행 신한 110-439-532672 팀팀
+                                <br />
+                                입금을 완료해야 참여 확정됩니다!
+                                <br />
+                                *경기는 입금 선착순으로 마감되니 신청 후 바로 입금해주세요.
+                            </p>
                         </div>
                         <ul>
                             {
-                                this.state.posts.sort(this.date_ascending).map((post, i) => {
+                                this.state.posts !== undefined && this.state.posts.sort(this.date_ascending).map((post, i) => {
                                     if (post.start_time !== undefined) {
                                         const start_year = new Date(post.start_time).getFullYear();
                                         const start_month = new Date(post.start_time).getMonth();
                                         const start_date = new Date(post.start_time).getDate();
                                         const isSameDate = i >= 1
-                                        ? (new Date(start_year, start_month, start_date).getTime() == new Date(new Date(posts[i - 1].start_time).getFullYear(), new Date(posts[i - 1].start_time).getMonth(), new Date(posts[i - 1].start_time).getDate()).getTime())
-                                        : false;
+                                        && (new Date(start_year, start_month, start_date).getTime() == new Date(new Date(this.state.posts[i - 1].start_time).getFullYear(), new Date(this.state.posts[i - 1].start_time).getMonth(), new Date(this.state.posts[i - 1].start_time).getDate()).getTime());
                                         return (
                                             <li className="match-list">
                                                 {
@@ -280,16 +308,22 @@ class Me extends Component {
                                                                 </div>
                                                             :
                                                                 <div
-                                                                    className="status-box"
-                                                                >
-                                                                <p
-                                                                    className="remove-match"
-                                                                    onClick={this.handleRemove}
+                                                                    className="status-box-remove"
                                                                     name={post.idpost}
-                                                                    type="submit"
-                                                                    value="삭제"
-                                                                    style={{ width: "100%" }}
-                                                                >삭제</p>
+                                                                >
+                                                                    <p
+                                                                        className="edit-match"
+                                                                        name={post.idpost}
+                                                                    >
+                                                                        수정
+                                                                    </p>
+                                                                    <p
+                                                                        className="remove-match"
+                                                                        onClick={this.handleRemove}
+                                                                        name={post.idpost}
+                                                                        type="submit"
+                                                                        value="삭제"
+                                                                    >삭제</p>
                                                             </div>
                                                         }
                                                     </div>

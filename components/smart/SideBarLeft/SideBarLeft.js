@@ -36,17 +36,20 @@ class SideBarLeft extends Component {
                         margin-bottom: 16rem;
                     }
                     footer {
-                        width: 250px;
-                        margin-bottom: 2rem;
-                        border-bottom: 1px solid #e0e0e0;
+                        width: 280px;
+                    }
+                    .footer-box {
+                        margin: 0px 10px 24px 10px;
+                        padding: 0 20px 0px 30px;
+                    }
+                    .title {
+                        font-size: 0.8rem;
+                        color: #757575;
                     }
                     .logo-container {
                         display: none;
                     }
-                    footer div {
-                        width: 100%;
-                    }
-                    @media screen and (max-width: 1200px) {
+                    @media screen and (max-width: 992px) {
                         .logo-container {
                             display: flex;
                             justify-content: center;
@@ -57,6 +60,10 @@ class SideBarLeft extends Component {
                             padding: 40px;
                         }   
                     }
+                    hr {
+                        width: 260px;
+                        border: .5px solid #e1e1e1;
+                    }
                 `}</style>
                 <div className="logo-container">
                     <img src="../../../static/logo.png"/>
@@ -66,10 +73,19 @@ class SideBarLeft extends Component {
                     locations={locations}
                     selectedLocation={selectedLocation}
                 />
+                <hr />
                 <footer>
-                    <div>
-                        <p>계좌번호</p>
-                        <p>신한 110-439-532672 팀팀</p>
+                    <div className="footer-box">
+                        <p className="title">계좌번호</p>
+                        <p className="account">신한 110-439-532672 팀팀</p>
+                    </div>
+                    <div className="footer-box">
+                        <p className="title">카카오톡 플러스친구</p>
+                        <p className="account">@팀팀</p>
+                    </div>
+                    <div className="footer-box">
+                        <p className="title">사업자 번호</p>
+                        <p className="account">00-000-0000</p>
                     </div>
                 </footer>
             </div>

@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import Link from 'next/link';
 import Router from 'next/router';
+import axios from 'axios';
+
 import fb from '../../../config/firebase';
 
 import MainView from '../../layout/MainView';
@@ -39,20 +41,36 @@ class Profile extends Component {
             if (user) {
                 console.log(user);
                 const { displayName, email, phoneNumber, photoURL, providerId } = user.providerData[0];
-                
-                this.setState({
-                    user: {
-                        displayName,
-                        email,
-                        emailVerified: user.emailVerified,
-                        phoneNumber,
-                        photoURL,
-                        providerId,
-                        uid: user.uid,
-                    }
+                const params = {
+                    uid: user.uid,
+                };
+                axios.get('http://localhost:3333/api/auth/user', {
+                    params,
+                })
+                .then(res => {
+                    const data = res.data[0];
+                    console.log(res);
+                    this.setState({
+                        user: {
+                            displayName,
+                            email,
+                            emailVerified: user.emailVerified,
+                            phoneNumber: data.phone,
+                            photoURL,
+                            providerId,
+                            uid: user.uid,
+                        }
+                    });
+                })
+                .catch((error) => {
+                    console.log(error);
+                    this.setState({
+                        phoneValidating: false, // 인증 전
+                    });
                 });
             } else {
                 console.log('user가 없습니다.');
+                Router.push('/sign-in');
             }
         });
     }
@@ -74,7 +92,7 @@ class Profile extends Component {
                     <p>{!photoURL && '사진 없음'}</p>
                     <p>{!displayName && '이름을 설정해주세요.'}</p>
                     <p>{emailVerified ? email : `${email} 인증 필요`}</p>
-                    <p>{!phoneNumber && '현재 등록된 전화번호가 없습니다.'}</p>
+                    <p>{phoneNumber && phoneNumber}</p>
                 </div>
                 <div>
                     <Link href='settings'><a>설정</a></Link>

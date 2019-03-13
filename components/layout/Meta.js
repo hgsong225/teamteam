@@ -10,6 +10,7 @@ export default () => (
     <style jsx global>{`
          body { 
             margin: 0px;
+            height: 100vh;
         }
 
         html {
@@ -66,6 +67,7 @@ export default () => (
             text-decoration: none;
             border-radius: 4px;
             outline: none;
+            font-size: .8rem;
         }
         .mask {
             position: absolute;
@@ -79,10 +81,10 @@ export default () => (
         }
         .mask.toggle {
             display: block;
-            opacity: 0.2;
+            opacity: 0;
             transition: .5s ease-out;
         }
-        @media screen and (max-width: 457px) {
+        @media screen and (max-width: 414px) {
             html {
                 font-size: 14px;
             }
@@ -92,6 +94,41 @@ export default () => (
                 display: none !important;
             }
         }
+
+50
+#e3f2fd
+100
+#bbdefb
+200
+#90caf9
+300
+#64b5f6
+400
+#42a5f5
+500
+#2196f3
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        td, th {
+            border: 1px solid #ddd;
+            padding: 8px;
+          }
+          
+          tr:nth-child(even){background-color: #f5f5f5;}
+          
+          tr:hover {background-color: #e3f2fd;}
+          
+          th {
+            min-width: 50px;
+            padding-top: 12px;
+            padding-bottom: 12px;
+            text-align: left;
+            background-color: #2196f3;
+            color: white;
+          }
     `}</style>
   </div>
 )
