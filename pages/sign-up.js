@@ -175,6 +175,7 @@ class SignUp extends Component {
                 }).then(res => {
                     const data = {
                         fb_uid: user.uid,
+                        name: this.state.name,
                         email,
                         phone: this.state.phone,
                         display_name: firstDisplayName,

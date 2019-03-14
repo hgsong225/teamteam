@@ -73,7 +73,7 @@ class Match extends Component {
         .catch((err) => console.log(err));
     }
 
-    handleApplicant = (e) => {
+    handleApplicant = (e) => { // 신청 관리
         e.preventDefault();
         const iduser = e.target.name;
         const applicant_status = e.target.value;
@@ -316,7 +316,7 @@ class Match extends Component {
                                                     }
                                                     {
                                                         applicants.length == 0 &&
-                                                        <div>신청자가 없습니다.</div>
+                                                        <p>신청자가 없습니다.</p>
                                                     }
                                                 </tbody>
                                             </table>

@@ -63,7 +63,7 @@ app.prepare()
             }
         });
         
-        server.post('/api/match/apply', (req, res) => {
+        server.post('/api/match/apply', (req, res) => { // 매치 신청
             try {
                 const data = req.body.data;
                 console.log('/api/match/apply', data);
@@ -123,7 +123,7 @@ app.prepare()
             }
         });
         
-        server.get('/api/match/applicants', (req, res) => {
+        server.get('/api/match/applicants', (req, res) => { // 매치 신청자 가져오기
             try {
                 const data = req.query;
                 console.log(data);
@@ -147,7 +147,7 @@ app.prepare()
             }
         });
         
-        server.get('/api/match/me', (req, res) => { // 내경기 불러오기
+        server.get('/api/match/me', (req, res) => { // 내 모든 경기 불러오기
             try {
                 const data = req.query;
                 const query = `SELECT * FROM post
@@ -169,7 +169,7 @@ app.prepare()
             }
         });
         
-        server.get('/api/match/me/apply', (req, res) => { // 내경기 불러오기
+        server.get('/api/match/me/apply', (req, res) => { // 내가 신청한 경기 불러오기
             try {
                 const data = req.query;
                 const query = `SELECT * FROM post
@@ -207,7 +207,7 @@ app.prepare()
             }
         });
         
-        server.post('/api/match/applicant/status', (req, res) => { // 내경기 불러오기
+        server.post('/api/match/applicant/status', (req, res) => { // 신청자 신청 수락 or 거절
             try {
                 const data = req.body.data;
                 console.log(data);
@@ -255,7 +255,7 @@ app.prepare()
                     deposit_account,
                 } = req.body.data;
                 const query = `
-                INSERT INTO \`post\` (user_iduser, type, contents, create_time, source, url)
+                INSERT INTO \`post\` (user_iduser, post_type, contents, create_time, source, url)
                 VALUES (
                         (SELECT iduser
                         FROM user
@@ -283,13 +283,10 @@ app.prepare()
                     selected_sports_category,
                     selected_sports_type,
                     total_guest,
-                    selected_location,
                     match_date,
                     match_start_time,
                     match_end_time,
-                    match_time_type,
                     selected_place,
-                    phone,
                     contents,
                     fee,
                     deposit_account,
@@ -300,28 +297,24 @@ app.prepare()
                 INSERT INTO \`match\`(
                     post_idpost,
                     sports_category,
-                    type,
-                    fee,
+                    match_type,
+                    match_fee,
                     total_game_capacity,
                     total_guest,
-                    total_applicants,
-                    total_participation_confirmed,
-                    total_canceled,
                     start_time,
                     end_time,
-                    expiration,
-                    status,
+                    match_status,
                     apply_status,
                     place_name,
                     address,
-                    bank_account)
+                    host_account)
                 VALUES
                 (
                     (SELECT idpost
                     FROM post
                     WHERE user_iduser = (
                         SELECT iduser FROM user WHERE fb_uid = "${uid}")
-                        AND type = "용병 모집"
+                        AND post_type = "용병 모집"
                         AND contents = "${contents}"
                         ORDER BY create_time DESC limit 1
                         ),
@@ -330,10 +323,8 @@ app.prepare()
                      "${fee}",
                      "${selected_sports_type * 2}",
                      "${total_guest}",
-                     0, 0, 0,
                      "${match_date} ${match_start_time}:00",
                      "${match_date} ${match_end_time}:00",
-                     "${match_date} ${match_start_time}:00",
                      "경기 전",
                      "신청 가능",
                      "${selected_place.place_name}",
@@ -379,7 +370,7 @@ app.prepare()
                         query += `
                         (
                             (SELECT idpost FROM post WHERE user_iduser = (SELECT iduser FROM user WHERE fb_uid = "${uid}")
-                               AND type = "용병 모집"
+                               AND post_type = "용병 모집"
                                AND contents = "${contents}"
                                ORDER BY create_time DESC limit 1
                                ),
@@ -395,7 +386,7 @@ app.prepare()
                         query += `
                         (
                             (SELECT idpost FROM post WHERE user_iduser = (SELECT iduser FROM user WHERE fb_uid = "${uid}")
-                               AND type = "용병 모집"
+                               AND post_type = "용병 모집"
                                AND contents = "${contents}"
                                ORDER BY create_time DESC limit 1),
                             (
@@ -430,6 +421,8 @@ app.prepare()
                     ? `
                     SELECT * FROM post
                     LEFT JOIN \`match\` ON post.idpost = \`match\`.post_idpost
+                    LEFT JOIN match_has_user ON \`match\`.idmatch = match_has_user.match_idmatch
+                    LEFT JOIN user ON user.iduser = match_has_user.user_iduser
                     LEFT JOIN post_has_location
                     ON post.idpost = post_has_location.post_idpost
                     WHERE location_idlocation =
@@ -482,11 +475,12 @@ app.prepare()
             try {
                 const {
                     fb_uid,
+                    name,
                     email,
                     phone,
                     display_name
                 } = req.body.data;
-                const query = `INSERT INTO user (fb_uid, email, phone, display_name) VALUES ('${fb_uid}', '${email}', '${phone}', '${display_name}')`;
+                const query = `INSERT INTO user (fb_uid, name, email, phone, display_name) VALUES ('${fb_uid}', '${name}', ${email}', '${phone}', '${display_name}')`;
 
                 connection.query(query, (err, rows) => {
                     if (err) throw err;
