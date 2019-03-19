@@ -1,8 +1,14 @@
 import React, { Component } from 'react';
+import Link from 'next/link';
 
 import LocationList from '../../dumb/SideBarLeft/LocationList';
 
 class SideBarLeft extends Component {
+    static defaultProps = {
+        user: {},
+        selectedLocation: {},
+    }
+
     state = {
         locations: [],
     }
@@ -10,7 +16,6 @@ class SideBarLeft extends Component {
     componentDidMount() {
         console.log('SideBarLeft에서 componentDidMount 실행');
         this.getAllLocation();
-
     }
 
     getAllLocation = () => {
@@ -35,6 +40,12 @@ class SideBarLeft extends Component {
                     .sidebar-left {
                         margin-bottom: 16rem;
                     }
+                    .logo-container {
+                        display: none;
+                    }
+                    .sidebar-header-list {
+                        display: none;
+                    }
                     footer {
                         width: 280px;
                     }
@@ -46,9 +57,7 @@ class SideBarLeft extends Component {
                         font-size: 0.8rem;
                         color: #757575;
                     }
-                    .logo-container {
-                        display: none;
-                    }
+
                     @media screen and (max-width: 992px) {
                         .logo-container {
                             display: flex;
@@ -58,16 +67,38 @@ class SideBarLeft extends Component {
                         .logo-container img {
                             height: 40px;
                             padding: 40px;
-                        }   
+                        }
+                        .sidebar-header-list {
+                            font-size: 16px;
+                            display: block;
+                            list-style-type: none;
+                            margin-left: 10px;
+                            padding: 0;
+                        }
+                        .sidebar-header-list li {
+                            padding: 10px 0px 10px 30px;
+                        }
                     }
                     hr {
-                        width: 260px;
+                        width: 240px;
                         border: .5px solid #e1e1e1;
                     }
                 `}</style>
                 <div className="logo-container">
                     <img src="../../../static/logo.png"/>
                 </div>
+                <ul className="sidebar-header-list">
+                    {
+                        this.props.user
+                        ? <li><Link prefetch href='/profile'><a>프로필</a></Link></li>
+                        : <li><Link prefetch href='/sign-in'><a>로그인</a></Link></li>
+                    }
+                    <li>
+                        <Link prefetch href='/match/me'><a>내 경기</a></Link>
+                    </li>
+                    <li><Link prefetch href='/match/create'><a>경기 만들기</a></Link></li>
+                <hr />
+                </ul>
                 <LocationList
                     selectLocation={this.props.selectLocation}
                     locations={locations}

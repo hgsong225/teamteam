@@ -68,6 +68,7 @@ export default () => (
             border-radius: 4px;
             outline: none;
             font-size: .8rem;
+            cursor: pointer;
         }
         .mask {
             position: absolute;
@@ -95,20 +96,7 @@ export default () => (
             }
         }
 
-50
-#e3f2fd
-100
-#bbdefb
-200
-#90caf9
-300
-#64b5f6
-400
-#42a5f5
-500
-#2196f3
         table {
-            border-collapse: collapse;
             width: 100%;
         }
 
@@ -131,6 +119,10 @@ export default () => (
         }
         tbody > p {
             color: #757575;
+        }
+
+        input[type=submit] {
+            cursor: pointer;
         }
     `}</style>
   </div>

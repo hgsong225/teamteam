@@ -6,6 +6,7 @@ import LayoutView from './LayoutView';
 
 class Layout extends Component {
     static defaultProps = {
+        user: {},
         selectedLocation: {},
     }
 
@@ -123,6 +124,7 @@ class Layout extends Component {
                     <section>
                         <nav className="sidebar-left-container" id="sidebar-left-container">
                             <SideBarLeft
+                                    user={this.props.user}
                                     selectLocation={this.props.selectLocation}
                                     selectedLocation={selectedLocation}
                                 />

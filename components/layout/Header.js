@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import Link from 'next/link';
+
 import fb from '../../config/firebase';
 
 class Header extends Component {
@@ -84,10 +85,10 @@ class Header extends Component {
                             overflow: hidden;
                         }
                         li {
-                            padding: 0 20px;
+                            padding: 0 16px;
                         }
                         li:last-child {
-                            padding-right: 0px;
+                            padding-right: 40px;
                         }
                         .logo {
                             display: flex !important;
@@ -155,8 +156,11 @@ class Header extends Component {
                         <Link prefetch href='http://localhost:3000/'><img src={'../../static/logo.png'}/></Link>
                     </li>
                     <div className="header-list">
+                        <li className="create">
+                            <Link prefetch href='/match/create'><a>경기 만들기</a></Link>
+                        </li>
                         <li className="">
-                                <Link prefetch href='/match/me'><a>내 경기</a></Link>
+                            <Link prefetch href='/match/me'><a>내 경기</a></Link>
                         </li>
                         {
                             this.state.user
@@ -167,9 +171,6 @@ class Header extends Component {
                                 <Link prefetch href='/sign-in'><a>로그인</a></Link>
                             </li>
                         }
-                        <li className="create">
-                                <Link prefetch href='/match/create'><a>경기 만들기</a></Link>
-                        </li>
                     </div>
                 </ul>
             </div>

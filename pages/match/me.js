@@ -109,11 +109,12 @@ class Me extends Component {
                 posts: posts.filter(post => post.idpost !== idpost),
             });
             
-            axios.delete('http://localhost:3333/api/match/me/remove', {
+            axios.delete('http://localhost:3333/api/match/me', {
                 params,
             })
             .then((res) => {
                 console.log(res);
+                alert('삭제 완료');
             })
             .catch(err => console.log(err));
         }
@@ -205,8 +206,6 @@ class Me extends Component {
                             align-items: center;
                         }
                         .applicant-status {
-                            margin: 0rem;
-                            margin-bottom: 1rem;
                             color: #009688;
                         }
                         .cancel-apply {
@@ -297,14 +296,17 @@ class Me extends Component {
                                                                     className="status-box"
                                                                 >
                                                                     <p className="applicant-status">{post.applicant_status}</p>
-                                                                    <p
-                                                                        className="cancel-apply"
-                                                                        onClick={this.handleRemove}
-                                                                        name={post.idpost}
-                                                                        type="submit"
-                                                                        value="신청 취소"
-                                                                        style={{ width: "100%" }}
-                                                                    >신청 취소</p>
+                                                                    {
+                                                                        post.applicant_status !== '신청취소(거절)'
+                                                                        && <p
+                                                                            className="cancel-apply"
+                                                                            onClick={this.handleRemove}
+                                                                            name={post.idpost}
+                                                                            type="submit"
+                                                                            value="신청 취소"
+                                                                            style={{ width: "100%" }}
+                                                                        >신청 취소</p>
+                                                                    }
                                                                 </div>
                                                             :
                                                                 <div
