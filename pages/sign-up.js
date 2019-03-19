@@ -6,6 +6,8 @@ import fb from '../config/firebase';
 
 import MainView from '../components/layout/MainView';
 
+import '../style/sign-up.css';
+
 class SignUp extends Component {
     state = {
         name: '',
@@ -207,83 +209,7 @@ class SignUp extends Component {
         return (
                 <MainView>
                 <style jsx>{`
-                    .error-msg {
-                        font-size: 0.8rem;
-                        color: #f44336;
-                    }
-                    .sign-container {
-                        margin-left: 16px;
-                        margin-right: 16px;
-                        max-width: 550px;
-                    }
-                    form {
-                    }
-                    .page-title-box {
-                        margin-top: 3rem;
-                        margin-bottom: 3rem;
-                    }
-                    .page-title {
-                        font-size: 2rem;
-                    }
-                    .page-desc {
-                        line-height: 1.6;
-                        font-size: 1rem;
-                    }
-                    input {
-                        box-sizing: border-box;
-                        margin-bottom: 0.5rem;
-                        padding: 10px;
-                        border: 1px solid #e0e0e0;
-                        width: 100%;
-                        border-radius: 4px;
-                        height: 50px;
-                        font-size: 1rem;
-                        color: #212121;
-                    }
-                    .section {
-                        margin-bottom: 2rem;
-                    }
-                    .section-contents {
-                        margin-bottom: 2rem;
-                    }
-                    .contents-title {
-                        font-size: 1rem;
-                        color: #9e9e9e;
-                    }
-                    .contents-desc {
-                        font-size: 0.8rem;
-                        color: #757575;
-                    }
-                    .validate-phone {
-                        color: #2196f3;
-                        cursor: pointer;
-                        border: none;
-                        background-color: #fff;
-                    }
-                    .validating-phone, .validated-phone {
-                        margin-top: 0;
-                    }
-                    .validating-phone, .different-certification-number {
-                        color: #f44336;
-                    }
-                    .validated-phone {
-                        color: #212121;
-                    }
-                    .button-box {
-                        display: flex;
-                        justify-content: flex-end;
-                        align-items: center;
-                    }
-                    input[type=submit] {
-                        width: 160px;
-                        background-color: #2196f3;
-                        color: #fff;
-                        cursor: pointer;
-                        outline: none;
-                    }
-                    input[type=submit]:hover {
-                        box-shadow: 0 6px 6px 0 rgba(0,0,0,0.24);
-                    }
+
                 `}</style>
                 <div className="sign-container">
                     <div className="page-title-box">

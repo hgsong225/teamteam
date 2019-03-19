@@ -4,6 +4,8 @@ import React, { Component } from 'react';
 import fb from '../config/firebase';
 import Header from '../components/layout/Header';
 
+import '../style/settings.css';
+
 class Settings extends Component {
     completeEdit = React.createRef()
 

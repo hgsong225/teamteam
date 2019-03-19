@@ -110,12 +110,12 @@ export default () => (
         tr:hover {background-color: #e3f2fd;}
         
         th {
-        min-width: 16px;
-        padding-top: 12px;
-        padding-bottom: 12px;
-        text-align: left;
-        background-color: #2196f3;
-        color: white;
+            min-width: 16px;
+            padding-top: 12px;
+            padding-bottom: 12px;
+            text-align: center;
+            background-color: #2196f3;
+            color: white;
         }
         tbody > p {
             color: #757575;

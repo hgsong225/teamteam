@@ -16,7 +16,7 @@ router.use(function timeLog(req, res, next) {
     next();
   });
 
-router.route('/api/location')
+router.route('/')
     .get((req, res) => { //location 업데이트
         connection.query('SELECT * from location', (err, rows) => {
             if (err) throw err;

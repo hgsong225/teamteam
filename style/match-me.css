@@ -1,0 +1,106 @@
+.title-box {
+    margin-top: 2rem;
+    margin-bottom: 2rem;
+}
+.title {
+    font-size: 2rem;
+    margin: 0;
+    margin-bottom: 2rem;
+}
+.sub-title{
+    font-size: 1rem;
+}
+ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+.match {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    width: 100%;
+    height: 8rem;
+    background-color: #fafafa;
+    border-radius: 4px;
+    margin-bottom: 1rem;
+}
+.match-time {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    color: #212121;
+    font-size: 1.5rem;
+    font-weight: 600;
+    letter-spacing: 0.25rem;
+}
+.match-status {
+    font-size: 1rem;
+    font-weight: normal;
+    margin-top: 0px;
+    margin-bottom: 2px;
+}
+.time {
+    margin: 0;
+}
+.match-place {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    color: #212121;
+}
+.place {
+    margin: 0;
+    font-size: 1.2rem;
+    margin-bottom: 1rem;
+}
+.match-type {
+    margin: 0;
+    font-size: 0.9rem;
+}
+.status-box {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+.applicant-status {
+    color: #009688;
+}
+.cancel-apply {
+    margin: 0;
+    color: #e91e63;
+    cursor: pointer;
+}
+.match-apply {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.match-apply-button {
+    cursor: pointer;
+    text-decoration: none;
+    border: none;
+    background-color: #2196f3;
+    font-size: 1rem;
+    color: white;
+    padding: 8px 40px;
+}
+
+.match-apply-button:hover {
+    background-color: #42a5f5;
+}
+.status-box-remove {
+    display: flex;
+    justify-content: center;
+}
+.edit-match, .remove-match {
+    cursor: pointer;
+    margin: 0 .5rem;
+}
+.edit-match {
+    color: #2196f3;
+}
+.remove-match {
+    color: #f44336;
+}

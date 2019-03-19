@@ -71,7 +71,7 @@ ul {
 
 .accordion__body {
     /* background-color: #fafafa; */
-    padding: 20px;
+    padding: 20px 20px 20px 60px;
     display: block;
     animation: move-down 1.5s ease-in;
 }
