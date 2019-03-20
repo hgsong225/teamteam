@@ -37,6 +37,8 @@ router.route('/edit')
                        total_guest = ${data.total_guest}, 
                        start_time = '${data.match_date} ${data.match_start_time}', 
                        end_time = '${data.match_date} ${data.match_end_time}'
+                       place_name = '${data.selected_location.place_name}',
+                       address = '${data.selected_location.address_name}'
                 WHERE  post_idpost = ${data.idpost}
                 AND    idmatch = ${data.idmatch};
             `;
