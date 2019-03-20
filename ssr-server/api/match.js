@@ -17,10 +17,102 @@ router.use(function timeLog(req, res, next) {
   next();
 });
 
+router.route('/edit')
+    .post((req, res) => {
+        try {
+            const data = req.body.data;
+            const postQuery = `
+                update post
+                set contents = '${data.contents}', edit_time = NOW()
+                where idpost = ${data.idpost};
+            `;
+
+            const matchQuery = `
+                UPDATE \`match\` 
+                SET    host_account = '${data.deposit_account}', 
+                       match_fee = ${data.fee}, 
+                       sports_category = '${data.selected_sports_category}', 
+                       match_type = ${data.selected_sports_type}, 
+                       total_game_capacity = ${data.selected_sports_type * 2}, 
+                       total_guest = ${data.total_guest}, 
+                       start_time = '${data.match_date} ${data.match_start_time}', 
+                       end_time = '${data.match_date} ${data.match_end_time}'
+                WHERE  post_idpost = ${data.idpost}
+                AND    idmatch = ${data.idmatch};
+            `;
+
+            const delete_post_has_locationQuery = `
+                DELETE 
+                FROM   post_has_location 
+                WHERE  post_idpost = ${data.idpost};
+            `;
+
+            let post_has_locationQuery = `
+                INSERT INTO post_has_location 
+                (post_idpost, 
+                 location_idlocation) 
+                VALUES 
+            `;
+
+            /* Begin transaction */
+            connection.beginTransaction((err) => {
+                if (err) { throw err; }
+                connection.query(postQuery, (err, result) => {
+                    if (err) {
+                        console.log(err);
+                        connection.rollback(() => { throw err; });
+                    }
+
+                    connection.query(matchQuery, (err, result) => {
+                        if (err) {
+                            console.log(err);
+                            connection.rollback(() => { throw err; });
+                        }
+
+                        connection.query(delete_post_has_locationQuery, (err, result) => {
+                            if (err) {
+                                console.log(err);
+                                connection.rollback(() => { throw err; });
+                            }
+
+                            for (let i = 0; i < data.selected_location.length; i += 1) {
+                                if (i == data.selected_location.length - 1) {
+                                    post_has_locationQuery += `(${data.idpost}, ${data.selected_location[i].idlocation});`;
+                                } else {
+                                    post_has_locationQuery += `(${data.idpost}, ${data.selected_location[i].idlocation}), `
+                                }
+                            }
+
+                            connection.query(post_has_locationQuery, (err, result) => {
+                                if (err) { 
+                                    console.log(err);
+                                    connection.rollback(() => { throw err; });
+                                }
+
+                                connection.commit((err) => {
+                                    if (err) { 
+                                        console.log(err);
+                                        connection.rollback(() => { throw err; });
+                                    }
+                                    console.log('Transaction Complete.');
+                                    res.send(result);
+                                });
+                            });
+                        });
+                    });
+                });
+            });
+            /* End transaction */
+        } catch (error) {
+            res.status(500).json({ error: error.toString() });
+        }
+    });
+
 router.route('/')
     .get((req, res) => {
         try {
             const data = req.query;
+            console.log('data', data);
             const query = `
             SELECT * FROM post
             LEFT JOIN \`match\`
@@ -38,7 +130,7 @@ router.route('/')
         }
     });
 
-router.route('/api/match/create')
+router.route('/create')
     .post((req, res) => { // 경기 생성하기
         try {
             const {
@@ -79,19 +171,19 @@ router.route('/api/match/create')
                     AND post_type = "용병 모집"
                     AND contents = "${contents}"
                     ORDER BY create_time DESC limit 1
-                    ),
-                    "${selected_sports_category}",
-                    "${selected_sports_type}",
-                    "${fee}",
-                    "${selected_sports_type * 2}",
-                    "${total_guest}",
-                    "${match_date} ${match_start_time}:00",
-                    "${match_date} ${match_end_time}:00",
-                    "경기 전",
-                    "신청 가능",
-                    "${selected_place.place_name}",
-                    "${selected_place.address_name}",
-                    "${deposit_account}"
+                ),
+                "${selected_sports_category}",
+                "${selected_sports_type}",
+                "${fee}",
+                "${selected_sports_type * 2}",
+                "${total_guest}",
+                "${match_date} ${match_start_time}:00",
+                "${match_date} ${match_end_time}:00",
+                "경기 전",
+                "신청 가능",
+                "${selected_place.place_name}",
+                "${selected_place.address_name}",
+                "${deposit_account}"
             );
             `;
 
@@ -189,7 +281,48 @@ router.route('/applicants')
         } catch (error) {
             res.status(500).json({ error: error.toString() });
         }
+    })
+    .post((req, res) => { // 매치 신청자 정보 업데이트
+        try {
+            const data = req.body.data;
+            let query = '';
+            console.log('fuck', data);
+            
+            if (data.cancel !== null) {
+                query = `
+                UPDATE match_has_user 
+                SET 
+                    applicant_status = '${data.applicant_status}',
+                    cancel_time = NOW(),
+                    cancel_type = '${data.cancel.cancel_type}',
+                    reason_for_cancel = '${data.cancel.reason_for_cancel}',
+                    refund_status = '${data.cancel.refund_status}',
+                    refund_fee_rate = ${data.cancel.refund_fee_rate},
+                    refund_fee = ${data.cancel.refund_fee}
+                WHERE
+                    match_idmatch = ${data.idmatch} AND user_iduser = ${data.iduser} AND payment_status = '결제완료';
+                `;
+            } else {
+                query = `
+                UPDATE match_has_user 
+                SET 
+                    applicant_status = '${data.applicant_status}'
+                WHERE
+                    match_idmatch = ${data.idmatch} AND user_iduser = ${data.iduser} AND payment_status = '결제완료';
+                `;
+            }
+
+            console.log(query);
+    
+            connection.query(query, (err, rows) => {
+                if (err) throw err;
+                res.send(rows);
+            });
+        } catch (error) {
+            res.status(500).json({ error: error.toString() });
+        }
     });
+
     
 router.route('/me')
     .get((req, res) => { // 내 모든 경기 불러오기 (생성, 신청한 경기 등 모두)
@@ -201,7 +334,7 @@ router.route('/me')
                 (SELECT iduser
                 FROM user
                 WHERE fb_uid = '${data.uid}')
-                    AND \`post\`.post_type = '용병 모집'
+                    AND \`post\`.post_type = '용병모집'
             ORDER BY \`match\`.start_time ASC;
             `;
 
@@ -251,24 +384,5 @@ router.route('/me/apply')
             res.status(500).json({ error: error.toString() });
         }
     })
-    .post((req, res) => { // 신청했던 경기 업데이트
-        try {
-            const data = req.body.data;
-            const query = `
-            UPDATE match_has_user 
-            SET 
-                applicant_status = '${data.applicant_status}'
-            WHERE
-                match_idmatch = ${data.idmatch} AND user_iduser = ${data.iduser};
-            `;
-    
-            connection.query(query, (err, rows) => {
-                if (err) throw err;
-                res.send(rows);
-            });
-        } catch (error) {
-            res.status(500).json({ error: error.toString() });
-        }
-    });
 
 module.exports = router;

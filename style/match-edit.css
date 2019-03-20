@@ -65,6 +65,7 @@
     transform: translate(-50%, -50%);
 }
 select, input {
+    background-color: inherit;
     margin-bottom: 0.5rem;
     width: 100%;
     max-width: 550px;
@@ -165,7 +166,6 @@ textarea {
     color: #212121;
     line-height: 1.5;
     letter-spacing: 1.2px;
-
 }
 .price-box {
     position: relative;

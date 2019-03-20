@@ -7,11 +7,15 @@ import location from '../../config/location.json';
 
 import MainView from '../../components/layout/MainView';
 
-import '../../style/match-create.css';
+import '../../style/match-edit.css';
 
-class CreateMatch extends Component {
+class EditMatch extends Component {
     state = {
         user: null,
+        match: [],
+        applicants: [],
+        completedPaymentForApplicants: [],
+        acceptedApplicants: [],
         sports: [
             {
                 category: '축구',
@@ -32,15 +36,15 @@ class CreateMatch extends Component {
         selected_location: [],
         selected_sido: '세종특별자치시',
         selected_sigungu: '',
-        match_date: new Date().toISOString().slice(0,10),
+        match_date: new Date().toISOString().slice(0, 10),
         match_time_type: '2',
-        match_start_time: `${new Date().getHours() + 1}`,
+        match_start_time: `${new Date().getHours() + 1}:00`,
         match_end_time: `${new Date().getHours() + 2}`,
         keyword: '',
         places: [],
         selected_place: [],
         phone: '',
-        contents: '',
+        contents: ''.trim(),
         fee: '',
         deposit_account: '',
         errors: {},
@@ -69,6 +73,9 @@ class CreateMatch extends Component {
                 this.setState({
                     user,
                 });
+                this.getApplicants(user);
+                this.getMatch();
+                this.getMatchLocations();
             } else {
                 this.setState({
                     user: null,
@@ -78,11 +85,90 @@ class CreateMatch extends Component {
         });
     }
 
+    getMatch = () => {
+        const self = this;
+        const { url } = this.props;
+        const params = {
+            id: url.query.id,
+        };
+        axios.get('http://localhost:3333/api/match', {
+            params,
+        })
+        .then((res) => {
+            const match = res.data;
+            self.setState({
+                match,
+                selected_sports_category: match[0].sports_category,
+                selected_sports_type: `${match[0].match_type} : ${match[0].match_type}`,
+                // 이제 location을 db에 insert 할 때 server단에서 예외처리 작업해서 집어 넣을 것.
+                total_guest: match[0].total_guest,
+                selected_location: [],
+                match_date: match[0].start_time.slice(0, 10),
+                match_time_type: `${(new Date(match[0].end_time).getTime() - new Date(match[0].start_time).getTime()) / (3600 * 1000)}`,
+                match_start_time: `${new Date(match[0].start_time).getHours() > 10 ? new Date(match[0].start_time).getHours() : `0${new Date(match[0].start_time).getHours()}`}:${new Date(match[0].start_time).getMinutes() > 10 ? new Date(match[0].start_time).getMinutes() : `0${new Date(match[0].start_time).getMinutes()}`}`,
+                match_end_time: `${new Date(match[0].end_time).getHours() > 10 ? new Date(match[0].end_time).getHours() : `0${new Date(match[0].end_time).getHours()}`}:${new Date(match[0].end_time).getMinutes() > 10 ? new Date(match[0].end_time).getMinutes() : `0${new Date(match[0].end_time).getMinutes()}`}`,
+                selected_place: [
+                    {
+                        address_name: match[0].address,
+                        place_name: match[0].place_name,
+                    },
+                ],
+                phone: match[0].phone,
+                contents: match[0].contents,
+                fee: match[0].match_fee,
+                deposit_account: match[0].host_account,
+            });
+        })
+        .catch((err) => console.log(err));
+    }
+
+    getMatchLocations = () => {
+        const { url } = this.props;
+        const params = {
+            id: url.query.id,
+        };
+        axios.get('http://localhost:3333/api/post/locations', {
+            params,
+        })
+        .then(res => {
+            console.log(res.data);
+            const selected_location = res.data;
+            this.setState({ selected_location, });
+        })
+        .catch((err) => console.log(err));
+    }
+
+    getApplicants = (user) => {
+        const self = this;
+        const { url } = this.props;
+        console.log(user);
+        const params = {
+            uid: user.uid,
+            id: url.query.id,
+        };
+        axios.get('http://localhost:3333/api/match/applicants', {
+            params,
+        })
+        .then((res) => {
+            const applicants = res.data;
+            const completedPaymentForApplicants = applicants.filter(applicant => applicant.payment_status === '결제완료'); // 결제 완료한 신청자
+            const acceptedApplicants = completedPaymentForApplicants.filter(applicant => applicant.applicant_status === '수락') // 수락 된 신청자
+
+            self.setState({
+                applicants: res.data,
+                completedPaymentForApplicants,
+                acceptedApplicants,
+            });
+        })
+        .catch((err) => console.log(err));
+    }
+
     addLocation = (e) => {
         e.preventDefault();
+        const idlocation = this.state.location.data.filter(location => location.sido_name == this.state.selected_sido && location.sigungu_name == this.state.selected_sigungu)[0].idlocation;
         let isAlreadyExistLocation = false;
         this.state.selected_location.forEach(location => {
-            if (location.sido == this.state.selected_sido && location.sigungu == this.state.selected_sigungu) {
+            if (location.sido_name == this.state.selected_sido && location.sigungu == this.state.selected_sigungu) {
                 isAlreadyExistLocation = true;
             }
         });
@@ -90,8 +176,9 @@ class CreateMatch extends Component {
         if (!isAlreadyExistLocation && this.state.selected_location.length < 5) {
             this.setState({
                 selected_location: this.state.selected_location.concat({
-                    sido: this.state.selected_sido,
-                    sigungu: this.state.selected_sigungu
+                    idlocation,
+                    sido_name: this.state.selected_sido,
+                    sigungu_name: this.state.selected_sigungu
                 })
             });
         }
@@ -100,10 +187,10 @@ class CreateMatch extends Component {
     removeLocation = (e) => {
         e.preventDefault();
         const target = e.target;
-        const sido = target.name;
-        const sigungu = target.value;
+        const sido_name = target.name;
+        const sigungu_name = target.value;
 
-        const res = this.state.selected_location.filter(location => location.sido + location.sigungu !== sido + sigungu);
+        const res = this.state.selected_location.filter(location => location.sido_name + location.sigungu_name !== sido_name + sigungu_name);
 
         this.setState({
             selected_location: res,
@@ -150,6 +237,21 @@ class CreateMatch extends Component {
         });
     }
 
+    milisecondsConverter = (time) => { // 01:00
+        console.log(time);
+        const times = time.split(':');
+
+        const hour = times[0] * 60 * 60;
+        const minute = times[1] * 60;
+
+        const res = 1000 * (hour + minute);
+        return res;
+    }
+
+    oneDigitConverter = (oneDigitNumber) => {
+        return oneDigitNumber >= 10 ? oneDigitNumber : `0${oneDigitNumber}`;
+    }
+
     handleChange = (e) => {
         const target = e.target;
         const name = target.name;
@@ -163,8 +265,12 @@ class CreateMatch extends Component {
                 selected_sigungu: this.state.location.data.find(location => e.target.value === location.sido_name).sigungu_name,
             });
         } else if (name === "match_time_type") {
+            const match_time = e.target.value * 3600 * 1000;
+            const match_end_time_hour = (this.milisecondsConverter(this.state.match_start_time) + match_time) / 1000 / 3600;
+            const match_end_time_minute = (match_end_time_hour - Math.floor(match_end_time_hour)) * 60;
+            
             this.setState({
-                match_end_time: +this.state.match_start_time + +e.target.value
+                match_end_time: `${this.oneDigitConverter(Math.floor(match_end_time_hour))}:${this.oneDigitConverter(match_end_time_minute)}`,
             })
         }
     }
@@ -195,12 +301,12 @@ class CreateMatch extends Component {
         } = this.state;
 
 
-        if (!selected_location.length > 0) {
+        if (selected_location.length <= 0) {
             formIsValid = false;
             errors["selected_location"] = "사람들에게 알리고 싶은 지역을 선택하세요.";
         }
 
-        if (!selected_place.length > 0) {
+        if (selected_place.length <= 0) {
             formIsValid = false;
             errors["selected_place"] = "경기장을 입력하고 선택해주세요.";
         }
@@ -210,7 +316,7 @@ class CreateMatch extends Component {
             errors["phone"] = "숫자로 입력하세요.";
         }
 
-        if (!phone.length > 0) {
+        if (phone.length <= 0) {
             formIsValid = false;
             errors["phone"] = "전화번호를 입력하세요.";
         }
@@ -220,12 +326,12 @@ class CreateMatch extends Component {
             errors["fee"] = "숫자로 입력하세요.";
         }
 
-        if (!fee.length > 0) {
+        if (fee.length <= 0) {
             formIsValid = false;
             errors["fee"] = "참가비를 입력하세요.";
         }
 
-        if (!deposit_account.length > 0) {
+        if (deposit_account.length <= 0) {
             formIsValid = false;
             errors["deposit_account"] = "계좌번호를 입력하세요.";
         }
@@ -242,6 +348,7 @@ class CreateMatch extends Component {
         if (this.handleValidation()) {
             const {
                 user,
+                match,
                 selected_sports_category,
                 selected_sports_type,
                 total_guest,
@@ -256,11 +363,13 @@ class CreateMatch extends Component {
                 fee,
                 deposit_account,
             } = this.state;
-    
+            console.log(selected_location);
             const sports_type = selected_sports_type.split(' ')[0];
             
             const data = {
                 uid: user.uid,
+                idpost: match[0].idpost,
+                idmatch: match[0].idmatch,
                 selected_sports_category,
                 selected_sports_type: sports_type,
                 total_guest,
@@ -276,19 +385,11 @@ class CreateMatch extends Component {
                 deposit_account,
             };
     
-            axios.post('http://localhost:3333/api/post/create', {
+            axios.post('http://localhost:3333/api/match/edit', {
                 data,
             })
             .then((res) => {
-                console.log(JSON.stringify(res.data));
-                axios.post('http://localhost:3333/api/match/create', {
-                    data,
-                })
-                .then((res) => {
-                    axios.post('http://localhost:3333/api/post/create/location', {
-                        data,
-                    }).then((res) => Router.push('/'));
-                });
+                console.log(`res.data`, res.data);
             })
             .catch((error) => {
                 console.log(error);
@@ -379,7 +480,7 @@ class CreateMatch extends Component {
                                     name="total_guest"
                                     value={this.state.total_guest}
                                     min="1"
-                                    max={Number(this.state.selected_sports_type.split(" ")[0]) - 1}
+                                    max={this.state.selected_sports_type - 1}
                                 />
                             </div>
                             <div className="section-contents">
@@ -436,13 +537,13 @@ class CreateMatch extends Component {
                                             this.state.selected_location.map(location => {
                                                 return (
                                                     <div className="selected-button">
-                                                        <span>{`${location.sido} ${location.sigungu}`}</span>
+                                                        <span>{`${location.sido_name} ${location.sigungu_name}`}</span>
                                                         {
                                                             this.state.selected_location.length > 0 &&
                                                             <button
                                                                 onClick={this.removeLocation}
-                                                                name={location.sido}
-                                                                value={location.sigungu}
+                                                                name={location.sido_name}
+                                                                value={location.sigungu_name}
                                                             >
                                                                 x
                                                             </button>
@@ -472,7 +573,7 @@ class CreateMatch extends Component {
                                         type="time"
                                         name="match_start_time"
                                         step="1800"
-                                        value={this.state.match_start_time+":00"}
+                                        value={this.state.match_start_time}
                                     />
                                     <label className="radio-label">2시간
                                         <input
@@ -494,7 +595,7 @@ class CreateMatch extends Component {
                                         />
                                         <span className="checkmark"></span>
                                     </label>
-                                <p>{this.state.match_end_time}시 경기 종료</p>
+                                <p>{this.state.match_end_time} 경기 종료</p>
                             </div>
                             <div className="section-contents">
                                 <h3 className="contents-title">경기장</h3>
@@ -560,7 +661,7 @@ class CreateMatch extends Component {
                                     onChange={this.handleChange}
                                     type="tel"
                                     name="phone"
-                                    value={this.state.phone}
+                                    value={this.state.phone.replace(/ /gi, "").replace(/(^02.{0}|^01.{1}|[0-9]{3})([0-9]+)([0-9]{4})/,"$1  $2  $3")}
                                 />
                                 <p className="error-msg">{this.state.errors.phone}</p>
 
@@ -577,7 +678,7 @@ class CreateMatch extends Component {
                                     name="contents"
                                     type="text"
                                     placeholder="참가하시는 분들에게 간단하게 전할 말이나 주의 할 사항을 알려주세요."
-                                    value={this.state.contents}
+                                    value={this.state.contents.trim()}
                                 />
                             </div>
                         </div>
@@ -611,7 +712,7 @@ class CreateMatch extends Component {
                         <div className="button-box">
                             <input
                                 type="submit"
-                                value="경기 생성"
+                                value="수정하기"
                             />
                         </div>
                     </form>
@@ -621,4 +722,4 @@ class CreateMatch extends Component {
     }
 }
 
-export default CreateMatch;
+export default EditMatch;

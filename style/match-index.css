@@ -102,7 +102,7 @@ td {
 }
 .button-box {
     display: flex;
-    justify-content: space-around;
+    justify-content: space-evenly;
     margin-top: 20px;
     width: 100%;
 }
@@ -131,6 +131,28 @@ input[type=submit] {
 .cancel-apply {
     background-color: #9e9e9e;
 }
+
+.edit {
+    background-color: #2196f3;
+    width: 160px;
+    border: none;
+    height: 50px;
+    margin-bottom: 0.5rem;
+}
+.edit>a {
+    font-size: 1rem;
+    color: #fff;
+}
+.edit>a:visited {
+    font-size: 1rem;
+    color: #fff;
+}
+
+input[type=submit].cancel-match, input[type=submit].remove-match {
+    color: #9e9e9e;
+    background-color: inherit;
+}
+
 @media screen and (max-width: 414px) {
     .button-box {
         z-index: 4;

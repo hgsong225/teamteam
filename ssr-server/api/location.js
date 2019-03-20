@@ -18,12 +18,12 @@ router.use(function timeLog(req, res, next) {
 
 router.route('/')
     .get((req, res) => { //location 업데이트
-        connection.query('SELECT * from location', (err, rows) => {
+        const query = `SELECT * FROM location order by sido_code asc, sigungu_name asc;`;
+        connection.query(query, (err, rows) => {
             if (err) throw err;
 
             res.send(rows);
         });
     });
-
 
 module.exports = router;

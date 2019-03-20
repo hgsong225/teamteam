@@ -39,7 +39,7 @@ router.route('/create')
                 (SELECT iduser
                 FROM user
                 WHERE fb_uid = "${uid}"),
-                "용병 모집",
+                "용병모집",
                 "${contents}",
                 NOW(),
                 "teamteam",
@@ -70,7 +70,7 @@ router.route('/create/location')
                 query += `
                 (
                     (SELECT idpost FROM post WHERE user_iduser = (SELECT iduser FROM user WHERE fb_uid = "${uid}")
-                      AND post_type = "용병 모집"
+                      AND post_type = "용병모집"
                       AND contents = "${contents}"
                       ORDER BY create_time DESC limit 1
                       ),
@@ -86,7 +86,7 @@ router.route('/create/location')
                 query += `
                 (
                     (SELECT idpost FROM post WHERE user_iduser = (SELECT iduser FROM user WHERE fb_uid = "${uid}")
-                      AND post_type = "용병 모집"
+                      AND post_type = "용병모집"
                       AND contents = "${contents}"
                       ORDER BY create_time DESC limit 1),
                     (
@@ -153,5 +153,45 @@ router.route('/location')
         res.status(500).json({ error: error.toString() });
     }
   });
+
+router.route('/locations')
+  .get((req, res) => {
+    try {
+        const data = req.query;
+        const query = `select location_idlocation from post_has_location where post_idpost = ${data.id}`;
+
+        /* Begin transaction */
+        connection.beginTransaction((err) => {
+            if (err) { throw err; }
+            connection.query(query, (err, result) => {
+                if (err) { 
+                    connection.rollback(() => { throw err; });
+                }
+                let query2 = `select idlocation, sido_name, sigungu_name from location where idlocation in (`;
+                for (let i = 0; i < result.length; i += 1) {
+                  if (i == result.length - 1) {
+                    query2 += `${result[i].location_idlocation});`;
+                  } else {
+                    query2 += `${result[i].location_idlocation},`;
+                  }
+                }
+                connection.query(query2, (err, result) => {
+                  if (err) { 
+                    connection.rollback(() => { throw err; });
+                  }
+                  connection.commit((err) => {
+                    if (err) { 
+                        connection.rollback(() => { throw err; });
+                    }
+                    console.log('Transaction Complete.');
+                  });
+                  res.send(result);
+                });
+            })
+        });
+    } catch (error) {
+        res.status(500).json({ error: error.toString() });
+    }
+});
 
 module.exports = router;

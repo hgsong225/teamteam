@@ -32,7 +32,7 @@ class Posts extends Component {
             //     desc: '경기에 참여 할 수 있는 제 3자(개인 또는 단체)가 대기중인 게시물입니다.',
             // },
             // {
-            //     name: '용병 모집',
+            //     name: '용병모집',
             //     desc: '경기에 참여 할 수 있는 제 3자(개인 또는 단체)를 모집하는 게시물입니다.',
             // },
             // {
@@ -94,7 +94,6 @@ class Posts extends Component {
     applyMatch = async (e, depositor) => {
         const { user, willBeAppliedMatch } = this.state;
         const { posts } = this.props;
-        console.log('tlqkf', e.target);
         // await this.setState({ depositor, willBeAppliedMatch: selectedMatch, });
         // const state = await this.getState();
         
