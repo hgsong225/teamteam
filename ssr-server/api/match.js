@@ -26,7 +26,7 @@ router.route('/edit')
                 set contents = '${data.contents}', edit_time = NOW()
                 where idpost = ${data.idpost};
             `;
-
+            console.log(data, data.selected_location);
             const matchQuery = `
                 UPDATE \`match\` 
                 SET    host_account = '${data.deposit_account}', 
@@ -36,9 +36,9 @@ router.route('/edit')
                        total_game_capacity = ${data.selected_sports_type * 2}, 
                        total_guest = ${data.total_guest}, 
                        start_time = '${data.match_date} ${data.match_start_time}', 
-                       end_time = '${data.match_date} ${data.match_end_time}'
-                       place_name = '${data.selected_location.place_name}',
-                       address = '${data.selected_location.address_name}'
+                       end_time = '${data.match_date} ${data.match_end_time}',
+                       place_name = '${data.selected_place.place_name}',
+                       address = '${data.selected_place.address_name}'
                 WHERE  post_idpost = ${data.idpost}
                 AND    idmatch = ${data.idmatch};
             `;
@@ -114,7 +114,6 @@ router.route('/')
     .get((req, res) => {
         try {
             const data = req.query;
-            console.log('data', data);
             const query = `
             SELECT * FROM post
             LEFT JOIN \`match\`
@@ -241,7 +240,6 @@ router.route('/applicant/me')
     .get((req, res) => {
         try {
             const data = req.query;
-            console.log(data, 'hey');
             const query = `
             SELECT * FROM match_has_user
                 WHERE user_iduser =
@@ -253,7 +251,6 @@ router.route('/applicant/me')
 
             connection.query(query, (err, rows) => {
                 if (err) throw err;
-                console.log(rows);
                 res.send(rows);
             });
         } catch (error) {
@@ -275,7 +272,6 @@ router.route('/applicants')
     
             connection.query(query, (err, rows) => {
                 if (err) throw err;
-                console.log(`rows`, rows);
                 res.send(rows);
             });
         } catch (error) {
@@ -286,7 +282,6 @@ router.route('/applicants')
         try {
             const data = req.body.data;
             let query = '';
-            console.log('fuck', data);
             
             if (data.cancel !== null) {
                 query = `
@@ -312,8 +307,6 @@ router.route('/applicants')
                 `;
             }
 
-            console.log(query);
-    
             connection.query(query, (err, rows) => {
                 if (err) throw err;
                 res.send(rows);
@@ -349,7 +342,6 @@ router.route('/me')
     .delete((req, res) => {
         try {
             const { idpost } = req.query;
-            console.log(req.query);
             const query = `DELETE FROM post WHERE idpost = '${idpost}'`;
     
             connection.query(query, (err, rows) => {
