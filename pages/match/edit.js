@@ -103,7 +103,7 @@ class EditMatch extends Component {
                 // 이제 location을 db에 insert 할 때 server단에서 예외처리 작업해서 집어 넣을 것.
                 total_guest: match[0].total_guest,
                 selected_location: [],
-                match_date: match[0].start_time.slice(0, 10),
+                match_date: `${new Date(match[0].start_time).getFullYear()}-${this.oneDigitConverter(new Date(match[0].start_time).getMonth() + 1)}-${new Date(match[0].start_time).getDate()}`,
                 match_time_type: `${(new Date(match[0].end_time).getTime() - new Date(match[0].start_time).getTime()) / (3600 * 1000)}`,
                 match_start_time: `${new Date(match[0].start_time).getHours() > 10 ? new Date(match[0].start_time).getHours() : `0${new Date(match[0].start_time).getHours()}`}:${new Date(match[0].start_time).getMinutes() > 10 ? new Date(match[0].start_time).getMinutes() : `0${new Date(match[0].start_time).getMinutes()}`}`,
                 match_end_time: `${new Date(match[0].end_time).getHours() > 10 ? new Date(match[0].end_time).getHours() : `0${new Date(match[0].end_time).getHours()}`}:${new Date(match[0].end_time).getMinutes() > 10 ? new Date(match[0].end_time).getMinutes() : `0${new Date(match[0].end_time).getMinutes()}`}`,
