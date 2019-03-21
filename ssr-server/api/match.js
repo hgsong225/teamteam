@@ -270,14 +270,12 @@ router.route('/applicants')
             LEFT JOIN \`match\` ON post.idpost = \`match\`.post_idpost
             LEFT JOIN match_has_user ON \`match\`.idmatch = match_has_user.match_idmatch
             LEFT JOIN user ON user.iduser = match_has_user.user_iduser
-                WHERE post_idpost = ${data.id} AND match_has_user.user_iduser !=
-                    (SELECT iduser
-                    FROM user
-                    WHERE fb_uid = '${data.uid}');
+                WHERE post_idpost = ${data.id};
             `;
     
             connection.query(query, (err, rows) => {
                 if (err) throw err;
+                console.log(`rows`, rows);
                 res.send(rows);
             });
         } catch (error) {

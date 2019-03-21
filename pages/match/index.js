@@ -76,8 +76,9 @@ class Match extends Component {
         })
         .then(res => {
             const myApplicationInfo = res.data;
+            console.log(`myApplicationInfo`, myApplicationInfo);
             const didIApply = myApplicationInfo.length > 0 && true; // 신청했는지 확인
-            const didICompletedPayment = myApplicationInfo[0].payment_status === '결제완료' && true; // 결제 했는지 확인
+            const didICompletedPayment = (didIApply && myApplicationInfo[0].payment_status === '결제완료') && true; // 결제 했는지 확인
             self.setState({
                 myApplicationInfo,
                 didIApply,
@@ -116,6 +117,7 @@ class Match extends Component {
         const iduser = e.target.name;
         let applicant_status = e.target.value;
         const { match } = this.state;
+        console.log(`applicant_status`, applicant_status);
 
         const cancel = {
             cancel_type: '거절',
@@ -123,8 +125,7 @@ class Match extends Component {
             refund_status: '환불전',
             refund_fee_rate: 1,
         }
-        if (applicant_status = '거절') {
-           applicant_status = '신청취소(거절)'
+        if (applicant_status == '신청취소') {
            cancel.refund_fee = this.state.applicants.filter(applicant => applicant.iduser == iduser)[0].amount_of_payment * cancel.refund_fee_rate;
         }
 
@@ -133,7 +134,7 @@ class Match extends Component {
                 idmatch: match[0].idmatch,
                 iduser: Number(iduser),
                 applicant_status,
-                cancel: applicant_status == '거절' ? null : cancel,
+                cancel: applicant_status == '신청취소' ? cancel : null,
             }
         })
         .then((res) => {
@@ -212,7 +213,7 @@ class Match extends Component {
                                     <p className="notice">{match[0].apply_status}, {match[0].total_guest}명 남음</p>
                                 </div> */}
                                 <div id="intro">
-                                    <p>{match[0].display_name} {this.state.didICompletedPayment === true && match[0].phone}</p>
+                                    <p>{match[0].display_name} {(this.state.didIApply && (this.state.myApplicationInfo[0].applicant_status === '수락' && this.state.didICompletedPayment)) && match[0].phone}</p>
                                     <div>
                                         <p>{match[0].contents}</p>
                                     </div>
@@ -264,22 +265,24 @@ class Match extends Component {
                                         <div className="post-box">
                                             <h3>신청 상태</h3>
                                             <p>신청 상태는 호스트만 볼 수 있습니다. 호스트가 신청자(결제 완료) 수락을 해야 참여 확정됩니다. 반드시 수락/거절 여부를 선택해주세요.</p>
+                                            <p>수락 시 해당 신청자 연락처를 볼 수 있습니다.</p>
                                             {
-                                                (applicants.length > 0 && applicants.filter(applicant => applicant.applicant_status !== '신청취소(거절)').length > 0)
+                                                (applicants.length > 0 && applicants.filter(applicant => applicant.applicant_status !== '신청취소' && applicant.payment_status !== '결제전').length > 0)
                                                 ? <table className="applicants">
                                                     <thead>
                                                         <tr>
-                                                            <th>이름</th>
+                                                            <th>신청자</th>
                                                             <th>신청 일시</th>
-                                                            {/* <th>신청 상태</th> */}
                                                             <th>입금 상태</th>
-                                                            {applicants.filter(applicant => applicant.applicant_status === '결제완료').length > 0 && <th></th>}
+                                                            {/* {applicants.filter(applicant => applicant.applicant_status === '결제완료').length > 0 && <th></th>} */}
+                                                            <th>신청 상태</th>
                                                         </tr>
                                                     </thead>
                                                     <tbody>
                                                     {
                                                         applicants.map((applicant, i) => {
-                                                            return applicant.applicant_status !== '신청취소(거절)' && (
+                                                            if (applicant.reason_for_cancel !== '신청자(신청취소)')
+                                                            return (
                                                                 <tr
                                                                     key={i * 2}
                                                                 >
@@ -288,22 +291,37 @@ class Match extends Component {
                                                                     {/* <td>{applicant.applicant_status}</td> */}
                                                                     <td>{applicant.payment_status}</td>
                                                                     {
-                                                                        // 결제 완료일 경우
-                                                                        applicant.payment_status === '결제완료' &&
+                                                                        // 결제완료, 수락
+                                                                        (applicant.payment_status === '결제완료' && applicant.applicant_status === '수락') &&
+                                                                        <td>
+                                                                            <p>{applicant.applicant_status}</p>
+                                                                            <p>{applicant.phone.replace(/(^02.{0}|^01.{1}|[0-9]{3})([0-9]+)([0-9]{4})/,"$1  $2  $3")}</p>
+                                                                        </td>
+                                                                    }
+                                                                    {
+                                                                        // 결제완료, 신청취소
+                                                                        (applicant.payment_status === '결제완료' && applicant.applicant_status === '신청취소' && applicant.reason_for_cancel === '호스트(신청거절)') &&
+                                                                        <td>{applicant.applicant_status} - {applicant.reason_for_cancel}</td>
+                                                                    }
+                                                                    {
+                                                                        // 결제 완료, 승인대기중
+                                                                        applicant.applicant_status === '승인대기중' &&
                                                                         <td className="response-box">
                                                                             <button
                                                                                 className="allow"
                                                                                 onClick={this.handleApplicant}
                                                                                 name={applicant.user_iduser}
                                                                                 value="수락"
-                                                                                >
-                                                                                    수락
+                                                                                disabled={applicant.payment_status === '결제전' ? true : false}
+                                                                            >
+                                                                                수락
                                                                             </button>
                                                                             <button
                                                                                 className="reject"
                                                                                 onClick={this.handleApplicant}
                                                                                 name={applicant.user_iduser}
-                                                                                value="신청취소(거절)"
+                                                                                value="신청취소"
+                                                                                disabled={applicant.payment_status === '결제전' ? true : false}
                                                                             >
                                                                                 거절
                                                                             </button>

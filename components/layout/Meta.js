@@ -70,6 +70,10 @@ export default () => (
             font-size: .8rem;
             cursor: pointer;
         }
+        button:disabled {
+            color: #bdbdbd;
+            cursor: not-allowed;
+        }
         .mask {
             position: absolute;
             width: 100%;
