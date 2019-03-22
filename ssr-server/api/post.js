@@ -130,6 +130,7 @@ router.route('/location')
                 WHERE sido_name = '${sido_name}'
                 AND sigungu_name = '${sigungu_name}'
                 )
+            AND apply_status ='신청가능'
             ORDER BY create_time DESC;
             `
             : `

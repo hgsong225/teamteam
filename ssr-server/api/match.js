@@ -17,7 +17,158 @@ router.use(function timeLog(req, res, next) {
   next();
 });
 
-router.route('/edit')
+/* prcoessing router */
+router.route('/cancel')
+    .post((req, res) => {
+        try {
+            const data = req.body.data;
+            const matchQuery = `
+                update \`match\`
+                set match_status = '경기취소', apply_status = '신청불가', match_cancel_time = NOW(), match_reason_for_cancel = '개인사정', host_revenue = 0, host_revenue_status = 0
+                where idmatch = ${data.idmatch};
+            `
+            let match_has_userQuery = `
+                update match_has_user
+                set applicant_status = '신청취소', cancel_type = case when cancel_type is NULL then '경기취소' end, cancel_time = case when cancel_type = '경기취소' then NOW() end, reason_for_cancel = case when cancel_type = '경기취소' then '호스트(경기취소)' end,
+            `;
+            let refund_statusQuery = `case `;
+            let refund_fee_rateQuery = `case `;
+            let refund_feeQuery = `case `;
+            let match_has_userLastQuery = `where match_idmatch = ${data.idmatch} and applicant_status != '신청취소';`;
+            
+            for (let i = 0; i < data.applicants.length; i += 1) {
+                if (i !== data.applicants.length - 1) {
+                    refund_feeQuery += `when user_iduser = ${data.applicants[i].iduser} then ${data.applicants[i].amount_of_payment * 1} `;
+                } else {
+                    refund_statusQuery = `case when payment_status = '결제전' then '환불완료' else '환불전' end`
+                    refund_fee_rateQuery = `case when payment_status = '결제전' then 0 else 1 end`
+                    refund_feeQuery += `when user_iduser = ${data.applicants[i].iduser} then ${data.applicants[i].amount_of_payment * 1} end`;
+                }
+            }
+            match_has_userQuery += `refund_status = ${refund_statusQuery}, refund_fee_rate = ${refund_fee_rateQuery}, refund_fee = ${refund_feeQuery} ${match_has_userLastQuery}`;
+
+            console.log(`match_has_userQuery`, match_has_userQuery);
+            
+            /* Begin transaction */
+            connection.beginTransaction((err) => {
+                if (err) { throw err; }
+                connection.query(matchQuery, (err, result) => {
+                    if (err) {
+                        console.log(err);
+                        connection.rollback(() => { throw err; });
+                    }
+                    connection.query(match_has_userQuery, (err, result) => {
+                        if (err) {
+                            console.log(err);
+                            connection.rollback(() => { throw err; });
+                        }
+                        connection.commit((err) => {
+                            if (err) { 
+                                console.log(err);
+                                connection.rollback(() => { throw err; });
+                            }
+                            console.log('Transaction Complete.');
+                            res.send(result);
+                        });
+                    })
+                })
+            })
+        } catch (error) {
+            res.status(500).json({ error: error.toString() });
+        }
+    })
+
+
+
+/* ROUTERS */
+router.route('/')
+    .get((req, res) => {
+        try {
+            const data = req.query;
+            const query = `
+            SELECT * FROM post
+            LEFT JOIN \`match\`
+                ON post.idpost = \`match\`.post_idpost
+            LEFT JOIN user ON user.iduser = post.user_iduser
+                WHERE post_idpost = ${data.id};
+            `;
+
+            connection.query(query, (err, rows) => {
+                if (err) throw err;
+                res.send(rows);
+            });
+        } catch (error) {
+            res.status(500).json({ error: error.toString() });
+        }
+    });
+
+router.route('/create')
+    .post((req, res) => { // 경기 생성하기
+        try {
+            const {
+                uid,
+                selected_sports_category,
+                selected_sports_type,
+                total_guest,
+                match_date,
+                match_start_time,
+                match_end_time,
+                selected_place,
+                contents,
+                fee,
+                deposit_account,
+            } = req.body.data;
+
+            const query = `
+            INSERT INTO \`match\`(
+                post_idpost,
+                sports_category,
+                match_type,
+                match_fee,
+                total_game_capacity,
+                total_guest,
+                start_time,
+                end_time,
+                match_status,
+                apply_status,
+                place_name,
+                address,
+                host_account)
+            VALUES
+            (
+                (SELECT idpost
+                FROM post
+                WHERE user_iduser = (
+                    SELECT iduser FROM user WHERE fb_uid = "${uid}")
+                    AND post_type = "용병 모집"
+                    AND contents = "${contents}"
+                    ORDER BY create_time DESC limit 1
+                ),
+                "${selected_sports_category}",
+                "${selected_sports_type}",
+                "${fee}",
+                "${selected_sports_type * 2}",
+                "${total_guest}",
+                "${match_date} ${match_start_time}:00",
+                "${match_date} ${match_end_time}:00",
+                "경기 전",
+                "신청가능",
+                "${selected_place.place_name}",
+                "${selected_place.address_name}",
+                "${deposit_account}"
+            );
+            `;
+
+            connection.query(query, (err, rows) => {
+                if (err) throw err;
+                res.send(rows);
+            });
+        } catch (error) {
+            res.status(500).json({ error: error.toString() });
+        }
+    });
+
+    router.route('/edit')
     .post((req, res) => {
         try {
             const data = req.body.data;
@@ -105,93 +256,6 @@ router.route('/edit')
                 });
             });
             /* End transaction */
-        } catch (error) {
-            res.status(500).json({ error: error.toString() });
-        }
-    });
-
-router.route('/')
-    .get((req, res) => {
-        try {
-            const data = req.query;
-            const query = `
-            SELECT * FROM post
-            LEFT JOIN \`match\`
-                ON post.idpost = \`match\`.post_idpost
-            LEFT JOIN user ON user.iduser = post.user_iduser
-                WHERE post_idpost = ${data.id};
-            `;
-
-            connection.query(query, (err, rows) => {
-                if (err) throw err;
-                res.send(rows);
-            });
-        } catch (error) {
-            res.status(500).json({ error: error.toString() });
-        }
-    });
-
-router.route('/create')
-    .post((req, res) => { // 경기 생성하기
-        try {
-            const {
-                uid,
-                selected_sports_category,
-                selected_sports_type,
-                total_guest,
-                match_date,
-                match_start_time,
-                match_end_time,
-                selected_place,
-                contents,
-                fee,
-                deposit_account,
-            } = req.body.data;
-
-            const query = `
-            INSERT INTO \`match\`(
-                post_idpost,
-                sports_category,
-                match_type,
-                match_fee,
-                total_game_capacity,
-                total_guest,
-                start_time,
-                end_time,
-                match_status,
-                apply_status,
-                place_name,
-                address,
-                host_account)
-            VALUES
-            (
-                (SELECT idpost
-                FROM post
-                WHERE user_iduser = (
-                    SELECT iduser FROM user WHERE fb_uid = "${uid}")
-                    AND post_type = "용병 모집"
-                    AND contents = "${contents}"
-                    ORDER BY create_time DESC limit 1
-                ),
-                "${selected_sports_category}",
-                "${selected_sports_type}",
-                "${fee}",
-                "${selected_sports_type * 2}",
-                "${total_guest}",
-                "${match_date} ${match_start_time}:00",
-                "${match_date} ${match_end_time}:00",
-                "경기 전",
-                "신청 가능",
-                "${selected_place.place_name}",
-                "${selected_place.address_name}",
-                "${deposit_account}"
-            );
-            `;
-
-            connection.query(query, (err, rows) => {
-                if (err) throw err;
-                res.send(rows);
-            });
         } catch (error) {
             res.status(500).json({ error: error.toString() });
         }

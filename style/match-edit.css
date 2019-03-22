@@ -191,7 +191,7 @@ input[type=submit] {
     outline: none;
     border: none;
 }
-input[type=submit]:hover {
+.edit:hover {
     box-shadow: 0 6px 6px 0 rgba(0,0,0,0.24);
 }
 

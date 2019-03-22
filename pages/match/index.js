@@ -157,8 +157,12 @@ class Match extends Component {
 
     cancelApply = (e) => {
         e.preventDefault();
+        const { match } = this.state;
         console.log(`cancelApply BUTTON 입니다.`, e.target);
         axios.post('http://localhost:3333/api/match/apply/cancel', {
+            data: {
+                idmatch: match[0].idmatch,
+            }
         })
         .then((res) => {
             console.log(res.data);
@@ -168,8 +172,13 @@ class Match extends Component {
 
     cancelMatch = (e) => {
         e.preventDefault();
+        const { match, applicants } = this.state;
         console.log(`cancelMatch BUTTON 입니다.`, e.target);
-        axios.post('http://localhost:3333/api/match/me/cancel', {
+        axios.post('http://localhost:3333/api/match/cancel', {
+            data: {
+                idmatch: match[0].idmatch,
+                applicants,
+            }
         })
         .then((res) => {
             console.log(res.data);
@@ -230,11 +239,11 @@ class Match extends Component {
                                         >
                                             {match[0].address} 
                                         </span>
-                                        <span
+                                        {/* <span
                                             id="copy"
                                             onClick={this.copy}
                                         >
-                                        주소 복사</span>
+                                        주소 복사</span> */}
                                     </div>
                                     <div>
                                         <p className="desc-title">경기 일시</p>
@@ -342,35 +351,34 @@ class Match extends Component {
                         }
                             {
                                 (match.length > 0 && this.state.user !== null) &&
-                                (
-                                    match[0].fb_uid == this.state.user.uid
-                                    ? <div className="button-box">
-                                        {
-                                            (this.state.completedPaymentForApplicants.length > 0 && this.state.acceptedApplicants.length > 0)
-                                            ? <input
-                                                className="cancel-match"
-                                                onClick={this.cancelMatch}
-                                                name={match[0].idmatch}
-                                                type="submit"
-                                                value="경기 취소"
-                                            />
-                                            : <input
-                                                className="remove-match"
-                                                onClick={this.removeMatch}
-                                                name={match[0].idpost}
-                                                type="submit"
-                                                value="경기 삭제"
-                                            />
-                                        }
-                                        <button
-                                            className="edit"
-                                        >
-                                            <Link prefetch href={{ pathname: '/match/edit', query: { id: this.props.url.query.id }}}><a>수정하기</a></Link>
-                                        </button>
-                                    </div>
-                                    // 신청 취소, 신청 상태 보여주기
+                                match[0].match_status !== '경기취소'
+                                    ? match[0].fb_uid == this.state.user.uid
+                                        ? <div className="button-box">
+                                            {
+                                                (this.state.completedPaymentForApplicants.length > 0 && this.state.acceptedApplicants.length > 0)
+                                                ? <input
+                                                    className="cancel-match"
+                                                    onClick={this.cancelMatch}
+                                                    name={match[0].idmatch}
+                                                    type="submit"
+                                                    value="경기 취소"
+                                                />
+                                                : <input
+                                                    className="remove-match"
+                                                    onClick={this.removeMatch}
+                                                    name={match[0].idpost}
+                                                    type="submit"
+                                                    value="경기 삭제"
+                                                />
+                                            }
+                                            <button
+                                                className="edit"
+                                            >
+                                                <Link prefetch href={{ pathname: '/match/edit', query: { id: this.props.url.query.id }}}><a>수정하기</a></Link>
+                                            </button>
+                                        </div>
                                     : (
-                                        !this.state.didIApply || this.state.myApplicationInfo[0].applicant_status === '신청취소(거절)'
+                                        !this.state.didIApply || this.state.myApplicationInfo[0].applicant_status === '신청취소'
                                         ? <div className="button-box">
                                             <input
                                                 className="apply"
@@ -387,8 +395,8 @@ class Match extends Component {
                                                 type="submit"
                                             />
                                         </div>
-                                    )
-                                )
+                                        )
+                                : <p className="canceld-match">취소된 경기입니다.</p>
                             }
                     </div>
                 </Layout>

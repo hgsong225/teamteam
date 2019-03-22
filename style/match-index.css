@@ -106,6 +106,10 @@ td {
     margin-top: 20px;
     width: 100%;
 }
+.canceld-match {
+    color: #bdbdbd;
+    text-align: center;
+}
 input[type=submit] {
     width: 160px;
     color: #fff;

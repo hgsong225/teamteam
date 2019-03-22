@@ -193,7 +193,7 @@ class Me extends Component {
                                                                 >
                                                                     <p className="applicant-status">{post.applicant_status}</p>
                                                                     {
-                                                                        post.applicant_status !== '신청취소(거절)'
+                                                                        post.applicant_status !== '신청취소'
                                                                         && <p
                                                                             className="cancel-apply"
                                                                             onClick={this.handleRemove}
