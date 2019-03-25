@@ -144,15 +144,49 @@ class Match extends Component {
         .catch((err) => console.log(err));
     }
 
-    applyMatch = (e) => {
+    handlePrompt = (e) => {
+        let depositor = prompt('입금자명을 입력하세요.');
+        console.log(depositor);
+        if (depositor == null) {
+            e.preventDefault();
+            alert('신청 취소');
+            return; 
+        }
+        if (depositor.length !== 0) {
+            if (confirm(`입금자명: '${depositor}' 님이 맞습니까? \n입금자명을 잘 확인해주세요.`)) {
+                e.preventDefault();
+                this.applyMatch(e, depositor);
+            } else {
+                e.preventDefault();
+                return alert('신청 취소');
+            }
+        } else {
+            return this.handlePrompt(e);
+        }
+    }
+
+    applyMatch = (e, depositor) => {
         e.preventDefault();
         console.log('applyMatch BUTTON입니다.', e.target);
-        axios.post('http://localhost:3333/api/match/apply', {
-        })
-        .then((res) => {
-            console.log(res.data);
-        })
-        .catch((err) => console.log(err));
+        if (this.state.user !== null && e.target.name !== undefined) {
+            const data = {
+                idmatch: this.state.match[0].idmatch,
+                uid: this.state.user.uid,
+                depositor,
+                match_has_user_fee: this.state.match[0].match_fee,
+            }
+    
+            axios.post('http://localhost:3333/api/match/apply', {
+                data,
+            })
+            .then((res) => {
+                console.log(res.data);
+                alert('신청 완료');
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+        }
     }
 
     cancelApply = (e) => {
@@ -262,7 +296,7 @@ class Match extends Component {
                                         <p className="info">신한 110-439-532672 팀팀</p>
                                         <p>- 입금자 순으로 신청 확정됩니다.</p>
                                         <p>- 신청자 당일 경기 취소시 환불은 불가합니다.</p>
-                                        <p>- 호스트 경기 취소 또는 신청자 거절시 결제 금액은 100% 환불합니다.</p>
+                                        <p>- 호스트의 경기 취소 또는 신청자 거절시 결제 금액은 100% 환불합니다.</p>
                                         <p>- 입금 확인 후 프로필에 등록하신 연락처로 경기 안내가 발송됩니다.</p>
                                         <p>- 입금 확인 후 경기 주최자의 연락처가 공개됩니다.</p>
                                     </div>
@@ -382,7 +416,7 @@ class Match extends Component {
                                         ? <div className="button-box">
                                             <input
                                                 className="apply"
-                                                onClick={this.applyMatch}
+                                                onClick={this.handlePrompt}
                                                 value="신청하기"
                                                 type="submit"
                                             />
@@ -396,7 +430,7 @@ class Match extends Component {
                                             />
                                         </div>
                                         )
-                                : <p className="canceld-match">취소된 경기입니다.</p>
+                                : <p className="canceld-match">호스트에의해 취소된 경기입니다. 결제한 금액은 취소시점 이후 24시간 내에 100% 환불됩니다.</p>
                             }
                     </div>
                 </Layout>

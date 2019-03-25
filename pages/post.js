@@ -1,5 +1,8 @@
 import React, { Component } from 'react';
+import Router from 'next/router';
 import axios from 'axios';
+
+import fb from '../config/firebase';
 
 import Layout from '../components/layout/Layout';
 import Posts from '../components/smart/post/Posts';
@@ -12,16 +15,18 @@ class Post extends Component {
     }
 
     state = {
+        user: null,
         selectedLocation: {},
         posts: [],
     }
-
+    
     componentDidMount() {
         console.log('post.js 에서 componentDidMount 실행');
         const selectedLocation = {
             sido_name: this.props.url.query.location,
             sigungu_name: this.props.url.query.sigungu,
         };
+        this.authListener();
         this.selectLocation(selectedLocation);
     }
 
@@ -31,6 +36,21 @@ class Post extends Component {
                 return false;
         }
         return true;
+    }
+
+    authListener = () => {
+        fb.auth().onAuthStateChanged((user) => {
+            if (user) {
+                this.setState({
+                    user,
+                });
+            } else {
+                this.setState({
+                    user: null,
+                });
+                Router.push('/sign-in');
+            }
+        });
     }
 
     getState = async () => {
@@ -82,7 +102,7 @@ class Post extends Component {
 
     render() {
         console.log('post.js에서 render() 실행');
-        const { selectedLocation, posts } = this.state;
+        const { user, selectedLocation, posts, myMatch, myApplicationMatch } = this.state;
         const { url } = this.props;
         console.log('url', url);
 
@@ -93,6 +113,7 @@ class Post extends Component {
             >
                 <Posts 
                     url={url}
+                    user={user}
                     selectedLocation={selectedLocation}
                     posts={posts}
                 />

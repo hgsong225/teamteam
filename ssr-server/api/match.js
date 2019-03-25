@@ -18,67 +18,14 @@ router.use(function timeLog(req, res, next) {
 });
 
 /* prcoessing router */
-router.route('/cancel')
-    .post((req, res) => {
-        try {
-            const data = req.body.data;
-            const matchQuery = `
-                update \`match\`
-                set match_status = '경기취소', apply_status = '신청불가', match_cancel_time = NOW(), match_reason_for_cancel = '개인사정', host_revenue = 0, host_revenue_status = 0
-                where idmatch = ${data.idmatch};
-            `
-            let match_has_userQuery = `
-                update match_has_user
-                set applicant_status = '신청취소', cancel_type = case when cancel_type is NULL then '경기취소' end, cancel_time = case when cancel_type = '경기취소' then NOW() end, reason_for_cancel = case when cancel_type = '경기취소' then '호스트(경기취소)' end,
-            `;
-            let refund_statusQuery = `case `;
-            let refund_fee_rateQuery = `case `;
-            let refund_feeQuery = `case `;
-            let match_has_userLastQuery = `where match_idmatch = ${data.idmatch} and applicant_status != '신청취소';`;
-            
-            for (let i = 0; i < data.applicants.length; i += 1) {
-                if (i !== data.applicants.length - 1) {
-                    refund_feeQuery += `when user_iduser = ${data.applicants[i].iduser} then ${data.applicants[i].amount_of_payment * 1} `;
-                } else {
-                    refund_statusQuery = `case when payment_status = '결제전' then '환불완료' else '환불전' end`
-                    refund_fee_rateQuery = `case when payment_status = '결제전' then 0 else 1 end`
-                    refund_feeQuery += `when user_iduser = ${data.applicants[i].iduser} then ${data.applicants[i].amount_of_payment * 1} end`;
-                }
-            }
-            match_has_userQuery += `refund_status = ${refund_statusQuery}, refund_fee_rate = ${refund_fee_rateQuery}, refund_fee = ${refund_feeQuery} ${match_has_userLastQuery}`;
-
-            console.log(`match_has_userQuery`, match_has_userQuery);
-            
-            /* Begin transaction */
-            connection.beginTransaction((err) => {
-                if (err) { throw err; }
-                connection.query(matchQuery, (err, result) => {
-                    if (err) {
-                        console.log(err);
-                        connection.rollback(() => { throw err; });
-                    }
-                    connection.query(match_has_userQuery, (err, result) => {
-                        if (err) {
-                            console.log(err);
-                            connection.rollback(() => { throw err; });
-                        }
-                        connection.commit((err) => {
-                            if (err) { 
-                                console.log(err);
-                                connection.rollback(() => { throw err; });
-                            }
-                            console.log('Transaction Complete.');
-                            res.send(result);
-                        });
-                    })
-                })
-            })
-        } catch (error) {
-            res.status(500).json({ error: error.toString() });
-        }
+router.route('/test')
+    .get((req, res) => {
+        const query = `select * from match_has_user left join \`match\` on \`match\`.idmatch = match_has_user.match_idmatch where match_idmatch = 2 and user_iduser = 3`;
+        connection.query(query, (err, rows) => {
+            if (err) throw err;
+            res.send(rows)
+        })
     })
-
-
 
 /* ROUTERS */
 router.route('/')
@@ -261,10 +208,72 @@ router.route('/create')
         }
     });
 
+    // 매치 취소
+    router.route('/cancel')
+    .post((req, res) => {
+        try {
+            const data = req.body.data;
+            const matchQuery = `
+                update \`match\`
+                set match_status = '경기취소', apply_status = '신청불가', match_cancel_time = NOW(), match_reason_for_cancel = '개인사정', host_revenue = 0, host_revenue_status = 0
+                where idmatch = ${data.idmatch};
+            `
+            let match_has_userQuery = `
+                update match_has_user
+                set applicant_status = '신청취소', cancel_type = case when cancel_type is NULL then '경기취소' end, cancel_time = case when cancel_type = '경기취소' then NOW() end, reason_for_cancel = case when cancel_type = '경기취소' then '호스트(경기취소)' end,
+            `;
+            let refund_statusQuery = `case `;
+            let refund_fee_rateQuery = `case `;
+            let refund_feeQuery = `case `;
+            let match_has_userLastQuery = `where match_idmatch = ${data.idmatch} and applicant_status != '신청취소';`;
+            
+            for (let i = 0; i < data.applicants.length; i += 1) {
+                if (i !== data.applicants.length - 1) {
+                    refund_feeQuery += `when user_iduser = ${data.applicants[i].iduser} then ${data.applicants[i].amount_of_payment * 1} `;
+                } else {
+                    refund_statusQuery = `case when payment_status = '결제전' then '환불완료' else '환불전' end`
+                    refund_fee_rateQuery = `case when payment_status = '결제전' then 0 else 1 end`
+                    refund_feeQuery += `when user_iduser = ${data.applicants[i].iduser} then ${data.applicants[i].amount_of_payment * 1} end`;
+                }
+            }
+            match_has_userQuery += `refund_status = ${refund_statusQuery}, refund_fee_rate = ${refund_fee_rateQuery}, refund_fee = ${refund_feeQuery} ${match_has_userLastQuery}`;
+
+            console.log(`match_has_userQuery`, match_has_userQuery);
+            
+            /* Begin transaction */
+            connection.beginTransaction((err) => {
+                if (err) { throw err; }
+                connection.query(matchQuery, (err, result) => {
+                    if (err) {
+                        console.log(err);
+                        connection.rollback(() => { throw err; });
+                    }
+                    connection.query(match_has_userQuery, (err, result) => {
+                        if (err) {
+                            console.log(err);
+                            connection.rollback(() => { throw err; });
+                        }
+                        connection.commit((err) => {
+                            if (err) { 
+                                console.log(err);
+                                connection.rollback(() => { throw err; });
+                            }
+                            console.log('Transaction Complete.');
+                            res.send(result);
+                        });
+                    })
+                })
+            })
+        } catch (error) {
+            res.status(500).json({ error: error.toString() });
+        }
+    })
+
 router.route('/apply')
     .post((req, res) => { // 매치 신청
         try {
             const data = req.body.data;
+            console.log('DATA', data);
             const commission_rate = 0.2;
             const commission = data.match_has_user_fee * commission_rate;
             const query = `
@@ -294,6 +303,78 @@ router.route('/apply')
             connection.query(query, (err, rows) => {
                 if (err) throw err;
                 res.send(rows);
+            });
+        } catch (error) {
+            res.status(500).json({ error: error.toString() });
+        }
+    });
+
+router.route('/apply/cancel')
+    .post((req, res) => { // 게스트 매치 신청 취소
+        try {
+            const data = req.body.data;
+            let test = {
+                uid: 'XqWVweCL4lVF9rDyEnJIkqvZY382',
+                match_idmatch: 2,
+            }
+            const query1 = `
+                select * from match_has_user
+                left join \`match\` on \`match\`.idmatch = match_has_user.match_idmatch
+                where match_idmatch = ${data.match_idmatch}
+                and user_iduser = (select iduser from user where fb_uid = '${data.uid}');
+            `;
+
+            connection.beginTransaction((err) => {
+                if (err) { throw err; }
+                connection.query(query1, (err, rows) => {
+                    if (err) {
+                        connection.rollback(() => { throw err; });
+                    }
+                    const { start_time, end_time, apply_time, cancel_time } = rows[0];
+                    const timeDiff = (new Date(start_time).getTime() - new Date().getTime()) / 1000;
+
+                    let query2 = ``;
+                    // 24시간 넘었는지 확인
+                    if (timeDiff > 86400) {
+                        query2 = `
+                            update match_has_user
+                            set applicant_status = '신청취소',
+                                cancel_time = NOW(),
+                                cancel_type = '신청취소',
+                                reason_for_cancel = '게스트(신청취소)',
+                                refund_status = case when payment_status = '결제전' then '환불완료' when payment_status = '결제완료' then '환불완료' end,
+                                refund_fee_rate = case when payment_status = '결제전' then 0 when payment_status = '결제완료' then 0 end,
+                                refund_fee = case when payment_status = '결제전' then 0 when payment_status = '결제완료' then 0 * ${rows[0].amount_of_payment} end
+                            where user_iduser = (select iduser from user where fb_uid = '${data.uid}')
+                        `;
+                    }
+                    if (timeDiff <= 86400 && timeDiff > 0) {
+                        query2 = `
+                            update match_has_user
+                            set applicant_status = '신청취소',
+                                cancel_time = NOW(),
+                                cancel_type = '신청취소',
+                                reason_for_cancel = '게스트(신청취소)',
+                                refund_status = case when payment_status = '결제전' then '환불완료' when payment_status = '결제완료' then '환불전' end,
+                                refund_fee_rate = case when payment_status = '결제전' then 0 when payment_status = '결제완료' then 1 end,
+                                refund_fee = case when payment_status = '결제전' then 0 when payment_status = '결제완료' then 1 * ${rows[0].amount_of_payment} end
+                            where user_iduser = (select iduser from user where fb_uid = '${data.uid}')
+                        `;
+                    }
+                    connection.query(query2, (err, rows) => {
+                        if (err) {
+                            connection.rollback(() => { throw err; });
+                        }
+                        connection.commit((err) => {
+                            if (err) { 
+                                console.log(err);
+                                connection.rollback(() => { throw err; });
+                            }
+                            console.log('Transaction Complete.');
+                            res.send(rows);
+                        });
+                    })
+                });
             });
         } catch (error) {
             res.status(500).json({ error: error.toString() });
@@ -382,7 +463,7 @@ router.route('/applicants')
 
     
 router.route('/me')
-    .get((req, res) => { // 내 모든 경기 불러오기 (생성, 신청한 경기 등 모두)
+    .get((req, res) => { // 내가 생성한 경기 불러오기 (생성한)
         try {
             const data = req.query;
             const query = `SELECT * FROM post
@@ -418,7 +499,7 @@ router.route('/me')
     });
 
 router.route('/me/apply')
-    .get((req, res) => { // 내가 신청한 경기 불러오기
+    .get((req, res) => { // 내가 신청한 경기만 불러오기
         try {
             const data = req.query;
             const query = `SELECT * FROM post

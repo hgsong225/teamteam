@@ -113,6 +113,7 @@ router.route('/location')
   .get((req, res) => {
     try {
         const data = req.query;
+        console.log(data);
         const sido_name = data.sido_name;
         const sigungu_name = data.sigungu_name;
         const query = sigungu_name
@@ -148,7 +149,9 @@ router.route('/location')
 
         connection.query(query, (err, rows) => {
             if (err) throw err;
+            console.log('ROWS', rows);
             res.send(rows);
+            
         });
     } catch (error) {
         res.status(500).json({ error: error.toString() });
