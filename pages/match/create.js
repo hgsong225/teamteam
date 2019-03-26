@@ -275,25 +275,13 @@ class CreateMatch extends Component {
                 fee,
                 deposit_account,
             };
-            axios.post('http://localhost:3333/api/match/test', {
+            axios.post('http://localhost:3333/api/match/create', {
                 data,
             })
-            // axios.post('http://localhost:3333/api/post/create', {
-            //     data,
-            // })
-            // .then((res) => {
-            //     console.log(JSON.stringify(res.data));
-            //     axios.post('http://localhost:3333/api/match/create', {
-            //         data,
-            //     })
-            //     .then((res) => {
-            //         axios.post('http://localhost:3333/api/post/create/location', {
-            //             data,
-            //         }).then((res) => Router.push('/'));
-            //     });
-            // })
             .then((res) => {
                 console.log(res);
+                const idpost = res.data.idpost;
+                Router.push(`/match?id=${idpost}`);
             })
             .catch((error) => {
                 console.log(error);

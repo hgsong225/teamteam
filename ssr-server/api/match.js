@@ -18,7 +18,31 @@ router.use(function timeLog(req, res, next) {
 });
 
 /* prcoessing router */
-router.route('/test')
+
+
+/* ROUTERS */
+router.route('/')
+    .get((req, res) => {
+        try {
+            const data = req.query;
+            const query = `
+            SELECT * FROM post
+            LEFT JOIN \`match\`
+                ON post.idpost = \`match\`.post_idpost
+            LEFT JOIN user ON user.iduser = post.user_iduser
+                WHERE post_idpost = ${data.id};
+            `;
+
+            connection.query(query, (err, rows) => {
+                if (err) throw err;
+                res.send(rows);
+            });
+        } catch (error) {
+            res.status(500).json({ error: error.toString() });
+        }
+    });
+
+    router.route('/create')
     .post((req, res) => { // 경기 생성하기
         try {
             const {
@@ -148,101 +172,12 @@ router.route('/test')
                                     }
                                     console.log('Transactio Completed');
                                 })
-                                res.sned(rows); 
+                                res.send({ idpost, });
                             });
                         })
                     });
                 });
             })
-        } catch (error) {
-            res.status(500).json({ error: error.toString() });
-        }
-    });
-
-/* ROUTERS */
-router.route('/')
-    .get((req, res) => {
-        try {
-            const data = req.query;
-            const query = `
-            SELECT * FROM post
-            LEFT JOIN \`match\`
-                ON post.idpost = \`match\`.post_idpost
-            LEFT JOIN user ON user.iduser = post.user_iduser
-                WHERE post_idpost = ${data.id};
-            `;
-
-            connection.query(query, (err, rows) => {
-                if (err) throw err;
-                res.send(rows);
-            });
-        } catch (error) {
-            res.status(500).json({ error: error.toString() });
-        }
-    });
-
-router.route('/create')
-    .post((req, res) => { // 경기 생성하기
-        try {
-            const {
-                uid,
-                selected_location,
-                selected_sports_category,
-                selected_sports_type,
-                total_guest,
-                match_date,
-                match_start_time,
-                match_end_time,
-                selected_place,
-                contents,
-                fee,
-                deposit_account,
-            } = req.body.data;
-
-            const query = `
-            INSERT INTO \`match\`(
-                post_idpost,
-                sports_category,
-                match_type,
-                match_fee,
-                total_game_capacity,
-                total_guest,
-                start_time,
-                end_time,
-                match_status,
-                apply_status,
-                place_name,
-                address,
-                host_account)
-            VALUES
-            (
-                (SELECT idpost
-                FROM post
-                WHERE user_iduser = (
-                    SELECT iduser FROM user WHERE fb_uid = "${uid}")
-                    AND post_type = "용병 모집"
-                    AND contents = "${contents}"
-                    ORDER BY create_time DESC limit 1
-                ),
-                "${selected_sports_category}",
-                "${selected_sports_type}",
-                "${fee}",
-                "${selected_sports_type * 2}",
-                "${total_guest}",
-                "${match_date} ${match_start_time}:00",
-                "${match_date} ${match_end_time}:00",
-                "경기 전",
-                "신청가능",
-                "${selected_place.place_name}",
-                "${selected_place.address_name}",
-                "${deposit_account}"
-            );
-            `;
-
-            connection.query(query, (err, rows) => {
-                if (err) throw err;
-                res.send(rows);
-            });
         } catch (error) {
             res.status(500).json({ error: error.toString() });
         }
@@ -547,7 +482,8 @@ router.route('/applicants')
             LEFT JOIN \`match\` ON post.idpost = \`match\`.post_idpost
             LEFT JOIN match_has_user ON \`match\`.idmatch = match_has_user.match_idmatch
             LEFT JOIN user ON user.iduser = match_has_user.user_iduser
-                WHERE post_idpost = ${data.id};
+                WHERE post_idpost = ${data.id}
+                and match_has_user.user_iduser is not null;
             `;
     
             connection.query(query, (err, rows) => {

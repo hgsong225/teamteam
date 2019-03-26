@@ -70,6 +70,9 @@ class PostList extends Component {
                         margin-bottom: 1rem;
                         align-items: center;
                     }
+                    .match:hover {
+                        border: 1px solid #bbdefb;
+                    }
                     .match_date {
                         margin-top: 2rem;
                         font-size: 1.2rem;

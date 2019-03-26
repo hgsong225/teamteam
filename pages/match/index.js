@@ -243,7 +243,7 @@ class Match extends Component {
 
     render() {
         const { match, applicants } = this.state;
-        
+        console.log('applicants:', this.state.applicants);
         return (
                 <Layout user={this.state.user}>
                     <style jsx>{`
@@ -311,7 +311,7 @@ class Match extends Component {
                                             <p>신청 상태는 호스트만 볼 수 있습니다. 호스트가 신청자(결제 완료) 수락을 해야 참여 확정됩니다. 반드시 수락/거절 여부를 선택해주세요.</p>
                                             <p>수락 시 해당 신청자 연락처를 볼 수 있습니다.</p>
                                             {
-                                                (applicants.length > 0 && applicants.filter(applicant => (applicant.applicant_status !== '신청취소')).length > 0)
+                                                (applicants.length > 0 && applicants.filter(applicant => {console.log(applicant); return applicant.applicant_status !== '신청취소' }).length > 0)
                                                 ? <table className="applicants">
                                                     <thead>
                                                         <tr>
