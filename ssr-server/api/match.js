@@ -19,13 +19,145 @@ router.use(function timeLog(req, res, next) {
 
 /* prcoessing router */
 router.route('/test')
-    .get((req, res) => {
-        const query = `select * from match_has_user left join \`match\` on \`match\`.idmatch = match_has_user.match_idmatch where match_idmatch = 2 and user_iduser = 3`;
-        connection.query(query, (err, rows) => {
-            if (err) throw err;
-            res.send(rows)
-        })
-    })
+    .post((req, res) => { // 경기 생성하기
+        try {
+            const {
+                uid,
+                selected_location,
+                selected_sports_category,
+                selected_sports_type,
+                total_guest,
+                match_date,
+                match_start_time,
+                match_end_time,
+                selected_place,
+                contents,
+                fee,
+                deposit_account,
+            } = req.body.data;
+
+            let postQuery = `
+            INSERT INTO \`post\` (user_iduser, post_type, contents, create_time, source, url)
+            VALUES (
+                    (SELECT iduser
+                    FROM user
+                    WHERE fb_uid = "${uid}"),
+                    "용병모집",
+                    "${contents}",
+                    NOW(),
+                    "teamteam",
+                    "http://www.teamteam.co");
+            `;
+
+            let post_has_locationQuery = `INSERT INTO \`post_has_location\` (post_idpost, location_idlocation) VALUES `;
+            
+            connection.beginTransaction((err) => {
+                if (err) throw err;
+                
+                connection.query(postQuery, (err, rows) => {
+                    if (err) {
+                        console.log(err);
+                        connection.rollback(() => { throw err; });
+                    }
+                    const selectIdpost = `
+                    SELECT idpost FROM post WHERE user_iduser = (SELECT iduser FROM user WHERE fb_uid = "${uid}")
+                                    AND post_type = "용병모집"
+                                    AND contents = "${contents}"
+                                    ORDER BY create_time DESC limit 1
+                    `;
+                    connection.query(selectIdpost, (err, rows) => {
+                        if (err) {
+                            connection.rollback(() => { throw err; });
+                        }
+                        const idpost = rows[0].idpost;
+                        console.log(`idpost`, idpost);
+                        const matchQuery = `
+                        INSERT INTO \`match\`(
+                            post_idpost,
+                            sports_category,
+                            match_type,
+                            match_fee,
+                            total_game_capacity,
+                            total_guest,
+                            start_time,
+                            end_time,
+                            match_status,
+                            apply_status,
+                            place_name,
+                            address,
+                            host_account)
+                        VALUES
+                        (
+                            ${idpost},
+                            "${selected_sports_category}",
+                            "${selected_sports_type}",
+                            "${fee}",
+                            "${selected_sports_type * 2}",
+                            "${total_guest}",
+                            "${match_date} ${match_start_time}:00",
+                            "${match_date} ${match_end_time}:00",
+                            "경기 전",
+                            "신청가능",
+                            "${selected_place.place_name}",
+                            "${selected_place.address_name}",
+                            "${deposit_account}"
+                        );
+                        `;
+                        connection.query(matchQuery, (err, rows) => {
+                            if (err) {
+                                console.log(err);
+                                connection.rollback(() => { throw err; })
+                            }
+                            console.log(`rows`, rows);
+                            for (let i = 0; i < selected_location.length; i += 1) {
+                                if (i == selected_location.length - 1) {
+                                    post_has_locationQuery += `
+                                    (
+                                        ${idpost},
+                                        (
+                                            SELECT idlocation
+                                            FROM location
+                                            WHERE sido_name = "${selected_location[i].sido}"
+                                            AND sigungu_name = "${selected_location[i].sigungu}"
+                                        )
+                                    )
+                                    `;
+                                } else {
+                                    post_has_locationQuery += `
+                                    (
+                                        ${idpost},
+                                        (
+                                            SELECT idlocation
+                                            FROM location
+                                            WHERE sido_name = "${selected_location[i].sido}"
+                                            AND sigungu_name = "${selected_location[i].sigungu}"
+                                        )
+                                    ),
+                                    `;
+                                }
+                            }
+    
+                            connection.query(post_has_locationQuery, (err, rows) => {
+                                if (err) {
+                                    connection.rollback(() => { throw err; });
+                                }
+                                
+                                connection.commit((err) => {
+                                    if (err) {
+                                        connection.rollback(() => {throw err; });
+                                    }
+                                    console.log('Transactio Completed');
+                                })
+                                res.sned(rows); 
+                            });
+                        })
+                    });
+                });
+            })
+        } catch (error) {
+            res.status(500).json({ error: error.toString() });
+        }
+    });
 
 /* ROUTERS */
 router.route('/')
@@ -54,6 +186,7 @@ router.route('/create')
         try {
             const {
                 uid,
+                selected_location,
                 selected_sports_category,
                 selected_sports_type,
                 total_guest,
