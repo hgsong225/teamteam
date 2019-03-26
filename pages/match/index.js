@@ -191,10 +191,11 @@ class Match extends Component {
 
     cancelApply = (e) => {
         e.preventDefault();
-        const { match } = this.state;
+        const { user, match } = this.state;
         console.log(`cancelApply BUTTON 입니다.`, e.target);
         axios.post('http://localhost:3333/api/match/apply/cancel', {
             data: {
+                uid: user.uid,
                 idmatch: match[0].idmatch,
             }
         })
@@ -310,7 +311,7 @@ class Match extends Component {
                                             <p>신청 상태는 호스트만 볼 수 있습니다. 호스트가 신청자(결제 완료) 수락을 해야 참여 확정됩니다. 반드시 수락/거절 여부를 선택해주세요.</p>
                                             <p>수락 시 해당 신청자 연락처를 볼 수 있습니다.</p>
                                             {
-                                                (applicants.length > 0 && applicants.filter(applicant => applicant.applicant_status !== '신청취소' && applicant.payment_status !== '결제전').length > 0)
+                                                (applicants.length > 0 && applicants.filter(applicant => (applicant.applicant_status !== '신청취소')).length > 0)
                                                 ? <table className="applicants">
                                                     <thead>
                                                         <tr>
@@ -324,7 +325,7 @@ class Match extends Component {
                                                     <tbody>
                                                     {
                                                         applicants.map((applicant, i) => {
-                                                            if (applicant.reason_for_cancel !== '신청자(신청취소)')
+                                                            if (applicant.applicant_status !== '신청취소')
                                                             return (
                                                                 <tr
                                                                     key={i * 2}

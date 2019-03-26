@@ -313,6 +313,7 @@ router.route('/apply/cancel')
     .post((req, res) => { // 게스트 매치 신청 취소
         try {
             const data = req.body.data;
+            console.log(`data`, data);
             let test = {
                 uid: 'XqWVweCL4lVF9rDyEnJIkqvZY382',
                 match_idmatch: 2,
@@ -320,7 +321,7 @@ router.route('/apply/cancel')
             const query1 = `
                 select * from match_has_user
                 left join \`match\` on \`match\`.idmatch = match_has_user.match_idmatch
-                where match_idmatch = ${data.match_idmatch}
+                where match_idmatch = ${data.idmatch}
                 and user_iduser = (select iduser from user where fb_uid = '${data.uid}');
             `;
 
@@ -330,6 +331,7 @@ router.route('/apply/cancel')
                     if (err) {
                         connection.rollback(() => { throw err; });
                     }
+                    console.log('rows', rows);
                     const { start_time, end_time, apply_time, cancel_time } = rows[0];
                     const timeDiff = (new Date(start_time).getTime() - new Date().getTime()) / 1000;
 

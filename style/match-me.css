@@ -25,6 +25,9 @@ ul {
     border-radius: 4px;
     margin-bottom: 1rem;
 }
+.match:hover {
+    border: 1px solid #bbdefb;
+}
 .match-time {
     display: flex;
     flex-direction: column;

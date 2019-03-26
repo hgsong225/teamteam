@@ -90,8 +90,21 @@ class Me extends Component {
         })
     }
 
-    handleCancleApply = (e) => { // 신청 취소 버튼
-
+    cancelApply = (e) => {
+        e.preventDefault();
+        const { user } = this.state;
+        const idmatch = e.target.getAttribute('value');
+        axios.post('http://localhost:3333/api/match/apply/cancel', {
+            data: {
+                uid: user.uid,
+                idmatch,
+            }
+        })
+        .then((res) => {
+            console.log(res.data);
+            e.preventDefulat();
+        })
+        .catch((err) => console.log(err));
     }
 
     handleEdit = (e) => { // 경기 수정 버튼
@@ -101,7 +114,7 @@ class Me extends Component {
     handleRemove = (e) => { // 유저가 나인지 정확히 확인 할 것
         e.preventDefault();
         const { posts } = this.state;
-        const idpost = e.target.getAttribute('name');
+        const idpost = e.target.getAttribute('value');
         const params = {
             idpost,
         };
@@ -183,7 +196,7 @@ class Me extends Component {
                                                         <div className="match-place">
                                                             <p className="place">{post.place_name}</p>
                                                             <p className="match-type">
-                                                            <span className="">{post.sports_category}</span> {post.match_type} : {post.match_type}, <span>{post.total_guest}명 모집 중</span></p>
+                                                            <span className="">{post.sports_category}</span> {post.match_type} : {post.match_type}</p>
                                                         </div>
                                                         {
                                                             post.apply_time !== undefined
@@ -196,10 +209,10 @@ class Me extends Component {
                                                                         post.applicant_status !== '신청취소'
                                                                         && <p
                                                                             className="cancel-apply"
-                                                                            onClick={this.handleRemove}
-                                                                            name={post.idpost}
+                                                                            onClick={this.cancelApply}
+                                                                            name="신청취소"
                                                                             type="submit"
-                                                                            value="신청 취소"
+                                                                            value={post.idmatch}
                                                                             style={{ width: "100%" }}
                                                                         >신청 취소</p>
                                                                     }
@@ -218,9 +231,9 @@ class Me extends Component {
                                                                     <p
                                                                         className="remove-match"
                                                                         onClick={this.handleRemove}
-                                                                        name={post.idpost}
+                                                                        name="삭제"
                                                                         type="submit"
-                                                                        value="삭제"
+                                                                        value={post.idpost}
                                                                     >삭제</p>
                                                             </div>
                                                         }
