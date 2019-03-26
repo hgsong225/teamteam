@@ -66,9 +66,56 @@ router.route('/location')
 
         connection.query(query, (err, rows) => {
             if (err) throw err;
-            console.log('ROWS', rows);
-            res.send(rows);
-            
+            const result = rows.reduce((total, {
+              match_idmatch,
+              apply_time,
+              depositor,
+              bank_account,
+              phone,
+              match_has_user_fee,
+              applicant_status,
+              amount_of_payment,
+              payment_status,
+              payment_method,
+              payment_time,
+              cancel_type,
+              cancel_time,
+              reason_for_cancel,
+              commission_rate,
+              commission,
+              refund_status,
+              refund_fee_rate,
+              refund_fee,
+              ...data
+            }) => {
+              if (!total[data.idpost]) {
+                total[data.idpost] = data;
+                total[data.idpost].match_has_users = [];
+              }
+              total[data.idpost].match_has_users.push({
+                match_idmatch,
+                apply_time,
+                depositor,
+                bank_account,
+                phone,
+                match_has_user_fee,
+                applicant_status,
+                amount_of_payment,
+                payment_status,
+                payment_method,
+                payment_time,
+                cancel_type,
+                cancel_time,
+                reason_for_cancel,
+                commission_rate,
+                commission,
+                refund_status,
+                refund_fee_rate,
+                refund_fee,
+              });
+              return total;
+            }, {});
+            res.send(Object.values(result));
         });
     } catch (error) {
         res.status(500).json({ error: error.toString() });

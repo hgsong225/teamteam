@@ -27,6 +27,18 @@ class Match extends Component {
     componentDidMount() {
         console.log('컴포넌트디드마운트 실행 in match');
         this.authListener();
+        const script = document.createElement("script");
+        document.body.appendChild(script);
+        // script.onload = () => {
+        //     setTimeout(() => {
+        //         const places = daum && new daum.maps.services.Places();
+        //         console.log(places);
+        //         this.setState({ places });
+        //     }, 10000);
+        // };
+        script.src = "//dapi.kakao.com/v2/maps/sdk.js?appkey=7aa07991d231ab8c2de8a2ca3feca8e6&autoload=false&libraries=services";
+        script.async = true;
+        document.body.appendChild(script);
     }
 
     authListener() {
@@ -56,9 +68,13 @@ class Match extends Component {
             params,
         })
         .then((res) => {
+            const match = res.data;
             self.setState({
-                match: res.data,
+                match,
             });
+            const lat = match[0].place_latitude;
+            const lon = match[0].place_longtitude;
+            this.drawMap(lat, lon);
         })
         .catch((err) => console.log(err));
     }
@@ -241,6 +257,19 @@ class Match extends Component {
         }
     }
 
+    drawMap = (lat, lon) => {
+        const { match } = this.state;
+        const container = document.getElementById('map');
+        daum.maps.load(() => {
+            const options = {
+                center: new daum.maps.LatLng(lon, lat),
+                level: 3
+            };
+    
+            const map = new daum.maps.Map(container, options);
+        });
+    }
+
     render() {
         const { match, applicants } = this.state;
         console.log('applicants:', this.state.applicants);
@@ -256,6 +285,7 @@ class Match extends Component {
                                 {/* <div className="notice-box">
                                     <p className="notice">{match[0].apply_status}, {match[0].total_guest}명 남음</p>
                                 </div> */}
+                                <div id="map" style={{width: "500px", height: "400px"}}></div>
                                 <div id="intro">
                                     <p>{match[0].display_name} {(this.state.didIApply && (this.state.myApplicationInfo[0].applicant_status === '수락' && this.state.didICompletedPayment)) && match[0].phone}</p>
                                     <div>

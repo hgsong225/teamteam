@@ -390,6 +390,8 @@ class EditMatch extends Component {
             })
             .then((res) => {
                 console.log(`res.data`, res.data);
+                alert('수정했습니다.');
+                Router.push(`/match?id=${match[0].idpost}`)
             })
             .catch((error) => {
                 console.log(error);
@@ -418,7 +420,7 @@ class EditMatch extends Component {
                             max-width: 550px;
                         }
                     `}</style>
-                    <p className="page-title">빠르게 경기를 생성해 팀팀 게스트를 초대하세요!</p>
+                    <p className="page-title">경기 수정</p>
                     <form
                         onSubmit={this.handleSubmit}
                     >

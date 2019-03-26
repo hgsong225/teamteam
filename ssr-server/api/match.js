@@ -109,6 +109,8 @@ router.route('/')
                             apply_status,
                             place_name,
                             address,
+                            place_latitude,
+                            place_longtitude,
                             host_account)
                         VALUES
                         (
@@ -124,6 +126,8 @@ router.route('/')
                             "신청가능",
                             "${selected_place.place_name}",
                             "${selected_place.address_name}",
+                            "${selected_place.x}",
+                            "${selected_place.y}",
                             "${deposit_account}"
                         );
                         `;

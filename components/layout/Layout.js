@@ -94,7 +94,7 @@ class Layout extends Component {
                             z-index: 999;
                             transform: translateX(-304px);
                             box-shadow: 0 0 16px rgba(0,0,0,.28);
-                            transition: transform 1s ease-out;
+                            transition: transform .5s ease-out;
                         }
                     }
                     @media screen and (max-width: 992px) {
@@ -103,7 +103,7 @@ class Layout extends Component {
                             margin-top: 0;
                             transform: translateX(-304px);
                             box-shadow: 0 0 16px rgba(0,0,0,.28);
-                            transition: transform 1s ease-out;
+                            transition: transform .5s ease-out;
                         }
                         .sidebar-left-container.toggle {
                             transform: translateX(0px);
