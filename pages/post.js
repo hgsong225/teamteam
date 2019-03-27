@@ -41,8 +41,21 @@ class Post extends Component {
     authListener = () => {
         fb.auth().onAuthStateChanged((user) => {
             if (user) {
-                this.setState({
-                    user,
+                const params = {
+                    uid: user.uid,
+                }
+                axios.get('http://localhost:3333/api/auth/user', {
+                    params,
+                })
+                .then((res) => {
+                    const data = res.data;
+                    user['data'] = data;
+                    this.setState({
+                        user,
+                    });
+                })
+                .catch((error) => {
+                    console.log(error);
                 });
             } else {
                 this.setState({

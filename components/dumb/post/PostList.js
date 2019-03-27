@@ -5,6 +5,7 @@ class PostList extends Component {
     static defaultProps = {
         applyMatch: () => {},
         depositor: '',
+        user: null,
         posts: [],
         postList: [],
         selectedFilter: '전체',
@@ -155,7 +156,7 @@ class PostList extends Component {
                 `}</style>
                 <ul>
                     {
-                        posts ? posts.sort(this.dateAscending).map(
+                        posts.length > 0 ? posts.sort(this.dateAscending).map(
                             (post, i) => {
                                 if (selectedFilter == '전체' && post.idmatch != null) {
                                     const start_year = new Date(post.start_time).getFullYear();
@@ -191,19 +192,51 @@ class PostList extends Component {
                                                         </div>
                                                         <div className="match-apply">
                                                             {
-                                                                post.applicant_status != null
-                                                                ? post.applicant_status
-                                                                : // 신청 상태, 취소
-                                                                    <button
-                                                                        className="match-apply-button"
-                                                                        onClick={this.handlePrompt}
-                                                                        name={post.idmatch}
-                                                                        type="submit"
-                                                                        value="신청하기"
-                                                                    >
-                                                                        <p className="apply">신청하기</p>
-                                                                        <p className="price">{post.match_fee}원</p>
-                                                                    </button>
+                                                                // 신청하기 (로그인유저)
+                                                                this.props.user !== null
+                                                                && (post.hostID !== this.props.user.data[0].iduser && (post.match_has_users === undefined || post.match_has_users.filter(match_has_user => match_has_user.iduser === this.props.user.data[0].iduser && match_has_user.applicant_status !== '신청취소').length < 1))
+                                                                    && <button
+                                                                            className="match-apply-button"
+                                                                            onClick={this.handlePrompt}
+                                                                            name={post.idmatch}
+                                                                            type="submit"
+                                                                            value="신청하기"
+                                                                        >
+                                                                            <p className="apply">신청하기</p>
+                                                                            <p className="price">{post.match_fee}원</p>
+                                                                        </button>
+                                                            }
+                                                            {
+                                                                // 내가 만든 경기
+                                                                this.props.user !== null
+                                                                && (post.hostID === this.props.user.data[0].iduser)
+                                                                    && <button
+                                                                            className="match-edit-button"
+                                                                            onClick={this.handlePrompt}
+                                                                            name={post.idmatch}
+                                                                            type="submit"
+                                                                            value="수정"
+                                                                        >
+                                                                            <p className="apply">경기 수정</p>
+                                                                        </button>
+                                                            }
+                                                            {
+                                                                // 내가 신청한 경기
+                                                                this.props.user !== null
+                                                                && (post.match_has_users.filter(match_has_user => match_has_user.iduser === this.props.user.data[0].iduser && match_has_user.applicant_status !== '신청취소').length > 0)
+                                                                    && <button
+                                                                            className="match-apply-cancel-button"
+                                                                            onClick={this.handlePrompt}
+                                                                            name={post.idmatch}
+                                                                            type="submit"
+                                                                            value="신청취소"
+                                                                        >
+                                                                            <p className="apply">신청취소</p>
+                                                                        </button>
+                                                            }
+                                                            {
+                                                                // 신청하기 (비로그인유저)
+                                                                this.props.user === null && <p>신청하기(비로그인)</p>
                                                             }
                                                         </div>
                                                     </div>

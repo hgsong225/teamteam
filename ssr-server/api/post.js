@@ -35,12 +35,12 @@ router.route('/location')
         const sigungu_name = data.sigungu_name;
         const query = sigungu_name
             ? `
-            SELECT * FROM post
-            LEFT JOIN \`match\` ON post.idpost = \`match\`.post_idpost
+            SELECT *, p.user_iduser as hostID FROM post p
+            LEFT JOIN \`match\` ON p.idpost = \`match\`.post_idpost
             LEFT JOIN match_has_user ON \`match\`.idmatch = match_has_user.match_idmatch
             LEFT JOIN user ON user.iduser = match_has_user.user_iduser
             LEFT JOIN post_has_location
-            ON post.idpost = post_has_location.post_idpost
+            ON p.idpost = post_has_location.post_idpost
             WHERE location_idlocation =
                 (
                 SELECT idlocation
@@ -52,8 +52,8 @@ router.route('/location')
             ORDER BY create_time DESC;
             `
             : `
-            SELECT * FROM post
-            LEFT JOIN \`match\` ON post.idpost = \`match\`.post_idpost
+            SELECT *, p.user_iduser as hostID FROM post p
+            LEFT JOIN \`match\` ON p.idpost = \`match\`.post_idpost
             LEFT JOIN post_has_location
             ON idpost = post_idpost
             LEFT JOIN
@@ -67,11 +67,21 @@ router.route('/location')
         connection.query(query, (err, rows) => {
             if (err) throw err;
             const result = rows.reduce((total, {
+              iduser,
+              fb_uid,
+              phone,
+              bod,
+              height,
+              weight,
+              name,
+              display_name,
+              introduction,
+              gender,
+              email,
               match_idmatch,
               apply_time,
               depositor,
               bank_account,
-              phone,
               match_has_user_fee,
               applicant_status,
               amount_of_payment,
@@ -93,11 +103,21 @@ router.route('/location')
                 total[data.idpost].match_has_users = [];
               }
               total[data.idpost].match_has_users.push({
+                iduser,
+                fb_uid,
+                phone,
+                bod,
+                height,
+                weight,
+                name,
+                display_name,
+                introduction,
+                gender,
+                email,
                 match_idmatch,
                 apply_time,
                 depositor,
                 bank_account,
-                phone,
                 match_has_user_fee,
                 applicant_status,
                 amount_of_payment,

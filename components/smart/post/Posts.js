@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import axios from 'axios';
+import Router from 'next/router';
 const querystring = require('querystring');
 
 import fb from '../../../config/firebase';
@@ -9,6 +10,7 @@ import PostFilter from '../../dumb/post/PostFilter';
 
 class Posts extends Component {
     static defaultProps = {
+        user: null,
         selectedLocation: {},
     }
 
@@ -47,24 +49,9 @@ class Posts extends Component {
         renderFilterList: [],
     }
 
-    authListener = () => {
-        fb.auth().onAuthStateChanged((user) => {
-            if (user) {
-                this.setState({
-                    user,
-                });
-            } else {
-                this.setState({
-                    user: null,
-                });
-            }
-        });
-    }
-
     componentDidMount() {
         const { selectedLocation } = this.props;
         console.log('Posts에서 componentDidMount 실행');
-        this.authListener();
     }
 
     handleFilter = (e) => {
@@ -92,11 +79,13 @@ class Posts extends Component {
     }
 
     applyMatch = async (e, depositor) => {
-        const { user, willBeAppliedMatch } = this.state;
-        const { posts } = this.props;
-        // await this.setState({ depositor, willBeAppliedMatch: selectedMatch, });
-        // const state = await this.getState();
+        const { user, posts } = this.props;
         
+        if (user === null) {
+            return Router.push('/sign-in')
+        }
+
+        console.log(user, e.target, depositor);
         if (user !== null && e.target.name !== undefined) {
             const idmatch = e.target.name;
             const selectedMatch = posts.filter(post => post.idmatch == idmatch);
@@ -165,6 +154,7 @@ class Posts extends Component {
                             <PostList
                                 renderPosts={this.renderPosts}
                                 applyMatch={this.applyMatch}
+                                user={this.props.user}
                                 posts={this.props.posts}
                                 postList={postList}
                                 selectedFilter={selectedFilter}
