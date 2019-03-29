@@ -41,7 +41,8 @@ router.route('/user')
                 phone,
                 display_name
             } = req.body.data;
-            const query = `INSERT INTO user (fb_uid, name, email, phone, display_name) VALUES ('${fb_uid}', '${name}', ${email}', '${phone}', '${display_name}')`;
+            console.log(req.body.data);
+            const query = `INSERT INTO user (fb_uid, name, email, phone, display_name) VALUES ('${fb_uid}', '${name}', '${email}', '${phone}', '${display_name}')`;
     
             connection.query(query, (err, rows) => {
                 if (err) throw err;
