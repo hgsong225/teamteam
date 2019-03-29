@@ -45,7 +45,7 @@ class Profile extends Component {
                     uid: user.uid,
                 };
                 axios.get('http://localhost:3333/api/auth/user', {
-                    params,
+                    params, 
                 })
                 .then(res => {
                     const data = res.data[0];

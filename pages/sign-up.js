@@ -176,7 +176,7 @@ class SignUp extends Component {
                     displayName: firstDisplayName,
                 }).then(res => {
                     const data = {
-                        fb_uid: user.uid,
+                        fb_uid: user.user.uid,
                         name: this.state.name,
                         email,
                         phone: this.state.phone,
@@ -186,7 +186,7 @@ class SignUp extends Component {
                         data,
                     })
                     .then((res) => {
-                        Router.push('/');
+                        // Router.push('/');
                     })
                     .catch((error) => {
                         console.log(error);

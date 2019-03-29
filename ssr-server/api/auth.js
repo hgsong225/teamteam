@@ -26,6 +26,7 @@ router.route('/user')
 
             connection.query(query, (err, rows) => {
                 if (err) throw err;
+                console.log(rows);
                 res.send(rows);
             });
         } catch (error) {
