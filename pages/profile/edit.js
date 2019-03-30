@@ -105,9 +105,12 @@ class Settings extends Component {
     }
 
     handleChange = (e) => {
-        let user = {...this.state.user};
+        let user = { ...this.state.user };
         user[e.target.name] = e.target.value;
 
+        if (e.target.name === 'displayName') {
+            user[e.target.name] = e.target.value.replace(/ /gi, ""); ;
+        }
         this.setState({
             user,
         });

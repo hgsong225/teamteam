@@ -17,6 +17,10 @@
     border-radius: 4px;
 }
 
+.profile-section a:visited {
+    color: #212121;
+}
+
 .profile-section-title {
     margin-top: 1rem;
     margin-bottom: 1rem;
