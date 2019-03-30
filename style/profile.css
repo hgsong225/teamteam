@@ -1,0 +1,42 @@
+.profile-container {
+    margin-left: 16px;
+    margin-right: 16px;
+    max-width: 550px;
+}
+
+.profile-title {
+    margin-top: 3rem;
+    margin-bottom: 3rem;
+    font-size: 2rem;
+}
+
+.profile-section {
+    margin-bottom: 1rem;
+    padding: 1rem;
+    border: 1px solid #eeeeee;
+    border-radius: 4px;
+}
+
+.profile-section-title {
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    font-size: 1.2rem;
+}
+
+.profile-section-contents {}
+
+.profile-content-definition {
+    display: flex;
+    justify-content: space-between;
+}
+
+.definition-word {
+    color: #757575;
+}
+
+.definition-word-desc {
+    display: none;
+    margin: 0;
+    color: #2196f3;
+    font-size: 0.8rem;
+}

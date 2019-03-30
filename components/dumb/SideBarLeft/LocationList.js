@@ -92,13 +92,17 @@ class LocationList extends Component {
                         expanded={selectedLocation.sido_name == location.sido_name && true}
                     >
                         <AccordionItemTitle>
-                            <Link
-                                href={{ pathname: '/post', query: { location: location.sido_name }}}
-                            >
-                                <a
-                                    onClick={this.selectSido}
-                                >{location.sido_name}</a>
-                            </Link>
+                            {
+                                location.sido_name === '세종특별자치시' ?
+                                <Link
+                                    href={{ pathname: '/post', query: { location: location.sido_name }}}
+                                >
+                                    <a
+                                        onClick={this.selectSido}
+                                    >{location.sido_name}</a>
+                                </Link>
+                                : <a>{location.sido_name}</a>
+                            }
                             {
                                 location.sigungus.map((sigungu, j) => {
                                     if (sigungu.sigungu_name !== "" && sigungu.sigungu_name !== "null") {

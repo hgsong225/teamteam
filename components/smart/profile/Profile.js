@@ -5,8 +5,6 @@ import axios from 'axios';
 
 import fb from '../../../config/firebase';
 
-import MainView from '../../layout/MainView';
-
 class Profile extends Component {
     state = {
         user: {
@@ -59,6 +57,13 @@ class Profile extends Component {
                             photoURL,
                             providerId,
                             uid: user.uid,
+                            bod: data.bod,
+                            gender: data.gender,
+                            height: data.height,
+                            weight: data.weight,
+                            iduser: data.iduser,
+                            introduction: data.introduction,
+                            name: data.name
                         }
                     });
                 })
@@ -76,35 +81,60 @@ class Profile extends Component {
     }
 
     render() {
-        const { displayName, email, emailVerified, phoneNumber, photoURL, providerId } = this.state.user;
+        const { name, bod, gender, height, weight, introduction, displayName, email, emailVerified, phoneNumber, photoURL, providerId } = this.state.user;
 
         return (
-            <MainView>
-                    <h1>
+            <div className="profile-container">
+                <p className="profile-title">
                     {
                         displayName
                         ? `${displayName}님 반갑습니다!`
                         : '반갑습니다!'
                     }
-                    </h1>
-                    <div>
-                    <h3>기본 정보</h3>
-                    <p>{!photoURL && '사진 없음'}</p>
-                    <p>{!displayName && '이름을 설정해주세요.'}</p>
-                    <p>{emailVerified ? email : `${email} 인증 필요`}</p>
-                    <p>{phoneNumber && phoneNumber}</p>
+                </p>
+                <p className="profile-section-title">프로필</p>
+                <div className="profile-section">
+                    <div className="profile-section-contents">
+                        <div className="profile-content-definition">
+                           <p className="definition-word">이름</p>
+                           <p>{name}</p>
+                        </div>
+                        <div className="profile-content-definition-container">
+                            <div className="profile-content-definition">
+                               <p className="definition-word">email</p>
+                               <p>{emailVerified ? email : `${email}`}</p>
+                            </div>
+                            <p className="definition-word-desc">
+                                설명
+                            </p>
+                        </div>
+                        <div className="profile-content-definition">
+                            <p className="definition-word">phone</p>
+                            <p>{phoneNumber && phoneNumber}</p>
+                        </div>
+                        <div className="profile-content-definition">
+                            <p className="definition-word">생일</p>
+                            <p>{bod ? bod : '-'}</p>
+                        </div>
+                        <div className="profile-content-definition">
+                            <p className="definition-word">성별</p>
+                            <p>{gender ? gender : '-'}</p>
+                        </div>
+                    </div>
                 </div>
-                <div>
-                    <Link href='settings'><a>설정</a></Link>
+                <div className="profile-section">
+                    <Link href='settings'><a>프로필 수정</a></Link>
                 </div>
-                <Link
+                <div className="profile-section">
+                    <Link
                     href='/'
-                >
+                    >
                     <a
                         onClick={this.signOut}
                     >로그아웃</a>
                 </Link>
-            </MainView>
+                </div>
+            </div>
         );
     }
 }

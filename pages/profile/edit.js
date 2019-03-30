@@ -115,14 +115,13 @@ class Settings extends Component {
 
     render() {
         return (
-            <div>
-                <Header />
-                <header>teamteam Settings</header>
+            <MainView>
+                {/* <header>teamteam Settings</header>
                 <main>
                     <form
                         onSubmit={this.handleSubmit}
                         ref={this.completeEdit}
-                    >
+                        >
                         <label>
                             닉네임
                         </label>
@@ -133,19 +132,18 @@ class Settings extends Component {
                             type="text"
                             name="displayName"
                             maxLength="16"
-                        />
+                            />
                         <div>
                             <button>완료</button>
                         </div>
                     </form>
                     <button
                         onClick={this.deleteUser}
-                    >
+                        >
                         계정 지우기
                     </button>
-                </main>
-            </div>
-    
+                </main> */}
+            </MainView>
         );
     }
 }
