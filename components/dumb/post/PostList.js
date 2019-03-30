@@ -67,7 +67,7 @@ class PostList extends Component {
                         width: 100%;
                         height: 5rem;
                         padding: 6px 0;
-                        background-color: #f1f1f1;
+                        background-color: #eeeeee;
                         margin-bottom: 1rem;
                         align-items: center;
                     }

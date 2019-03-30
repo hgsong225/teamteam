@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import Router from 'next/router';
 import Link from 'next/link';
 import axios from 'axios';
+import moment from 'moment';
 
 import fb from '../../config/firebase';
 import Layout from '../../components/layout/Layout';
@@ -143,6 +144,20 @@ class Me extends Component {
         });
       }
 
+    convertDay = (day) => {
+        const dayOfTheWeek = {
+            Sunday: '일',
+            Monday: '월',
+            Tuesday: '화',
+            Wednesday: '수',
+            Thursday: '목',
+            Friday: '금',
+            Saturday: '토'
+        };
+
+        return dayOfTheWeek[day];
+    }
+
     render() {
         console.log(this.state.posts);
         return (
@@ -181,11 +196,11 @@ class Me extends Component {
                                                     ? true
                                                     :
                                                     <h3 className="match_date">
-                                                        {post.start_time.slice(5, 7)}월 {post.start_time.slice(8, 10)}일
+                                                        {`${moment.parseZone(post.start_time).local().format('MM월 DD일')} ${this.convertDay(moment.parseZone(post.start_time).local().format('dddd'))}요일`}
                                                     </h3>
                                                 }
                                                 <Link
-                                                        prefetch    
+                                                        prefetch
                                                         href={{ pathname: '/match', query: { id: post.idpost }}}
                                                 >
                                                     <div className="match">
@@ -207,7 +222,7 @@ class Me extends Component {
                                                                     <p className="applicant-status">{post.applicant_status}</p>
                                                                     {
                                                                         post.applicant_status !== '신청취소'
-                                                                        && <p
+                                                                        ? <p
                                                                             className="cancel-apply"
                                                                             onClick={this.cancelApply}
                                                                             name="신청취소"
@@ -215,6 +230,7 @@ class Me extends Component {
                                                                             value={post.idmatch}
                                                                             style={{ width: "100%" }}
                                                                         >신청 취소</p>
+                                                                        : <p className="applicant-status">{post.reason_for_cancel}</p>
                                                                     }
                                                                 </div>
                                                             :
@@ -239,6 +255,35 @@ class Me extends Component {
                                                         }
                                                     </div>
                                                 </Link>
+                                                {
+                                                    post.applicant_status === '신청취소'
+                                                    && <div className="cancel_contents_container">
+                                                            <div className="cancel_contents">
+                                                                <p>신청일시</p><p>{moment.parseZone(post.apply_time).local().format('YYYY-MM-DD HH:mm:ss')}</p>
+                                                            </div>
+                                                            <div className="cancel_contents">
+                                                                <p>결제금액</p><p>{post.amount_of_payment === null ? 0 : post.amount_of_payment}</p>
+                                                            </div>
+                                                            <div className="cancel_contents">
+                                                                <p>결제일시</p><p>{post.payment_time !== null ? moment.parseZone(post.payment_time).local().format('YYYY-MM-DD HH:mm:ss') : '-'}</p>
+                                                            </div>
+                                                            <div className="cancel_contents">
+                                                                <p>취소일시</p><p>{moment.parseZone(post.cancel_time).local().format('YYYY-MM-DD HH:mm:ss')}</p>
+                                                            </div>
+                                                            <div className="cancel_contents">
+                                                                <p>취소사유</p><p>{post.reason_for_cancel}</p>
+                                                            </div>
+                                                            <div className="cancel_contents">
+                                                                <p>환불상태</p><p>{post.refund_status}</p>
+                                                            </div>
+                                                            <div className="cancel_contents">
+                                                                <p>환불금액</p><p>{post.refund_fee}</p>
+                                                            </div>
+                                                            <div className="cancel_contents">
+                                                                <p>환불계좌</p><p>{post.bank_account}</p>
+                                                            </div>
+                                                        </div>
+                                                }
                                             </li>
                                         );
                                     }
