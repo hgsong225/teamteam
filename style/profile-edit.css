@@ -1,0 +1,79 @@
+select, input {
+    background-color: inherit;
+    margin-bottom: 0.5rem;
+    width: 100%;
+    max-width: 550px;
+    height: 50px;
+    font-size: 1rem;
+    color: #212121;
+    padding: 10px;
+    border: 1px solid #e0e0e0;
+    border-radius: 4px;
+}
+input {
+    box-sizing: border-box;
+    letter-spacing: 1.2px;
+}
+
+.profile-edit-container {
+    margin-left: 16px;
+    margin-right: 16px;
+    max-width: 550px;
+}
+
+.profile-edit-title {
+    margin-top: 3rem;
+    margin-bottom: 3rem;
+    font-size: 2rem;
+}
+
+.profile-edit-section {
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+}
+
+.profile-edit-form-container {
+    margin-bottom: 1rem;
+    padding: 1rem;
+    border: 1px solid #eeeeee;
+    border-radius: 4px;
+}
+
+.profile-edit-form-section {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+}
+
+.profile-edit-form-section>input,  .profile-edit-form-section>select {
+    width: 50%;
+}
+
+.definition-word {
+    color: #757575;
+}
+
+button[type=submit] {
+    padding: 8px 40px;
+    width: 160px;
+    height: 50px;
+    text-decoration: none;
+    border: none;
+    background-color: #2196f3;
+    font-size: 1rem;
+    color: #fff;
+    cursor: pointer;
+    outline: none;
+}
+button[type=submit]:hover {
+    box-shadow: 0 6px 6px 0 rgba(0,0,0,0.24);
+}
+
+.button-section {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    margin-top: 2rem;
+}

@@ -27,6 +27,7 @@ router.route('/user')
             connection.query(query, (err, rows) => {
                 if (err) throw err;
                 console.log(rows);
+                rows[0].gender = rows[0].gender === 'm' ? '남자' : '여자';
                 res.send(rows);
             });
         } catch (error) {
@@ -44,6 +45,52 @@ router.route('/user')
             } = req.body.data;
             console.log(req.body.data);
             const query = `INSERT INTO user (fb_uid, name, email, phone, display_name) VALUES ('${fb_uid}', '${name}', '${email}', '${phone}', '${display_name}')`;
+    
+            connection.query(query, (err, rows) => {
+                if (err) throw err;
+                res.send(rows);
+            });
+        } catch (error) {
+            res.status(500).json({ error: error.toString() });
+        }
+    })
+    .put((req, res) => {
+        try {
+            const {
+                displayName,
+                email,
+                phoneNumber,
+                bod,
+                gender,
+                height,
+                weight,
+                iduser,
+                introduction,
+                name,
+            } = req.body.data;
+            console.log(req.body.data);
+
+            nullCheck = (data) => {
+                if (data === null || data === 'null') {
+                    return null
+                }
+                return `'${data}'`;
+            }
+
+            const query = `
+                update \`user\`
+                set
+                    display_name = '${displayName}',
+                    email = '${email}',
+                    phone = '${phoneNumber}',
+                    bod = ${nullCheck(bod)},
+                    gender = ${nullCheck(gender)},
+                    height = ${height},
+                    weight = ${weight},
+                    introduction = ${nullCheck(introduction)},
+                    name = '${name}'
+                where iduser = ${iduser};
+            `;
     
             connection.query(query, (err, rows) => {
                 if (err) throw err;

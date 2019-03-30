@@ -2,7 +2,7 @@
 import React, { Component } from 'react';
 
 import fb from '../config/firebase';
-import Header from '../components/layout/Header';
+import MainView from '../components/layout/MainView';
 
 import '../style/settings.css';
 
@@ -115,20 +115,20 @@ class Settings extends Component {
 
     render() {
         return (
-            <div>
-                <Header />
-                <header>
-                    <h1>설정</h1>
-                </header>
-                <main>
-                    <button
-                        onClick={this.deleteUser}
-                    >
-                        계정 지우기
-                    </button>
-                </main>
-            </div>
-    
+            <MainView>
+                <div className="">
+                    <header>
+                        <h1>계정 관리</h1>
+                    </header>
+                    <main>
+                        <button
+                            onClick={this.deleteUser}
+                        >
+                            계정 지우기
+                        </button>
+                    </main>
+                </div>
+            </MainView>
         );
     }
 }

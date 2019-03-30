@@ -57,6 +57,15 @@ export default () => (
             text-decoration: none;
         }
 
+        input[type=number]::-webkit-inner-spin-button, 
+        input[type=number]::-webkit-outer-spin-button { 
+          -webkit-appearance: none; 
+          margin: 0; 
+        }
+        textarea:disabled, input:disabled {
+            background-color: rgb(235, 235, 228);
+        }
+
         button {
             -webkit-transition: all 200ms cubic-bezier(0.390, 0.500, 0.150, 1.360);
             -moz-transition: all 200ms cubic-bezier(0.390, 0.500, 0.150, 1.360);

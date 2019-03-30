@@ -186,7 +186,7 @@ class SignUp extends Component {
                         data,
                     })
                     .then((res) => {
-                        // Router.push('/');
+                        Router.push('/');
                     })
                     .catch((error) => {
                         console.log(error);

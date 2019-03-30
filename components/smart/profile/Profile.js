@@ -85,55 +85,60 @@ class Profile extends Component {
 
         return (
             <div className="profile-container">
-                <p className="profile-title">
+                <header className="profile-title">
                     {
                         displayName
                         ? `${displayName}님 반갑습니다!`
                         : '반갑습니다!'
                     }
-                </p>
+                </header>
                 <p className="profile-section-title">프로필</p>
-                <div className="profile-section">
-                    <div className="profile-section-contents">
-                        <div className="profile-content-definition">
-                           <p className="definition-word">이름</p>
-                           <p>{name}</p>
-                        </div>
-                        <div className="profile-content-definition-container">
+                <main>
+                    <section className="profile-section">
+                        <div className="profile-section-contents">
                             <div className="profile-content-definition">
-                               <p className="definition-word">email</p>
-                               <p>{emailVerified ? email : `${email}`}</p>
+                               <p className="definition-word">이름</p>
+                               <p>{name}</p>
                             </div>
-                            <p className="definition-word-desc">
-                                설명
-                            </p>
+                            <div className="profile-content-definition-container">
+                                <div className="profile-content-definition">
+                                   <p className="definition-word">email</p>
+                                   <p>{emailVerified ? email : `${email}`}</p>
+                                </div>
+                                <p className="definition-word-desc">
+                                    설명
+                                </p>
+                            </div>
+                            <div className="profile-content-definition">
+                                <p className="definition-word">phone</p>
+                                <p>{phoneNumber && phoneNumber}</p>
+                            </div>
+                            <div className="profile-content-definition">
+                                <p className="definition-word">생일</p>
+                                <p>{bod ? bod : '-'}</p>
+                            </div>
+                            <div className="profile-content-definition">
+                                <p className="definition-word">성별</p>
+                                <p>{gender ? gender : '-'}</p>
+                            </div>
                         </div>
-                        <div className="profile-content-definition">
-                            <p className="definition-word">phone</p>
-                            <p>{phoneNumber && phoneNumber}</p>
-                        </div>
-                        <div className="profile-content-definition">
-                            <p className="definition-word">생일</p>
-                            <p>{bod ? bod : '-'}</p>
-                        </div>
-                        <div className="profile-content-definition">
-                            <p className="definition-word">성별</p>
-                            <p>{gender ? gender : '-'}</p>
-                        </div>
-                    </div>
-                </div>
-                <div className="profile-section">
-                    <Link href='settings'><a>프로필 수정</a></Link>
-                </div>
-                <div className="profile-section">
-                    <Link
-                    href='/'
-                    >
-                    <a
-                        onClick={this.signOut}
-                    >로그아웃</a>
-                </Link>
-                </div>
+                    </section>
+                    <section className="profile-section">
+                        <Link href='profile/edit'><a>프로필 수정</a></Link>
+                    </section>
+                    <section className="profile-section">
+                        <Link href='settings'><a>계정 관리</a></Link>
+                    </section>
+                    <section className="profile-section">
+                        <Link
+                        href='/'
+                        >
+                            <a
+                                onClick={this.signOut}
+                            >로그아웃</a>
+                        </Link>
+                    </section>
+                </main>
             </div>
         );
     }
