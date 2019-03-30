@@ -553,7 +553,7 @@ class CreateMatch extends Component {
                                     onChange={this.handleChange}
                                     type="tel"
                                     name="phone"
-                                    value={this.state.phone}
+                                    value={this.state.phone.replace(/ /gi, "").replace(/(^02.{0}|^01.{1}|[0-9]{3})([0-9]+)([0-9]{4})/,"$1  $2  $3")}
                                 />
                                 <p className="error-msg">{this.state.errors.phone}</p>
 
