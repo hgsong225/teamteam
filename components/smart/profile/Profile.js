@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import Link from 'next/link';
 import Router from 'next/router';
 import axios from 'axios';
+import moment from 'moment';
 
 import fb from '../../../config/firebase';
 
@@ -115,7 +116,7 @@ class Profile extends Component {
                             </div>
                             <div className="profile-content-definition">
                                 <p className="definition-word">생일</p>
-                                <p>{bod ? bod : '-'}</p>
+                                <p>{bod ? `${moment.parseZone(bod).local().format('YYYY년 MM월 DD일')}` : '-'}</p>
                             </div>
                             <div className="profile-content-definition">
                                 <p className="definition-word">성별</p>

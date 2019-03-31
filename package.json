@@ -7,7 +7,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "nodemon ssr-server/index.js",
     "build": "next build",
-    "start": "NODE_ENV=production node ssr-server/index.js",
+    "start": "set NODE_ENV=production node ssr-server/index.js",
     "export": "next export",
     "deploy": "npm run build && npm run export"
   },

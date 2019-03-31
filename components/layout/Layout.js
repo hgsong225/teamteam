@@ -124,10 +124,10 @@ class Layout extends Component {
                     <section>
                         <nav className="sidebar-left-container" id="sidebar-left-container">
                             <SideBarLeft
-                                    user={this.props.user}
-                                    selectLocation={this.props.selectLocation}
-                                    selectedLocation={selectedLocation}
-                                />
+                                user={this.props.user}
+                                selectLocation={this.props.selectLocation}
+                                selectedLocation={selectedLocation}
+                            />
                         </nav>
                         <div className="content">
                             <main className="view-container">
