@@ -110,13 +110,13 @@ ul {
 
 /* 취소, 환불 내용 */
 
-.cancel_contents_container {
+.match_status_container, .apply_status_container, .cancel_contents_container {
     margin-bottom: 1rem;
     padding: 1rem;
     background-color: #fafafa;
 }
 
-.cancel_contents {
+.match_status_contents, .apply_status_contents, .cancel_contents {
     display: flex;
     justify-content: space-between;
 }

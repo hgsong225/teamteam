@@ -1,5 +1,7 @@
 import Head from 'next/head';
 
+import '../../style/meta.css';
+
 export default () => (
   <div>
     <Head>

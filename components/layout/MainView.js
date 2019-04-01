@@ -43,6 +43,34 @@ class MainView extends Component {
                         width: 1310px;
                         max-width: 1310px;
                     }
+                    .sidebar-left-container#sidebar-left-container {
+                        display: none;
+                    }
+                    
+                    @media screen and (max-width: 375px) {
+                        .sidebar-left-container {
+                            margin-top: 0;
+                            z-index: 999;
+                            transform: translateX(-304px);
+                            box-shadow: 0 0 16px rgba(0,0,0,.28);
+                            transition: transform .5s ease-out;
+                        }
+                    }
+                    @media screen and (max-width: 992px) {
+                        .sidebar-left-container {
+                            z-index: 999;
+                            margin-top: 0;
+                            transform: translateX(-304px);
+                            box-shadow: 0 0 16px rgba(0,0,0,.28);
+                            transition: transform .5s ease-out;
+                        }
+                        .sidebar-left-container.toggle {
+                            transform: translateX(0px);
+                        }
+                        .sidebar-left-container#sidebar-left-container {
+                            display: block;
+                        }
+                    }
                 `}</style>
                 <div className="container">
                     <div className="header">

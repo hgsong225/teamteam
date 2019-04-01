@@ -541,13 +541,13 @@ router.route('/me')
     .get((req, res) => { // 내가 생성한 경기 불러오기 (생성한)
         try {
             const data = req.query;
-            const query = `SELECT * FROM post
-            LEFT JOIN \`match\` ON post.idpost = \`match\`.post_idpost
+            const query = `SELECT *, p.user_iduser as hostID FROM post p
+            LEFT JOIN \`match\` ON p.idpost = \`match\`.post_idpost
             WHERE user_iduser =
                 (SELECT iduser
                 FROM user
                 WHERE fb_uid = '${data.uid}')
-                    AND \`post\`.post_type = '용병모집'
+                    AND \`p\`.post_type = '용병모집'
             ORDER BY \`match\`.start_time ASC;
             `;
 

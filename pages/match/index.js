@@ -285,7 +285,7 @@ class Match extends Component {
                                 {/* <div className="notice-box">
                                     <p className="notice">{match[0].apply_status}, {match[0].total_guest}명 남음</p>
                                 </div> */}
-                                <div id="map" style={{width: "500px", height: "400px"}}></div>
+                                <div id="map"></div>
                                 <div id="intro">
                                     <p>{match[0].display_name} {(this.state.didIApply && (this.state.myApplicationInfo[0].applicant_status === '수락' && this.state.didICompletedPayment)) && match[0].phone.replace(/ /gi, "").replace(/(^02.{0}|^01.{1}|[0-9]{3})([0-9]+)([0-9]{4})/,"$1  $2  $3")}</p>
                                     <div>

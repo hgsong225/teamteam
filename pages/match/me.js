@@ -36,8 +36,21 @@ class Me extends Component {
     authListener = () => {
         fb.auth().onAuthStateChanged((user) => {
             if (user) {
-                this.setState({
-                    user,
+                const params = {
+                    uid: user.uid,
+                }
+                axios.get('http://localhost:3333/api/auth/user', {
+                    params,
+                })
+                .then((res) => {
+                    const data = res.data;
+                    user['data'] = data;
+                    this.setState({
+                        user,
+                    });
+                })
+                .catch((error) => {
+                    console.log(error);
                 });
             } else {
                 this.setState({
@@ -214,7 +227,7 @@ class Me extends Component {
                                                             <span className="">{post.sports_category}</span> {post.match_type} : {post.match_type}</p>
                                                         </div>
                                                         {
-                                                            post.apply_time !== undefined
+                                                            this.state.user.data[0].iduser !== post.hostID
                                                             ?
                                                                 <div
                                                                     className="status-box"
@@ -256,31 +269,103 @@ class Me extends Component {
                                                     </div>
                                                 </Link>
                                                 {
-                                                    post.applicant_status === '신청취소'
-                                                    && <div className="cancel_contents_container">
+                                                    /* 내 경기일 때 status container */
+                                                    this.state.user.data[0].iduser === post.hostID
+                                                    && <div className="match_status_container">
+                                                            <div className="match_status_contents">
+                                                                <p>게시일</p>
+                                                                <p>{moment.parseZone(post.create_time).local().format('YYYY-MM-DD HH:mm:ss')}</p>
+                                                            </div>
+                                                            <div className="match_status_contents">
+                                                                <p>게시유형</p>
+                                                                <p>{post.post_type}</p>
+                                                            </div>
+                                                            <div className="match_status_contents">
+                                                                <p>경기날짜</p>
+                                                                <p>{moment.parseZone(post.start_time).local().format('YYYY-MM-DD')} ({this.convertDay(moment.parseZone(post.start_time).local().format('dddd'))})</p>
+                                                            </div>
+                                                            <div className="match_status_contents">
+                                                                <p>경기시간</p>
+                                                                <p>{moment.parseZone(post.start_time).local().format('HH:mm')} - {moment.parseZone(post.end_time).local().format('HH:mm')}</p>
+                                                            </div>
+                                                            <div className="match_status_contents">
+                                                                <p>경기유형</p>
+                                                                <p>{post.sports_category} {post.match_type}:{post.match_type}</p>
+                                                            </div>
+                                                            <div className="match_status_contents">
+                                                                <p>경기장소</p>
+                                                                <p>{post.place_name} ({post.address})</p>
+                                                            </div>
+                                                            <div className="match_status_contents">
+                                                                <p>경기금액</p>
+                                                                <p>{`${post.match_fee}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")}원</p>
+                                                            </div>
+                                                            <div className="match_status_contents">
+                                                                <p>모집 게스트 수</p>
+                                                                <p>{post.total_guest}명</p>
+                                                            </div>
+                                                        </div>
+                                                }
+                                                {
+                                                    (post.applicant_status !== '신청취소' && this.state.user.data[0].iduser !== post.hostID)
+                                                    && <div className="apply_status_container">
+                                                            <div className="apply_status_contents">
+                                                                <p>신청일시</p>
+                                                                <p>{moment.parseZone(post.apply_time).local().format('YYYY-MM-DD HH:mm:ss')}</p>
+                                                            </div>
+                                                            <div className="apply_status_contents">
+                                                                <p>입금자명</p>
+                                                                <p>{post.depositor}</p>
+                                                            </div>
+                                                            <div className="apply_status_contents">
+                                                                <p>결제상태</p>
+                                                                <p>{post.payment_status} ({post.payment_method})</p>
+                                                            </div>
+                                                            <div className="apply_status_contents">
+                                                                <p>결제금액</p>
+                                                                <p>{post.amount_of_payment === null ? 0 : post.amount_of_payment.replace(/\B(?=(\d{3})+(?!\d))/g, ",")}원</p>
+                                                            </div>
+                                                            <div className="apply_status_contents">
+                                                                <p>결제일시</p>
+                                                                <p>{post.payment_time !== null ? moment.parseZone(post.payment_time).local().format('YYYY-MM-DD HH:mm:ss') : ''}</p>
+                                                            </div>
+                                                        </div>
+                                                }
+                                                {
+                                                    (post.applicant_status === '신청취소' && this.state.user.data[0].iduser !== post.hostID)
+                                                    &&
+                                                    <div className="cancel_contents_container">
                                                             <div className="cancel_contents">
-                                                                <p>신청일시</p><p>{moment.parseZone(post.apply_time).local().format('YYYY-MM-DD HH:mm:ss')}</p>
+                                                                <p>신청일시</p>
+                                                                <p>{moment.parseZone(post.apply_time).local().format('YYYY-MM-DD HH:mm:ss')}</p>
                                                             </div>
                                                             <div className="cancel_contents">
-                                                                <p>결제금액</p><p>{post.amount_of_payment === null ? 0 : post.amount_of_payment}</p>
+                                                                <p>결제금액</p>
+                                                                <p>{post.amount_of_payment === null ? 0 : post.amount_of_payment.replace(/\B(?=(\d{3})+(?!\d))/g, ",")}원</p>
                                                             </div>
                                                             <div className="cancel_contents">
-                                                                <p>결제일시</p><p>{post.payment_time !== null ? moment.parseZone(post.payment_time).local().format('YYYY-MM-DD HH:mm:ss') : '-'}</p>
+                                                                <p>결제일시</p>
+                                                                <p>{post.payment_time !== null ? moment.parseZone(post.payment_time).local().format('YYYY-MM-DD HH:mm:ss') : '-'}</p>
                                                             </div>
                                                             <div className="cancel_contents">
-                                                                <p>취소일시</p><p>{moment.parseZone(post.cancel_time).local().format('YYYY-MM-DD HH:mm:ss')}</p>
+                                                                <p>취소일시</p>
+                                                                <p>{moment.parseZone(post.cancel_time).local().format('YYYY-MM-DD HH:mm:ss')}</p>
                                                             </div>
                                                             <div className="cancel_contents">
-                                                                <p>취소사유</p><p>{post.reason_for_cancel}</p>
+                                                                <p>취소사유</p>
+                                                                <p>{post.reason_for_cancel}</p>
                                                             </div>
                                                             <div className="cancel_contents">
-                                                                <p>환불상태</p><p>{post.refund_status}</p>
+                                                                <p>환불상태</p>
+                                                                <p>{post.refund_status}</p>
                                                             </div>
                                                             <div className="cancel_contents">
-                                                                <p>환불금액</p><p>{post.refund_fee}</p>
+                                                                <p>환불금액</p>
+                                                                <p>{`${post.refund_fee}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")}원</p>
                                                             </div>
                                                             <div className="cancel_contents">
-                                                                <p>환불계좌</p><p>{post.bank_account}</p>
+                                                                <p>환불계좌</p>
+                                                                <p>{post.bank_account}</p>
                                                             </div>
                                                         </div>
                                                 }
