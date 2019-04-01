@@ -103,7 +103,7 @@ class Profile extends Component {
                             </div>
                             <div className="profile-content-definition-container">
                                 <div className="profile-content-definition">
-                                   <p className="definition-word">email</p>
+                                   <p className="definition-word">이메일</p>
                                    <p>{emailVerified ? email : `${email}`}</p>
                                 </div>
                                 <p className="definition-word-desc">
@@ -111,7 +111,7 @@ class Profile extends Component {
                                 </p>
                             </div>
                             <div className="profile-content-definition">
-                                <p className="definition-word">phone</p>
+                                <p className="definition-word">연락처</p>
                                 <p>{phoneNumber && phoneNumber.replace(/ /gi, "").replace(/(^02.{0}|^01.{1}|[0-9]{3})([0-9]+)([0-9]{4})/,"$1  $2  $3")}</p>
                             </div>
                             <div className="profile-content-definition">
