@@ -70,9 +70,9 @@ ul {
 .applicant-status {
     color: #009688;
 }
-.cancel-apply {
+.match-me-cancel-apply {
     margin: 0;
-    color: #e91e63;
+    color: #757575;
     cursor: pointer;
 }
 .match-apply {
@@ -119,4 +119,12 @@ ul {
 .match_status_contents, .apply_status_contents, .cancel_contents {
     display: flex;
     justify-content: space-between;
+}
+
+.match_status_container div:not(:nth-child(1)) p:nth-child(1), .apply_status_container div:not(:nth-child(1)) p:nth-child(1), .cancel_contents_container div:not(:nth-child(1)) p:nth-child(1), .status-title {
+    color: #757575;
+}
+
+.status-title, .status-desc {
+    font-weight: 700;
 }

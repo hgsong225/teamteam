@@ -1,7 +1,5 @@
 import Head from 'next/head';
 
-import '../../style/meta.css';
-
 export default () => (
   <div>
     <Head>
@@ -25,6 +23,9 @@ export default () => (
         article, aside, details, figcaption, figure, 
         footer, header, hgroup, menu, nav, section {
             display: block;
+        }
+        p {
+            letter-spacing: 1px;
         }
         ol, ul {
             list-style: none;

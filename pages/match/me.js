@@ -212,41 +212,23 @@ class Me extends Component {
                                                         {`${moment.parseZone(post.start_time).local().format('MM월 DD일')} ${this.convertDay(moment.parseZone(post.start_time).local().format('dddd'))}요일`}
                                                     </h3>
                                                 }
-                                                <Link
-                                                        prefetch
-                                                        href={{ pathname: '/match', query: { id: post.idpost }}}
-                                                >
-                                                    <div className="match">
-                                                        <div className="match-time">
-                                                            <p className="match-status">{post.match_status}</p>
-                                                            <p className="time">{post.start_time.slice(11, 16)}</p>
-                                                        </div>
-                                                        <div className="match-place">
-                                                            <p className="place">{post.place_name}</p>
-                                                            <p className="match-type">
-                                                            <span className="">{post.sports_category}</span> {post.match_type} : {post.match_type}</p>
-                                                        </div>
-                                                        {
-                                                            this.state.user.data[0].iduser !== post.hostID
-                                                            ?
-                                                                <div
-                                                                    className="status-box"
-                                                                >
-                                                                    <p className="applicant-status">{post.applicant_status}</p>
-                                                                    {
-                                                                        post.applicant_status !== '신청취소'
-                                                                        ? <p
-                                                                            className="cancel-apply"
-                                                                            onClick={this.cancelApply}
-                                                                            name="신청취소"
-                                                                            type="submit"
-                                                                            value={post.idmatch}
-                                                                            style={{ width: "100%" }}
-                                                                        >신청 취소</p>
-                                                                        : <p className="applicant-status">{post.reason_for_cancel}</p>
-                                                                    }
+                                                {
+                                                    /* 내 경기일 때 */
+                                                    this.state.user.data[0].iduser === post.hostID
+                                                    && <Link
+                                                            prefetch
+                                                            href={{ pathname: '/match', query: { id: post.idpost }}}
+                                                        >
+                                                            <div className="match">
+                                                                <div className="match-time">
+                                                                    <p className="match-status">{post.match_status}</p>
+                                                                    <p className="time">{post.start_time.slice(11, 16)}</p>
                                                                 </div>
-                                                            :
+                                                                <div className="match-place">
+                                                                    <p className="place">{post.place_name}</p>
+                                                                    <p className="match-type">
+                                                                    <span className="">{post.sports_category}</span> {post.match_type} : {post.match_type}</p>
+                                                                </div>
                                                                 <div
                                                                     className="status-box-remove"
                                                                     name={post.idpost}
@@ -255,23 +237,78 @@ class Me extends Component {
                                                                         className="edit-match"
                                                                         name={post.idpost}
                                                                     >
-                                                                        수정
+                                                                        수정하기
                                                                     </p>
-                                                                    <p
-                                                                        className="remove-match"
-                                                                        onClick={this.handleRemove}
-                                                                        name="삭제"
-                                                                        type="submit"
-                                                                        value={post.idpost}
-                                                                    >삭제</p>
+                                                                </div>
                                                             </div>
-                                                        }
-                                                    </div>
-                                                </Link>
+                                                        </Link>
+                                                }
                                                 {
-                                                    /* 내 경기일 때 status container */
+                                                    /* 내가 신청한 경기 */
+                                                    (post.applicant_status !== '신청취소' && this.state.user.data[0].iduser !== post.hostID)
+                                                    && <Link
+                                                            prefetch
+                                                            href={{ pathname: '/match', query: { id: post.idpost }}}
+                                                        >
+                                                            <div className="match">
+                                                                <div className="match-time">
+                                                                    <p className="match-status">{post.match_status}</p>
+                                                                    <p className="time">{post.start_time.slice(11, 16)}</p>
+                                                                </div>
+                                                                <div className="match-place">
+                                                                    <p className="place">{post.place_name}</p>
+                                                                    <p className="match-type">
+                                                                    <span className="">{post.sports_category}</span> {post.match_type} : {post.match_type}</p>
+                                                                </div>
+                                                                <div
+                                                                    className="status-box"
+                                                                >
+                                                                    <p className="applicant-status">{post.applicant_status}</p>
+                                                                    <p
+                                                                        className="match-me-cancel-apply"
+                                                                        onClick={this.cancelApply}
+                                                                        name="신청취소"
+                                                                        type="submit"
+                                                                        value={post.idmatch}
+                                                                        style={{ width: "100%" }}
+                                                                    >신청 취소</p>
+                                                                </div>
+                                                            </div>
+                                                        </Link>
+                                                }
+                                                {
+                                                    /* 신청 취소된 경기 */
+                                                    (post.applicant_status === '신청취소' && this.state.user.data[0].iduser !== post.hostID)
+                                                    && <Link
+                                                            prefetch
+                                                            href={{ pathname: '/match', query: { id: post.idpost }}}
+                                                        >
+                                                            <div className="match">
+                                                                <div className="match-time">
+                                                                    <p className="match-status">{post.match_status}</p>
+                                                                    <p className="time">{post.start_time.slice(11, 16)}</p>
+                                                                </div>
+                                                                <div className="match-place">
+                                                                    <p className="place">{post.place_name}</p>
+                                                                    <p className="match-type">
+                                                                    <span className="">{post.sports_category}</span> {post.match_type} : {post.match_type}</p>
+                                                                </div>
+                                                                <div
+                                                                    className="status-box"
+                                                                >
+                                                                    <p className="applicant-status">{post.reason_for_cancel}</p>
+                                                                </div>
+                                                            </div>
+                                                        </Link>
+                                                }
+                                                {
+                                                    /* 내 경기일 때 */
                                                     this.state.user.data[0].iduser === post.hostID
                                                     && <div className="match_status_container">
+                                                            <div className="match_status_contents">
+                                                                <p className="status-title">상태</p>
+                                                                <p className="status-desc">{post.match_status}</p>
+                                                            </div>
                                                             <div className="match_status_contents">
                                                                 <p>게시일</p>
                                                                 <p>{moment.parseZone(post.create_time).local().format('YYYY-MM-DD HH:mm:ss')}</p>
@@ -282,7 +319,7 @@ class Me extends Component {
                                                             </div>
                                                             <div className="match_status_contents">
                                                                 <p>경기날짜</p>
-                                                                <p>{moment.parseZone(post.start_time).local().format('YYYY-MM-DD')} ({this.convertDay(moment.parseZone(post.start_time).local().format('dddd'))})</p>
+                                                                <p>{moment.parseZone(post.start_time).local().format('YYYY-MM-DD')} ({this.convertDay(moment.parseZone(post.start_time).local().format('dddd'))}) - {post.match_status}</p>
                                                             </div>
                                                             <div className="match_status_contents">
                                                                 <p>경기시간</p>
@@ -307,8 +344,13 @@ class Me extends Component {
                                                         </div>
                                                 }
                                                 {
+                                                    /* 내가 신청한 경기 */
                                                     (post.applicant_status !== '신청취소' && this.state.user.data[0].iduser !== post.hostID)
                                                     && <div className="apply_status_container">
+                                                            <div className="apply_status_contents">
+                                                                <p className="status-title">상태</p>
+                                                                <p className="status-desc">{post.applicant_status} ({post.payment_status})</p>
+                                                            </div>
                                                             <div className="apply_status_contents">
                                                                 <p>신청일시</p>
                                                                 <p>{moment.parseZone(post.apply_time).local().format('YYYY-MM-DD HH:mm:ss')}</p>
@@ -332,9 +374,14 @@ class Me extends Component {
                                                         </div>
                                                 }
                                                 {
+                                                    /* 신청 취소된 경기 */
                                                     (post.applicant_status === '신청취소' && this.state.user.data[0].iduser !== post.hostID)
                                                     &&
                                                     <div className="cancel_contents_container">
+                                                            <div className="cancel_contents">
+                                                                <p className="status-title">상태</p>
+                                                                <p className="status-desc">{post.reason_for_cancel} - {post.refund_status}</p>
+                                                            </div>
                                                             <div className="cancel_contents">
                                                                 <p>신청일시</p>
                                                                 <p>{moment.parseZone(post.apply_time).local().format('YYYY-MM-DD HH:mm:ss')}</p>
