@@ -185,14 +185,16 @@ class Me extends Component {
                     `}</style>
                         <div className="title-box">
                             <h3 className="title">다가오는 내 매치</h3>
-                            <p className="page-desc">
-                                입금계좌 - 신한은행 신한 110-439-532672 팀팀
-                                <br />
-                                입금을 완료해야 참여 확정됩니다!
-                                <br />
-                                *경기는 입금 선착순으로 마감되니 신청 후 바로 입금해주세요.
-                            </p>
                         </div>
+                        <div className="match-me page-notice-box">
+                            <p className="match-me-notice-type">공지</p>
+                            <p className="match-me-notice">
+                                입금 완료 후 호스트 신청 수락시 참여 확정됩니다!
+                            </p>
+                            <p className="match-me-notice-desc">
+                                신한은행 신한 110-439-532672 팀팀
+                            </p>
+                        </div> 
                         <ul>
                             {
                                 this.state.posts !== undefined && this.state.posts.sort(this.date_ascending).map((post, i) => {
@@ -331,7 +333,7 @@ class Me extends Component {
                                                             </div>
                                                             <div className="match_status_contents">
                                                                 <p>경기장소</p>
-                                                                <p>{post.place_name} ({post.address})</p>
+                                                                <p>{post.place_name}<br />({post.address})</p>
                                                             </div>
                                                             <div className="match_status_contents">
                                                                 <p>경기금액</p>

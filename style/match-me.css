@@ -10,6 +10,26 @@
 .sub-title{
     font-size: 1rem;
 }
+
+.match-me.page-notice-box {
+    padding: 1rem;
+    border: solid 1px #90caf9;
+    border-radius: 4px;
+    background-color: #bbdefb;
+}
+.match-me-notice-type {
+    margin: 0;
+    font-weight: 300;
+    font-size: 0.8rem;
+    color: #757575;
+}
+.match-me-notice {
+    font-size: 1rem;
+}
+.match-me-notice-desc {
+    font-size: 1rem;
+}
+
 ul {
     list-style-type: none;
     margin: 0;
@@ -27,6 +47,9 @@ ul {
 }
 .match:hover {
     border: 1px solid #bbdefb;
+}
+.match_date {
+    margin-top: 2rem;
 }
 .match-time {
     display: flex;
@@ -54,7 +77,7 @@ ul {
 }
 .place {
     margin: 0;
-    font-size: 1.2rem;
+    font-size: 1rem;
     margin-bottom: 1rem;
 }
 .match-type {
@@ -68,7 +91,7 @@ ul {
     align-items: center;
 }
 .applicant-status {
-    color: #009688;
+    color: #212121;
 }
 .match-me-cancel-apply {
     margin: 0;
@@ -111,7 +134,7 @@ ul {
 /* 취소, 환불 내용 */
 
 .match_status_container, .apply_status_container, .cancel_contents_container {
-    margin-bottom: 1rem;
+    margin-bottom: 1.5rem;
     padding: 1rem;
     background-color: #fafafa;
 }
@@ -123,6 +146,10 @@ ul {
 
 .match_status_container div:not(:nth-child(1)) p:nth-child(1), .apply_status_container div:not(:nth-child(1)) p:nth-child(1), .cancel_contents_container div:not(:nth-child(1)) p:nth-child(1), .status-title {
     color: #757575;
+}
+
+.match_status_container p:nth-child(2), .apply_status_container p:nth-child(2), .cancel_contents_container p:nth-child(2) {
+    text-align: right;
 }
 
 .status-title, .status-desc {
