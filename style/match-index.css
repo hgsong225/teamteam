@@ -24,7 +24,7 @@
 #intro {
     height: 100%;
     padding: 0.9rem;
-    background-color: #fafafa;
+    background-color: #eeeeee;
     border-radius: 4px;
     line-height: 1.5;
 }
@@ -175,4 +175,28 @@ input[type=submit].cancel-match, input[type=submit].remove-match {
         border-top: 1px solid #e1e1e1;
         background-color: #fafafa;
     }
+}
+
+.applicant-status-container {
+    margin-top: 2rem;
+    margin-bottom: 2rem;
+    padding: 1rem;
+    border: 1px solid #eeeeee;
+    border-radius: 4px;
+    background-color: #eeeeee;
+}
+
+.applicant-status-container.refund {    
+}
+
+.refund-contents-container {
+    border-bottom: 1px solid #fff;
+}
+.refund-contents {
+    display: flex;
+    justify-content: space-between
+}
+
+.refund-contents-label {
+    color: #757575;
 }

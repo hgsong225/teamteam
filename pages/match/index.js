@@ -438,18 +438,24 @@ class Match extends Component {
                             </div>
                         }
                         {
-                            // 신청자
-                            (match.length > 0 && user !== null) &&
-                            (match[0].match_status !== '경기취소' && match[0].apply_status !== '신청불가')
+                            // 신청자 경기 안내
+                            (match.length > 0 && user !== null)
                             && <div>
                                 {
-                                    /* 신청 전일 때 (비로그인) */
-                                    /* 신청 전일 때 (로그인) */
-                                    /* 이미 신청했을 때 (승인대기 + 결제전) */
-                                    /* 이미 신청했을 때 (승인대기 + 결제완료) */
-                                    /* 이미 신청했을 때 (수락 + 결제 완료) */
-                                    /* 신청 취소됐을 때 (신청취소 + 결제전) */
-                                    /* 신청 취소됐을 때 (신청취소 + 결제완료) */
+                                    /*
+                                        신청 전일 때 (비로그인)
+                                        신청 전일 때 (경기전 + 신청가능 + 로그인)
+
+                                        이미 신청했을 때 (경기전 + 신청가능 + 승인대기 + 결제전)
+                                        이미 신청했을 때 (경기전 + 신청가능 + 승인대기 + 결제완료)
+                                        이미 신청했을 때 (경기전 + 신청가능 + 수락 + 결제완료)
+
+                                        신청 취소됐을 때 (경기전 + 신청가능 + 신청취소 + 결제전)
+                                        신청 취소됐을 때 (경기전 + 신청가능 + 신청취소 + 결제완료)
+
+                                        신청 불가능 할 때 (경기전 + 신청불가 + 신청취소)
+                                        경기 취소 됐을 때 (경기취소 + 신청불가 + 신청취소)
+                                    */
 
                                     /*
                                         appliedAndBeforePayments,
@@ -462,26 +468,26 @@ class Match extends Component {
                                 {
                                     /* 신청 전일 때 (비로그인) */
                                     (user === null)
-                                    && <div>신청 전일 때 (비로그인)</div>
+                                    && <div className="applicant-status-container">신청 전일 때 (비로그인)</div>
                                 }
                                 {
                                     /* 신청 전일 때 (비로그인) */
                                     /* 신청 전일 때 (로그인) */
                                     (match[0].fb_uid !== user.uid && (!appliedAndBeforePayments.length > 0 && !appliedAndCompletedPayments.length > 0 && !acceptedAndCompletdPayments.length > 0))
-                                    && <div>신청 전일 때 (로그인)</div>
+                                    && <div className="applicant-status-container">신청 전일 때 (로그인)</div>
                                 }
                                 {
                                     /* 이미 신청했을 때 (승인대기 + 결제전) */
-                                    (match[0].match_status !== '경기취소' && match[0].apply_status !== '신청불가' && match[0].fb_uid !== user.uid && appliedAndBeforePayments.length > 0)
-                                    && <div>
+                                    (match[0].fb_uid !== user.uid && appliedAndBeforePayments.length > 0)
+                                    && <div className="applicant-status-container">
                                         <p>이미 신청했을 때 (승인대기 + 결제전)</p>
                                         <p>아직 결제 전입니다. 결제 완료 후 호스트가 승인 가능합니다. 결제를 마무리해주세요.</p>
                                     </div>
                                 }
                                 {
                                     /* 이미 신청했을 때 (승인대기 + 결제완료) */
-                                    (match[0].match_status !== '경기취소' && match[0].apply_status !== '신청불가' && match[0].fb_uid !== user.uid && appliedAndCompletedPayments.length > 0)
-                                    && <div>
+                                    (match[0].fb_uid !== user.uid && appliedAndCompletedPayments.length > 0)
+                                    && <div className="applicant-status-container">
                                         <p>이미 신청했을 때 (승인대기 + 결제완료)</p>
                                         <p>호스트 승인대기중입니다.</p>
                                         <div>
@@ -501,8 +507,8 @@ class Match extends Component {
                                 }
                                 {
                                     /* 이미 신청했을 때 (수락 + 결제 완료) */
-                                    (match[0].match_status !== '경기취소' && match[0].apply_status !== '신청불가' && match[0].fb_uid !== user.uid && acceptedAndCompletdPayments.length > 0)
-                                    && <div>
+                                    (match[0].fb_uid !== user.uid && acceptedAndCompletdPayments.length > 0)
+                                    && <div className="applicant-status-container">
                                         <p>이미 신청했을 때 (수락 + 결제 완료)</p>
                                         <p>호스트 승인 완료! 경기 갈 준비되셨나요?</p>
                                         <div>
@@ -522,16 +528,16 @@ class Match extends Component {
                                 }
                                 {
                                     /* 신청 취소됐을 때 (신청취소 + 결제전) */
-                                    (match[0].match_status !== '경기취소' && match[0].apply_status !== '신청불가' && match[0].fb_uid !== user.uid && canceledAndBeforePayments.length > 0)
-                                    && <div>
+                                    (match[0].fb_uid !== user.uid && canceledAndBeforePayments.length > 0)
+                                    && <div className="applicant-status-container refund">
                                         <p>신청 취소됐을 때 (신청취소 + 결제전)</p>
                                         <p>신청이 취소되었습니다.</p>
                                         <div>
                                            <p>결제 내역</p>
                                            {
-                                               canceledAndBeforePayments.map(info => {
+                                               canceledAndBeforePayments.map((info, i) => {
                                                    return (
-                                                       <div>
+                                                       <div className="refund_contents">
                                                            <p>결제금액</p>
                                                            <p>{info.amount_of_payment}</p>
                                                        </div>
@@ -543,20 +549,24 @@ class Match extends Component {
                                 }
                                 {
                                     /* 신청 취소됐을 때 (신청취소 + 결제완료) */
-                                    (match[0].match_status !== '경기취소' && match[0].apply_status !== '신청불가' && match[0].fb_uid !== user.uid && canceledAndCompletdPayments.length > 0)
-                                    && <div>
+                                    (match[0].fb_uid !== user.uid && canceledAndCompletdPayments.length > 0)
+                                    && <div className="applicant-status-container refund">
                                         <p>신청 취소됐을 때 (신청취소 + 결제완료)</p>
                                         <p>신청이 취소되었습니다.</p>
                                         <div>
-                                           <p>상세</p>
+                                           <p>환불 내역</p>
                                            {
                                                canceledAndCompletdPayments.map(info => {
                                                    return (
-                                                       <div>
-                                                           <p>결제금액</p>
-                                                           <p>{info.amount_of_payment}</p>
-                                                           <p>취소사유</p>
-                                                           <p>{info.reason_for_cancel}</p>
+                                                       <div className="refund-contents-container">
+                                                           <div className="refund-contents">
+                                                               <p className="refund-contents-label">결제금액</p>
+                                                               <p className="refund_contents_desc">{info.amount_of_payment}</p>
+                                                           </div>
+                                                           <div className="refund-contents">
+                                                               <p className="refund-contents-label">취소사유</p>
+                                                               <p className="refund_contents_desc">{info.reason_for_cancel}</p>
+                                                           </div>
                                                        </div>
                                                    )
                                                })
@@ -564,69 +574,83 @@ class Match extends Component {
                                         </div>
                                     </div>
                                 }
-                                </div>
+                            </div>
                         }
                         {
                             /* 내 경기인 경우 */
-                            (match.length > 0 && user !== null) &&
-                            match[0].match_status !== '경기취소'
-                                ? match[0].fb_uid == user.uid
-                                    ? <div className="button-box">
-                                        {
-                                            (this.state.completedPaymentForApplicants.length > 0 && this.state.acceptedApplicants.length > 0)
-                                            ? <input
-                                                className="cancel-match"
-                                                onClick={this.cancelMatch}
-                                                name={match[0].idmatch}
-                                                type="submit"
-                                                value="경기 취소"
-                                            />
-                                            : <input
-                                                className="remove-match"
-                                                onClick={this.removeMatch}
-                                                name={match[0].idpost}
-                                                type="submit"
-                                                value="경기 삭제"
-                                            />
-                                        }
-                                        <button
-                                            className="edit"
-                                        >
-                                            <Link prefetch href={{ pathname: '/match/edit', query: { id: this.props.url.query.id }}}><a>수정하기</a></Link>
-                                        </button>
-                                    </div>
-                                : (
-                                    !this.state.didIApply || this.state.myApplicationInfo[0].applicant_status === '신청취소'
-                                    ? <div className="button-box">
-                                        <input
-                                            className="apply"
-                                            onClick={this.handlePrompt}
-                                            value="신청하기"
+                            (match.length > 0 && user !== null)
+                            && match[0].fb_uid == user.uid
+                                && <div className="button-box">
+                                    {
+                                        (this.state.completedPaymentForApplicants.length > 0 && this.state.acceptedApplicants.length > 0)
+                                        ? <input
+                                            className="cancel-match"
+                                            onClick={this.cancelMatch}
+                                            name={match[0].idmatch}
                                             type="submit"
+                                            value="경기 취소"
                                         />
-                                    </div>
-                                    : <div className="button-box">
-                                        <input
-                                            className="cancel-apply"
-                                            onClick={this.cancelApply}
-                                            value="신청 취소"
+                                        : <input
+                                            className="remove-match"
+                                            onClick={this.removeMatch}
+                                            name={match[0].idpost}
                                             type="submit"
+                                            value="경기 삭제"
                                         />
-                                    </div>
-                                    )
-                            : <p className="canceld-match">호스트에의해 취소된 경기입니다. 결제한 금액은 취소시점 이후 24시간 내에 100% 환불됩니다.</p>
+                                    }
+                                    <button
+                                        className="edit"
+                                    >
+                                        <Link prefetch href={{ pathname: '/match/edit', query: { id: this.props.url.query.id }}}><a>수정하기</a></Link>
+                                    </button>
+                                </div>
                         }
                         {
-                            /* 경기 취소 */
-                            (match.length > 0 && user !== null) &&
-                            (match[0].match_status === '경기취소' && match[0].apply_status !== '신청불가')
-                            && <div>취소된 경기다</div>
-                        }
-                        {
-                            /* 신청 불가 */
-                            (match.length > 0 && user !== null) &&
-                            (match[0].match_status !== '경기취소' && match[0].apply_status === '신청불가')
-                            && <div>신청불가한 경기</div>
+                            /* 버튼 */
+                            (match.length > 0 && user !== null)
+                            && <div>
+                                    {
+                                        /* 신청 전일 때 (로그인) */
+                                        (match[0].fb_uid !== user.uid && ((!appliedAndBeforePayments.length > 0 && !appliedAndCompletedPayments.length > 0 && !acceptedAndCompletdPayments.length > 0)))
+                                        && <div>
+                                            <p>신청 전일 때 (로그인), (경기전 + 신청가능 + 신청취소 + 결제전), (경기전 + 신청가능 + 신청취소 + 결제완료)</p>
+                                            {
+                                                (match[0].apply_status === '신청가능')
+                                                && <div className="button-box">
+                                                    <input
+                                                        className="apply"
+                                                        onClick={this.handlePrompt}
+                                                        value="신청하기"
+                                                        type="submit"
+                                                    />
+                                                </div>
+                                            }
+                                            {
+                                                (match[0].match_status === '신청마감')
+                                                && <p>신청이 마감됐습니다.</p>
+                                            }
+                                            {
+                                                (match[0].match_status === '경기취소')
+                                                && <p>호스트에의해 취소된 경기입니다. 결제한 금액은 취소시점 이후 24시간 내에 100% 환불됩니다.</p>
+                                            }
+                                        </div>
+                                    }
+                                    {
+                                        /* 이미 신청했을 때 */
+                                        (match[0].fb_uid !== user.uid && (appliedAndBeforePayments.length > 0 || appliedAndCompletedPayments.length > 0 || acceptedAndCompletdPayments.length > 0))
+                                        && <div>
+                                            <p>이미 신청했을 때 (승인대기 + 결제전), (경기전 + 신청가능 + 승인대기 + 결제완료), (경기전 + 신청가능 + 수락 + 결제완료)</p>
+                                            <div className="button-box">
+                                                <input
+                                                    className="cancel-apply"
+                                                    onClick={this.cancelApply}
+                                                    value="신청 취소"
+                                                    type="submit"
+                                                />
+                                            </div>
+                                        </div>
+                                    }
+                                </div>
                         }
                     </div>
                 </Layout>
