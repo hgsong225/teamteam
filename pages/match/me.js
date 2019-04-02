@@ -189,7 +189,7 @@ class Me extends Component {
                         <div className="match-me page-notice-box">
                             <p className="match-me-notice-type">공지</p>
                             <p className="match-me-notice">
-                                입금 완료 후 호스트 신청 수락시 참여 확정됩니다!
+                                입금 완료 후 호스트 신청 수락시 참여 확정됩니다.
                             </p>
                             <p className="match-me-notice-desc">
                                 신한은행 신한 110-439-532672 팀팀
@@ -224,7 +224,7 @@ class Me extends Component {
                                                             <div className="match">
                                                                 <div className="match-time">
                                                                     <p className="match-status">{post.match_status}</p>
-                                                                    <p className="time">{post.start_time.slice(11, 16)}</p>
+                                                                    <p className="time">{moment.parseZone(post.start_time).local().format('HH:mm')}</p>
                                                                 </div>
                                                                 <div className="match-place">
                                                                     <p className="place">{post.place_name}</p>
@@ -255,7 +255,7 @@ class Me extends Component {
                                                             <div className="match">
                                                                 <div className="match-time">
                                                                     <p className="match-status">{post.match_status}</p>
-                                                                    <p className="time">{post.start_time.slice(11, 16)}</p>
+                                                                    <p className="time">{moment.parseZone(post.start_time).local().format('HH:mm')}</p>
                                                                 </div>
                                                                 <div className="match-place">
                                                                     <p className="place">{post.place_name}</p>
@@ -288,7 +288,7 @@ class Me extends Component {
                                                             <div className="match">
                                                                 <div className="match-time">
                                                                     <p className="match-status">{post.match_status}</p>
-                                                                    <p className="time">{post.start_time.slice(11, 16)}</p>
+                                                                    <p className="time">{moment.parseZone(post.start_time).local().format('HH:mm')}</p>
                                                                 </div>
                                                                 <div className="match-place">
                                                                     <p className="place">{post.place_name}</p>
