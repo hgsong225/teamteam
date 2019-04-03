@@ -51,6 +51,7 @@ class Profile extends Component {
                     console.log(res);
                     this.setState({
                         user: {
+                            account: data.account,
                             displayName,
                             email,
                             emailVerified: user.emailVerified,
@@ -82,7 +83,7 @@ class Profile extends Component {
     }
 
     render() {
-        const { name, bod, gender, height, weight, introduction, displayName, email, emailVerified, phoneNumber, photoURL, providerId } = this.state.user;
+        const { account, name, bod, gender, height, weight, introduction, displayName, email, emailVerified, phoneNumber, photoURL, providerId } = this.state.user;
 
         return (
             <div className="profile-container">
@@ -93,39 +94,57 @@ class Profile extends Component {
                         : '반갑습니다!'
                     }
                 </header>
-                <p className="profile-section-title">프로필</p>
                 <main>
-                    <section className="profile-section">
-                        <div className="profile-section-contents">
-                            <div className="profile-content-definition">
-                               <p className="definition-word">이름</p>
-                               <p>{name}</p>
-                            </div>
-                            <div className="profile-content-definition-container">
+                    <div className="profile-section-container">
+                        <p className="profile-section-title">프로필</p>
+                        <section className="profile-section">
+                            <div className="profile-section-contents">
                                 <div className="profile-content-definition">
-                                   <p className="definition-word">이메일</p>
-                                   <p>{emailVerified ? email : `${email}`}</p>
+                                   <p className="definition-word">이름</p>
+                                   <p>{name}</p>
                                 </div>
-                                <p className="definition-word-desc">
-                                    설명
-                                </p>
+                                <div className="profile-content-definition-container">
+                                    <div className="profile-content-definition">
+                                       <p className="definition-word">이메일</p>
+                                       <p>{emailVerified ? email : `${email}`}</p>
+                                    </div>
+                                </div>
+                                <div className="profile-content-definition">
+                                    <p className="definition-word">연락처</p>
+                                    <p>{phoneNumber && phoneNumber.replace(/ /gi, "").replace(/(^02.{0}|^01.{1}|[0-9]{3})([0-9]+)([0-9]{4})/,"$1  $2  $3")}</p>
+                                </div>
+                                <div className="profile-content-definition">
+                                    <p className="definition-word">생일</p>
+                                    <p>{bod ? `${moment.parseZone(bod).local().format('YYYY년 MM월 DD일')}` : '-'}</p>
+                                </div>
+                                <div className="profile-content-definition">
+                                    <p className="definition-word">성별</p>
+                                    <p>{gender ? gender : '-'}</p>
+                                </div>
                             </div>
-                            <div className="profile-content-definition">
-                                <p className="definition-word">연락처</p>
-                                <p>{phoneNumber && phoneNumber.replace(/ /gi, "").replace(/(^02.{0}|^01.{1}|[0-9]{3})([0-9]+)([0-9]{4})/,"$1  $2  $3")}</p>
+                        </section>
+                    </div>
+                    <div className="profile-section-container">
+                        <p className="profile-section-title">결제</p>
+                        <section className="profile-section">
+                            <div className="profile-section-contents">
+                                <div className="profile-content-definition-container">
+                                    <div className="profile-content-definition">
+                                        <p className="definition-word">계좌번호</p>
+                                        <p>{account !== null ? account : '-'}</p>
+                                    </div>
+                                    <p className="definition-word-desc">
+                                        * 호스트 환급, 게스트 환불 목적 이외에 사용되지 않으며 제 3자에게 공개되지 않습니다.
+                                    </p>
+                                </div>
                             </div>
-                            <div className="profile-content-definition">
-                                <p className="definition-word">생일</p>
-                                <p>{bod ? `${moment.parseZone(bod).local().format('YYYY년 MM월 DD일')}` : '-'}</p>
-                            </div>
-                            <div className="profile-content-definition">
-                                <p className="definition-word">성별</p>
-                                <p>{gender ? gender : '-'}</p>
-                            </div>
-                        </div>
-                    </section>
+                        </section>
+                    </div>
                     <section className="profile-section">
                         <Link href='profile/edit'><a>프로필 수정</a></Link>
+                    </section>
+                    <section className="profile-section">
+                        <Link href='profile/payment'><a>결제 관리</a></Link>
                     </section>
                     <section className="profile-section">
                         <Link href='settings'><a>계정 관리</a></Link>

@@ -27,7 +27,6 @@ router.route('/user')
             connection.query(query, (err, rows) => {
                 if (err) throw err;
                 console.log(rows);
-                rows[0].gender = rows[0].gender === 'm' ? '남자' : '여자';
                 res.send(rows);
             });
         } catch (error) {
@@ -41,10 +40,11 @@ router.route('/user')
                 name,
                 email,
                 phone,
-                display_name
+                display_name,
+                account,
             } = req.body.data;
             console.log(req.body.data);
-            const query = `INSERT INTO user (fb_uid, name, email, phone, display_name) VALUES ('${fb_uid}', '${name}', '${email}', '${phone}', '${display_name}')`;
+            const query = `INSERT INTO user (fb_uid, name, email, phone, display_name) VALUES ('${fb_uid}', '${name}', '${email}', '${phone}', '${display_name}', '${account}')`;
     
             connection.query(query, (err, rows) => {
                 if (err) throw err;
@@ -57,6 +57,7 @@ router.route('/user')
     .put((req, res) => {
         try {
             const {
+                account,
                 displayName,
                 email,
                 phoneNumber,
@@ -80,6 +81,7 @@ router.route('/user')
             const query = `
                 update \`user\`
                 set
+                    account = '${account}',
                     display_name = '${displayName}',
                     email = '${email}',
                     phone = '${phoneNumber}',

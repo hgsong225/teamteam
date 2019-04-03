@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import Link from 'next/link';
 import Router from 'next/router';
 import axios from 'axios';
+import moment from 'moment';
 
 import fb from '../../config/firebase';
 import MainView from '../../components/layout/MainView';
@@ -36,6 +37,7 @@ class Settings extends Component {
                     console.log(res);
                     this.setState({
                         user: {
+                            account: data.account,
                             displayName,
                             email,
                             emailVerified: user.emailVerified,
@@ -43,7 +45,7 @@ class Settings extends Component {
                             photoURL,
                             providerId,
                             uid: user.uid,
-                            bod: data.bod,
+                            bod: moment.parseZone(data.bod).local().format('YYYY-MM-DD'),
                             gender: data.gender,
                             height: data.height,
                             weight: data.weight,
@@ -182,7 +184,7 @@ class Settings extends Component {
                                     </div>
                                     <input
                                         onChange={this.handleChange}
-                                        placeholder={user.bod}
+                                        value={user.bod}
                                         type="date"
                                         name="bod"
                                     />
@@ -197,18 +199,21 @@ class Settings extends Component {
                                         type="text"
                                         name="gender"
                                     >
-                                     <option value='null'>
+                                        <option
+                                            value='null'
+                                            selected={user.gender === null && true}
+                                        >
                                             선택안함
                                         </option>
                                         <option
                                             value='m'
-                                            selected={user.gender === '남자' && true}
+                                            selected={user.gender === 'm' && true}
                                         >
                                             남자
                                         </option>
                                         <option
                                             value='w'
-                                            selected={user.gender === '여자' && true}
+                                            selected={user.gender === 'w' && true}
                                         >
                                             여자
                                         </option>
@@ -241,7 +246,9 @@ class Settings extends Component {
                             </form>
                         </section>
                         <footer className="profile-edit-section button-section">
-                            <button>
+                            <button
+                                className="profile-edit-cancel button"
+                            >
                                 <Link href='/profile'><a>취소</a></Link>
                             </button>
                             <button

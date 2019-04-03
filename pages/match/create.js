@@ -63,11 +63,27 @@ class CreateMatch extends Component {
         document.body.appendChild(script);
     }
 
-    authListener() {
+    authListener = () => {
         fb.auth().onAuthStateChanged((user) => {
             if (user) {
-                this.setState({
-                    user,
+                const params = {
+                    uid: user.uid,
+                }
+                axios.get('http://localhost:3333/api/auth/user', {
+                    params,
+                })
+                .then((res) => {
+                    const data = res.data;
+                    user['data'] = data;
+                    this.setState({
+                        user,
+                        phone: data[0].phone,
+                        deposit_account: data[0].account,
+
+                    });
+                })
+                .catch((error) => {
+                    console.log(error);
                 });
             } else {
                 this.setState({

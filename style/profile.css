@@ -10,6 +10,10 @@
     font-size: 2rem;
 }
 
+.profile-section-container {
+    margin-bottom: 3rem;
+}
+
 .profile-section {
     margin-bottom: 1rem;
     padding: 1rem;
@@ -40,7 +44,6 @@
 }
 
 .definition-word-desc {
-    display: none;
     margin: 0;
     color: #2196f3;
     font-size: 0.8rem;

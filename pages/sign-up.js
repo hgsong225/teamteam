@@ -16,6 +16,7 @@ class SignUp extends Component {
         password2: '',
         checkPassword: false,
         phone: '',
+        account: '',
         phoneValidating: false, // true, false, processing
         userCertificationNumber: '',
         certificationNumber: '',
@@ -129,6 +130,7 @@ class SignUp extends Component {
             password2,
             checkPassword,
             phone,
+            account,
             phoneValidating, // true, false, processing
             userCertificationNumber,
             certificationNumber,
@@ -155,6 +157,10 @@ class SignUp extends Component {
         if (!phone.length > 0  || (!phone.length > 0 && phoneValidating !== true) || phoneValidating !== true) {
             formIsValid = false;
             errors["phone"] = "전화번호를 입력하고 인증을 완료하세요.";
+        }
+        if (!account.length > 0) {
+            formIsValid = false;
+            errors["account"] = "계좌번호를 입력하세요.";
         }
         
         this.setState({ errors, });
@@ -201,6 +207,11 @@ class SignUp extends Component {
             })
             .catch(err => {
                 console.log(err);
+                if (err.code === 'auth/email-already-in-use') {
+                    let errors = {};
+                    errors['email'] = '이미 있는 이메일입니다.'
+                    this.setState({ errors, });
+                }
             });   
         }
     }
@@ -346,6 +357,29 @@ class SignUp extends Component {
                                     {
                                         this.state.phoneValidating == true && <p className="validated-phone">인증 완료</p>
                                     }
+                                </div>
+                            </div>
+                            <div className="section">
+                                <div className="section-contents">
+                                    <p className="contents-title">
+                                        계좌번호
+                                        {
+                                            this.state.errors.account &&
+                                            <span className="error-msg"> - {this.state.errors.account}</span>
+                                        }
+                                    </p>
+                                    <input
+                                        onChange={this.handleChange}
+                                        value={this.state.account}
+                                        type="text"
+                                        name="account"
+                                    />
+                                    <p className="definition-word-desc">
+                                        ex) 신한 000-000-00000
+                                    </p>
+                                    <p className="definition-word-desc">
+                                        * 호스트 환급, 게스트 환불 목적 이외에 사용되지 않으며 제 3자에게 공개되지 않습니다.
+                                    </p>
                                 </div>
                             </div>
                             <div className="button-box">
