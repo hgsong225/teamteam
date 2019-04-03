@@ -471,17 +471,18 @@ class Match extends Component {
                                     && <div className="applicant-status-container">신청 전일 때 (비로그인)</div>
                                 }
                                 {
+                                    /* 지우지 말 것 */
                                     /* 신청 전일 때 (비로그인) */
-                                    /* 신청 전일 때 (로그인) */
-                                    (match[0].fb_uid !== user.uid && (!appliedAndBeforePayments.length > 0 && !appliedAndCompletedPayments.length > 0 && !acceptedAndCompletdPayments.length > 0))
-                                    && <div className="applicant-status-container">신청 전일 때 (로그인)</div>
+                                    /* 신청 전일 때 (로그인) */ 
+                                    // (match[0].fb_uid !== user.uid && (!appliedAndBeforePayments.length > 0 && !appliedAndCompletedPayments.length > 0 && !acceptedAndCompletdPayments.length > 0))
+                                    // && <div className="applicant-status-container">신청 전일 때 (로그인)</div>
                                 }
                                 {
                                     /* 이미 신청했을 때 (승인대기 + 결제전) */
                                     (match[0].fb_uid !== user.uid && appliedAndBeforePayments.length > 0)
                                     && <div className="applicant-status-container">
                                         <p>이미 신청했을 때 (승인대기 + 결제전)</p>
-                                        <p>아직 결제 전입니다. 결제 완료 후 호스트가 승인 가능합니다. 결제를 마무리해주세요.</p>
+                                        <p className="applicant-status-title">입금 대기중입니다.</p>
                                     </div>
                                 }
                                 {
@@ -489,15 +490,28 @@ class Match extends Component {
                                     (match[0].fb_uid !== user.uid && appliedAndCompletedPayments.length > 0)
                                     && <div className="applicant-status-container">
                                         <p>이미 신청했을 때 (승인대기 + 결제완료)</p>
-                                        <p>호스트 승인대기중입니다.</p>
+                                        <p className="applicant-status-title">호스트 승인대기중입니다.</p>
                                         <div>
-                                           <p>결제 내역</p>
                                            {
                                                appliedAndCompletedPayments.map(info => {
                                                    return (
-                                                       <div>
-                                                           <p>결제금액</p>
-                                                           <p>{info.amount_of_payment}</p>
+                                                       <div className="applicant-contents-container">
+                                                           <div className="applicant-contents">
+                                                               <p className="applicant-contents-label">신청일시</p>
+                                                               <p className="applicant_contents_desc">{info.apply_time}</p>
+                                                           </div>
+                                                           <div className="applicant-contents">
+                                                               <p className="applicant-contents-label">결제상태</p>
+                                                               <p className="applicant_contents_desc">{info.payment_status} ({info.payment_method})</p>
+                                                           </div>
+                                                           <div className="applicant-contents">
+                                                               <p className="applicant-contents-label">결제금액</p>
+                                                               <p className="applicant_contents_desc">{info.amount_of_payment}</p>
+                                                           </div>
+                                                           <div className="applicant-contents">
+                                                               <p className="applicant-contents-label">결제일시</p>
+                                                               <p className="applicant_contents_desc">{info.payment_time}</p>
+                                                           </div>
                                                        </div>
                                                    )
                                                })
@@ -508,17 +522,30 @@ class Match extends Component {
                                 {
                                     /* 이미 신청했을 때 (수락 + 결제 완료) */
                                     (match[0].fb_uid !== user.uid && acceptedAndCompletdPayments.length > 0)
-                                    && <div className="applicant-status-container">
+                                    && <div className="applicant-status-container accepted">
                                         <p>이미 신청했을 때 (수락 + 결제 완료)</p>
-                                        <p>호스트 승인 완료! 경기 갈 준비되셨나요?</p>
+                                        <p className="applicant-status-title">호스트 승인 완료! 경기 갈 준비되셨나요?</p>
                                         <div>
-                                           <p>결제 내역</p>
                                            {
                                                acceptedAndCompletdPayments.map(info => {
                                                    return (
-                                                       <div>
-                                                           <p>결제금액</p>
-                                                           <p>{info.amount_of_payment}</p>
+                                                       <div className="applicant-contents-container">
+                                                           <div className="applicant-contents">
+                                                               <p className="applicant-contents-label">신청일시</p>
+                                                               <p className="applicant_contents_desc">{info.apply_time}</p>
+                                                           </div>
+                                                           <div className="applicant-contents">
+                                                               <p className="applicant-contents-label">결제상태</p>
+                                                               <p className="applicant_contents_desc">{info.payment_status} ({info.payment_method})</p>
+                                                           </div>
+                                                           <div className="applicant-contents">
+                                                               <p className="applicant-contents-label">결제금액</p>
+                                                               <p className="applicant_contents_desc">{info.amount_of_payment}</p>
+                                                           </div>
+                                                           <div className="applicant-contents">
+                                                               <p className="applicant-contents-label">결제일시</p>
+                                                               <p className="applicant_contents_desc">{info.payment_time}</p>
+                                                           </div>
                                                        </div>
                                                    )
                                                })
@@ -531,16 +558,25 @@ class Match extends Component {
                                     (match[0].fb_uid !== user.uid && canceledAndBeforePayments.length > 0)
                                     && <div className="applicant-status-container refund">
                                         <p>신청 취소됐을 때 (신청취소 + 결제전)</p>
-                                        <p>신청이 취소되었습니다.</p>
+                                        <p className="applicant-status-title">신청이 취소되었습니다.</p>
                                         <div>
-                                           <p>결제 내역</p>
                                            {
-                                               canceledAndBeforePayments.map((info, i) => {
+                                               canceledAndBeforePayments.map(info => {
                                                    return (
-                                                       <div className="refund_contents">
-                                                           <p>결제금액</p>
-                                                           <p>{info.amount_of_payment}</p>
-                                                       </div>
+                                                        <div className="refund-contents-container">
+                                                            <div className="refund-contents">
+                                                                    <p className="refund-contents-label">취소사유</p>
+                                                                    <p className="refund_contents_desc">{info.reason_for_cancel}</p>
+                                                            </div>
+                                                            <div className="refund-contents">
+                                                                <p className="refund-contents-label">결제상태</p>
+                                                                <p className="refund_contents_desc">{info.payment_status} ({info.payment_method})</p>
+                                                            </div>
+                                                            <div className="refund-contents">
+                                                                <p className="refund-contents-label">환불금액</p>
+                                                                <p className="refund_contents_desc">{info.refund_fee === null && 0}</p>
+                                                            </div>
+                                                        </div>
                                                    )
                                                })
                                            }
@@ -552,20 +588,41 @@ class Match extends Component {
                                     (match[0].fb_uid !== user.uid && canceledAndCompletdPayments.length > 0)
                                     && <div className="applicant-status-container refund">
                                         <p>신청 취소됐을 때 (신청취소 + 결제완료)</p>
-                                        <p>신청이 취소되었습니다.</p>
+                                        <p className="applicant-status-title">신청이 취소되었습니다.</p>
                                         <div>
-                                           <p>환불 내역</p>
                                            {
                                                canceledAndCompletdPayments.map(info => {
                                                    return (
                                                        <div className="refund-contents-container">
                                                            <div className="refund-contents">
+                                                                   <p className="refund-contents-label">취소사유</p>
+                                                                   <p className="refund_contents_desc">{info.reason_for_cancel}</p>
+                                                           </div>
+                                                           <div className="refund-contents">
+                                                               <p className="refund-contents-label">결제상태</p>
+                                                               <p className="refund_contents_desc">{info.payment_status} ({info.payment_method})</p>
+                                                           </div>
+                                                           
+                                                           <div className="refund-contents">
                                                                <p className="refund-contents-label">결제금액</p>
                                                                <p className="refund_contents_desc">{info.amount_of_payment}</p>
                                                            </div>
                                                            <div className="refund-contents">
-                                                               <p className="refund-contents-label">취소사유</p>
-                                                               <p className="refund_contents_desc">{info.reason_for_cancel}</p>
+                                                               <p className="refund-contents-label">결제일시</p>
+                                                               <p className="refund_contents_desc">{info.cancel_time}</p>
+                                                           </div>
+                                                           
+                                                           <div className="refund-contents">
+                                                               <p className="refund-contents-label">환불상태</p>
+                                                               <p className="refund_contents_desc">{info.refund_status}</p>
+                                                           </div>
+                                                           <div className="refund-contents">
+                                                               <p className="refund-contents-label">환불계좌</p>
+                                                               <p className="refund_contents_desc">{info.bank_account}</p>
+                                                           </div>
+                                                           <div className="refund-contents">
+                                                               <p className="refund-contents-label">환불금액</p>
+                                                               <p className="refund_contents_desc">{info.refund_fee}</p>
                                                            </div>
                                                        </div>
                                                    )

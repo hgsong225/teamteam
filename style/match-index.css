@@ -183,20 +183,40 @@ input[type=submit].cancel-match, input[type=submit].remove-match {
     padding: 1rem;
     border: 1px solid #eeeeee;
     border-radius: 4px;
-    background-color: #eeeeee;
+    background-color: #fafafa;
+}
+.applicant-status-container.accepted {
+    margin-top: 2rem;
+    margin-bottom: 2rem;
+    padding: 1rem;
+    border: solid 1px #90caf9;
+    border-radius: 4px;
+    background-color: #fafafa;
+}
+.applicant-status-container.refund {
+    margin-top: 2rem;
+    margin-bottom: 2rem;
+    padding: 1rem;
+    border: 1px solid #ef9a9a;
+    border-radius: 4px;
+    background-color: #fafafa;
 }
 
-.applicant-status-container.refund {    
+.applicant-status-title {
+    font-size: 1.2rem;
+    font-weight: 700;
 }
 
-.refund-contents-container {
-    border-bottom: 1px solid #fff;
+.refund-contents-container, .applicant-contents-container {
+    margin-bottom: 1rem;
+    padding-bottom: 1rem;
+    border-bottom: 2px solid #eeeeee;
 }
-.refund-contents {
+.refund-contents, .applicant-contents {
     display: flex;
     justify-content: space-between
 }
 
-.refund-contents-label {
+.refund-contents-label, .applicant-contents-label {
     color: #757575;
 }
