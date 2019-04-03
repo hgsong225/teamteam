@@ -189,10 +189,10 @@ class Me extends Component {
                         <div className="match-me page-notice-box">
                             <p className="match-me-notice-type">공지</p>
                             <p className="match-me-notice">
-                                입금 완료 후 호스트 신청 수락시 참여 확정됩니다.
+                                결제 완료 후 호스트 신청 수락시 참여 확정됩니다.
                             </p>
                             <p className="match-me-notice-desc">
-                                신한은행 신한 110-439-532672 팀팀
+                                입금 계좌: 신한 110-439-532672 팀팀
                             </p>
                         </div> 
                         <ul>

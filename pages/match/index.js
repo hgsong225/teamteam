@@ -361,7 +361,7 @@ class Match extends Component {
                                         match[0].fb_uid == this.state.user.uid &&
                                         <div className="post-box">
                                             <h3>신청 상태</h3>
-                                            <p>신청 상태는 호스트만 볼 수 있습니다. 호스트가 신청자(결제 완료) 수락을 해야 참여 확정됩니다. 반드시 수락/거절 여부를 선택해주세요.</p>
+                                            <p>신청 상태는 호스트만 볼 수 있습니다. 반드시 신청자(결제 완료) 수락 여부를 선택해주세요.</p>
                                             <p>수락 시 해당 신청자 연락처를 볼 수 있습니다.</p>
                                             {
                                                 (applicants.length > 0 && applicants.filter(applicant => {console.log(applicant); return applicant.applicant_status !== '신청취소' }).length > 0)
@@ -483,6 +483,11 @@ class Match extends Component {
                                     && <div className="applicant-status-container">
                                         <p>이미 신청했을 때 (승인대기 + 결제전)</p>
                                         <p className="applicant-status-title">입금 대기중입니다.</p>
+                                        <p>입금 계좌: 신한 110-439-532672</p>
+                                        <div className="applicant-contents">
+                                           <p className="applicant-contents-label">결제금액</p>
+                                           <p className="applicant_contents_desc">{`${match[0].match_fee}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")}원</p>
+                                       </div>
                                     </div>
                                 }
                                 {
@@ -498,19 +503,19 @@ class Match extends Component {
                                                        <div className="applicant-contents-container">
                                                            <div className="applicant-contents">
                                                                <p className="applicant-contents-label">신청일시</p>
-                                                               <p className="applicant_contents_desc">{info.apply_time}</p>
+                                                               <p className="applicant_contents_desc">{moment.parseZone(info.apply_time).local().format('YYYY-MM-DD HH:mm:ss')}</p>
+                                                           </div>
+                                                           <div className="applicant-contents">
+                                                               <p className="applicant-contents-label">결제금액</p>
+                                                               <p className="applicant_contents_desc">{info.amount_of_payment.replace(/\B(?=(\d{3})+(?!\d))/g, ",")}원</p>
                                                            </div>
                                                            <div className="applicant-contents">
                                                                <p className="applicant-contents-label">결제상태</p>
                                                                <p className="applicant_contents_desc">{info.payment_status} ({info.payment_method})</p>
                                                            </div>
                                                            <div className="applicant-contents">
-                                                               <p className="applicant-contents-label">결제금액</p>
-                                                               <p className="applicant_contents_desc">{info.amount_of_payment}</p>
-                                                           </div>
-                                                           <div className="applicant-contents">
                                                                <p className="applicant-contents-label">결제일시</p>
-                                                               <p className="applicant_contents_desc">{info.payment_time}</p>
+                                                               <p className="applicant_contents_desc">{moment.parseZone(info.payment_time).local().format('YYYY-MM-DD HH:mm:ss')}</p>
                                                            </div>
                                                        </div>
                                                    )
@@ -532,19 +537,19 @@ class Match extends Component {
                                                        <div className="applicant-contents-container">
                                                            <div className="applicant-contents">
                                                                <p className="applicant-contents-label">신청일시</p>
-                                                               <p className="applicant_contents_desc">{info.apply_time}</p>
+                                                               <p className="applicant_contents_desc">{moment.parseZone(info.apply_time).local().format('YYYY-MM-DD HH:mm:ss')}</p>
+                                                           </div>
+                                                           <div className="applicant-contents">
+                                                               <p className="applicant-contents-label">결제금액</p>
+                                                               <p className="applicant_contents_desc">{info.amount_of_payment.replace(/\B(?=(\d{3})+(?!\d))/g, ",")}원</p>
                                                            </div>
                                                            <div className="applicant-contents">
                                                                <p className="applicant-contents-label">결제상태</p>
                                                                <p className="applicant_contents_desc">{info.payment_status} ({info.payment_method})</p>
                                                            </div>
                                                            <div className="applicant-contents">
-                                                               <p className="applicant-contents-label">결제금액</p>
-                                                               <p className="applicant_contents_desc">{info.amount_of_payment}</p>
-                                                           </div>
-                                                           <div className="applicant-contents">
                                                                <p className="applicant-contents-label">결제일시</p>
-                                                               <p className="applicant_contents_desc">{info.payment_time}</p>
+                                                               <p className="applicant_contents_desc">{moment.parseZone(info.payment_time).local().format('YYYY-MM-DD HH:mm:ss')}</p>
                                                            </div>
                                                        </div>
                                                    )
@@ -565,8 +570,8 @@ class Match extends Component {
                                                    return (
                                                         <div className="refund-contents-container">
                                                             <div className="refund-contents">
-                                                                    <p className="refund-contents-label">취소사유</p>
-                                                                    <p className="refund_contents_desc">{info.reason_for_cancel}</p>
+                                                                <p className="refund-contents-label">취소사유</p>
+                                                                <p className="refund_contents_desc">{info.reason_for_cancel}</p>
                                                             </div>
                                                             <div className="refund-contents">
                                                                 <p className="refund-contents-label">결제상태</p>
@@ -589,40 +594,39 @@ class Match extends Component {
                                     && <div className="applicant-status-container refund">
                                         <p>신청 취소됐을 때 (신청취소 + 결제완료)</p>
                                         <p className="applicant-status-title">신청이 취소되었습니다.</p>
+                                        <p>결제한 금액은 취소시점 이후 24시간 내에 100% 환불됩니다.</p>
                                         <div>
                                            {
                                                canceledAndCompletdPayments.map(info => {
                                                    return (
                                                        <div className="refund-contents-container">
                                                            <div className="refund-contents">
-                                                                   <p className="refund-contents-label">취소사유</p>
-                                                                   <p className="refund_contents_desc">{info.reason_for_cancel}</p>
+                                                               <p className="refund-contents-label">취소사유</p>
+                                                               <p className="refund_contents_desc">{info.reason_for_cancel}</p>
+                                                           </div>
+                                                           <div className="refund-contents">
+                                                               <p className="refund-contents-label">결제금액</p>
+                                                               <p className="refund_contents_desc">{info.amount_of_payment.replace(/\B(?=(\d{3})+(?!\d))/g, ",")}원</p>
                                                            </div>
                                                            <div className="refund-contents">
                                                                <p className="refund-contents-label">결제상태</p>
                                                                <p className="refund_contents_desc">{info.payment_status} ({info.payment_method})</p>
                                                            </div>
-                                                           
-                                                           <div className="refund-contents">
-                                                               <p className="refund-contents-label">결제금액</p>
-                                                               <p className="refund_contents_desc">{info.amount_of_payment}</p>
-                                                           </div>
                                                            <div className="refund-contents">
                                                                <p className="refund-contents-label">결제일시</p>
-                                                               <p className="refund_contents_desc">{info.cancel_time}</p>
+                                                               <p className="refund_contents_desc">{moment.parseZone(info.payment_time).local().format('YYYY-MM-DD HH:mm:ss')}</p>
                                                            </div>
-                                                           
                                                            <div className="refund-contents">
                                                                <p className="refund-contents-label">환불상태</p>
                                                                <p className="refund_contents_desc">{info.refund_status}</p>
                                                            </div>
                                                            <div className="refund-contents">
                                                                <p className="refund-contents-label">환불계좌</p>
-                                                               <p className="refund_contents_desc">{info.bank_account}</p>
+                                                               <p className="refund_contents_desc">{info.account}</p>
                                                            </div>
                                                            <div className="refund-contents">
                                                                <p className="refund-contents-label">환불금액</p>
-                                                               <p className="refund_contents_desc">{info.refund_fee}</p>
+                                                               <p className="refund_contents_desc">{`${info.refund_fee}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")}원</p>
                                                            </div>
                                                        </div>
                                                    )
