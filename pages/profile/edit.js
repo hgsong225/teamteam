@@ -45,7 +45,7 @@ class Settings extends Component {
                             photoURL,
                             providerId,
                             uid: user.uid,
-                            bod: moment.parseZone(data.bod).local().format('YYYY-MM-DD'),
+                            bod: data.bod === null ? null : moment.parseZone(data.bod).local().format('YYYY-MM-DD'),
                             gender: data.gender,
                             height: data.height,
                             weight: data.weight,

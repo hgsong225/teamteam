@@ -45,7 +45,7 @@ class Settings extends Component {
                             photoURL,
                             providerId,
                             uid: user.uid,
-                            bod: moment.parseZone(data.bod).local().format('YYYY-MM-DD'),
+                            bod: data.bod === null ? null : moment.parseZone(data.bod).local().format('YYYY-MM-DD'),
                             gender: data.gender,
                             height: data.height,
                             weight: data.weight,
@@ -147,11 +147,12 @@ class Settings extends Component {
                             </form>
                         </section>
                         <footer className="profile-edit-section button-section">
-                            <button
-                                className="profile-edit-cancel button"
-                            >
-                                <Link href='/profile'><a>취소</a></Link>
-                            </button>
+                            <Link href='/profile'>
+                                <button
+                                    className="profile-edit-cancel button"
+                                >취소
+                                </button>
+                            </Link>
                             <button
                                 onClick={this.handleSubmit}
                                 type="submit"
