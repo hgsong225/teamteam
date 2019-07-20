@@ -1,0 +1,214 @@
+/**
+* ----------------------------------------------
+* Demo styles
+* ----------------------------------------------
+**/
+.u-position-absolute {
+    position: absolute;
+}
+
+.u-position-relative {
+    position: relative;
+}
+
+ul {
+    margin: 0;
+}
+
+.accordion {
+    box-sizing: border-box;
+    /* margin-bottom: 2rem; */
+    /* padding-bottom: 24px; */
+    /* border-bottom: 1px solid #e0e0e0; */
+    /* border: 1px solid rgba(0, 0, 0, 0.1); */
+    border-radius: 2px;
+}
+
+.accordion__item {
+    padding: 10px 0;
+}
+
+.accordion__item + .accordion__item {
+    /* border-top: 1px solid rgba(0, 0, 0, 0.1); */
+}
+
+.accordion__item--has-icon {
+    position: relative;
+}
+
+.accordion__title {
+    outline: none;
+    cursor: pointer;
+    text-align: left;
+    border: none;
+}
+
+.accordion__title > a {
+    width: 95%;
+    box-sizing: border-box;
+    padding: 10px;
+    padding-left: 40px;
+    display: inline-block;
+    color: #3c4043;
+}
+
+.accordion__title > a:visited {
+    color: #3c4043;
+}
+
+[aria-selected='true'] > a {
+    background-color: rgba(66,133,244,0.149);;
+    color: #1e88e5 !important;
+    border-radius: 0 48px 48px 0;
+}
+
+[aria-selected='true'] > a:hover {
+}
+
+.accordion__item:hover, .accordion__title:hover, .accordion__title a:hover  {
+    color: #1e88e5;
+}
+
+.accordion__body {
+    /* background-color: #fafafa; */
+    padding: 20px 20px 20px 60px;
+    display: block;
+    animation: move-down 1.5s ease-in;
+}
+
+.accordion__body:hover {
+    background-color: #fafafa;
+}
+
+.accordion__body ul li a {
+    padding: 8px;
+}
+
+
+.accordion__body--hidden {
+    display: none;
+    opacity: 0;
+    animation: move-up 1.5s ease-in;
+}
+
+.accordion__title > *:last-child,
+.accordion__body > *:last-child {
+    margin-bottom: 0;
+}
+
+.accordion__arrow {
+    display: inline-block;
+    position: relative;
+    width: 24px;
+    height: 12px;
+    position: absolute;
+    top: 50%;
+    right: 0;
+    margin-top: -6px;
+}
+
+.accordion__arrow::after,
+.accordion__arrow::before {
+    display: block;
+    position: absolute;
+    top: 50%;
+    width: 10px;
+    height: 2px;
+    background-color: currentColor;
+    content: '';
+}
+
+.accordion__arrow::before {
+    left: 4px;
+    transform: rotate(45deg);
+}
+
+[aria-expanded='true'] .accordion__arrow::before, [aria-selected='true'] .accordion__arrow::before {
+    transform: rotate(-45deg);
+}
+
+.accordion__arrow::after {
+    right: 4px;
+    transform: rotate(-45deg);
+}z
+
+[aria-expanded='true'] .accordion__arrow::after, [aria-selected='true'] .accordion__arrow::after {
+    transform: rotate(45deg);
+}
+
+.accordion__arrow::before,
+.accordion__arrow::after {
+    transition: transform 0.25s ease, -webkit-transform 0.25s ease;
+}
+
+/* -------------------------------------------------- */
+/* ---------------- Animation part ------------------ */
+/* -------------------------------------------------- */
+
+@keyframes fadein {
+    0% {
+        opacity: 0;
+    }
+
+    100% {
+        opacity: 1;
+    }
+}
+
+@keyframes move-down {
+    0% {
+        transform: translateY(0);
+    }
+    10% {
+        transform: translateY(0);
+    }
+    20% {
+        transform: translateY(5px);
+    }
+    30% {
+        transform: translateY(0);
+    }
+    100% {
+        transform: translateY(0);
+    }
+}
+
+@keyframes move-up {
+    0% {
+        transform: translateY(0);
+    }
+    10% {
+        transform: translateY(0);
+    }
+    20% {
+        transform: translateY(-5px);
+    }
+    30% {
+        transform: translateY(0);
+    }
+    100% {
+        transform: translateY(0);
+    }
+}
+
+.accordion__title--animated:hover .accordion__arrow {
+    animation-name: move-down;
+    animation-duration: 1.5s;
+}
+
+.accordion__title--animated[aria-expanded='true']:hover .accordion__arrow {
+    animation-name: move-up;
+    animation-duration: 1.5s;
+}
+
+@media screen and (max-width: 480px) {
+    .accordion {
+        width: 100%;
+    }
+    .accordion__title > a {
+        width: 100%;
+        border-radius: 0;
+    }
+}
+
+/*# sourceMappingURL=styles.chunk.css.map*/

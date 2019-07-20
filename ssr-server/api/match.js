@@ -408,13 +408,13 @@ router.route('/apply/cancel')
                     const timeDiff = (new Date(start_time).getTime() - new Date().getTime()) / 1000;
 
                     let query2 = ``;
-                    // 24시간 넘었는지 확인
+                    // 24시간 넘기 전에 취소시 - 전액 환불
                     if (timeDiff > 86400) {
                         query2 = `
                             update match_has_user
                             set applicant_status = '신청취소',
                                 cancel_time = NOW(),
-                                cancel_type = '신청취소',
+                                cancel_type = '24_hours_ago',
                                 reason_for_cancel = '게스트(신청취소)',
                                 refund_status = case when payment_status = '결제전' then '환불완료' when payment_status = '결제완료' then '환불완료' end,
                                 refund_fee_rate = case when payment_status = '결제전' then 0 when payment_status = '결제완료' then 0 end,
@@ -422,12 +422,13 @@ router.route('/apply/cancel')
                             where user_iduser = (select iduser from user where fb_uid = '${data.uid}')
                         `;
                     }
+                    // 24시간 넘어서 취소 시 - 환불 x
                     if (timeDiff <= 86400 && timeDiff > 0) {
                         query2 = `
                             update match_has_user
                             set applicant_status = '신청취소',
                                 cancel_time = NOW(),
-                                cancel_type = '신청취소',
+                                cancel_type = '당일취소',
                                 reason_for_cancel = '게스트(신청취소)',
                                 refund_status = case when payment_status = '결제전' then '환불완료' when payment_status = '결제완료' then '환불전' end,
                                 refund_fee_rate = case when payment_status = '결제전' then 0 when payment_status = '결제완료' then 1 end,

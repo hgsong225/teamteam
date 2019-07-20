@@ -1,0 +1,1 @@
+(window.webpackJsonp=window.webpackJsonp||[]).push([[5],{382:function(n,o,t){__NEXT_REGISTER_PAGE("/faq",function(){return n.exports=t(383),{page:n.exports.default}})},383:function(n,o,t){"use strict";t.r(o);t(384)}},[[382,0,2]]]);

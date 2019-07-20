@@ -159,7 +159,7 @@ class Match extends Component {
             refund_status: '환불전',
             refund_fee_rate: 1,
         }
-        if (applicant_status == '신청취소') {
+        if (applicant_status === '거절') {
             // 이것도 고쳐야해
            cancel.refund_fee = this.state.applicants.filter(applicant => applicant.iduser == iduser)[0].amount_of_payment * cancel.refund_fee_rate;
         }
@@ -169,7 +169,7 @@ class Match extends Component {
                 idmatch: match[0].idmatch,
                 iduser: Number(iduser),
                 applicant_status,
-                cancel: applicant_status == '신청취소' ? cancel : null,
+                cancel: applicant_status == '거절' ? cancel : null,
             }
         })
         .then((res) => {
@@ -417,7 +417,7 @@ class Match extends Component {
                                                                                 className="reject"
                                                                                 onClick={this.handleApplicant}
                                                                                 name={applicant.user_iduser}
-                                                                                value="신청취소"
+                                                                                value="거절"
                                                                                 disabled={applicant.payment_status === '결제전' ? true : false}
                                                                             >
                                                                                 거절
