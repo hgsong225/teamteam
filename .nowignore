@@ -1,0 +1,5 @@
+.vscode
+.next
+.firebase
+node_modules
+out

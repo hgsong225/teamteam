@@ -1,5 +1,7 @@
 {
-    "version": 2,
-    "name": "teamteam-beta",
-    "alias": ["teamteam-beta.now.sh"]
-  }
+  "version": 2,
+  "name": "teamteam-beta",
+  "builds": [
+    {"src": "package.json", "use": "@now/next"}
+  ]
+}
