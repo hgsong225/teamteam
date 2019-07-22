@@ -3,7 +3,7 @@ import Router from 'next/router';
 import axios from 'axios';
 
 import fb from '../config/firebase';
-const AWS = require('../../../config/aws.js');
+const AWS = require('../config/aws.js');
 
 import Layout from '../components/layout/Layout';
 import Posts from '../components/smart/post/Posts';

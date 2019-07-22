@@ -4,7 +4,7 @@ import axios from 'axios';
 
 import fb from '../../config/firebase';
 import location from '../../config/location.json';
-const AWS = require('../../../config/aws.js');
+const AWS = require('../../config/aws.js');
 
 import MainView from '../../components/layout/MainView';
 

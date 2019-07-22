@@ -5,7 +5,7 @@ import axios from 'axios';
 import moment from 'moment';
 
 import fb from '../../config/firebase';
-const AWS = require('../../../config/aws.js');
+const AWS = require('../../config/aws.js');
 
 import Layout from '../../components/layout/Layout';
 
