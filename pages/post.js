@@ -3,9 +3,12 @@ import Router from 'next/router';
 import axios from 'axios';
 
 import fb from '../config/firebase';
+const AWS = require('../../../config/aws.js');
 
 import Layout from '../components/layout/Layout';
 import Posts from '../components/smart/post/Posts';
+
+const teamteam_URL = `${AWS.ec2.DNS}:${AWS.ec2.PORT}`;
 
 class Post extends Component {
     static async getInitialProps ({req}) {
@@ -44,7 +47,7 @@ class Post extends Component {
                 const params = {
                     uid: user.uid,
                 }
-                axios.get('http://localhost:3333/api/auth/user', {
+                axios.get(`http://${teamteam_URL}/api/auth/user`, {
                     params,
                 })
                 .then((res) => {
@@ -98,7 +101,7 @@ class Post extends Component {
                 sido_name,
                 sigungu_name,
             };
-            axios.get('http://localhost:3333/api/post/location', {
+            axios.get(`http://${teamteam_URL}/api/post/location`, {
                 params,
             })
             .then((res) => {

@@ -5,9 +5,12 @@ import axios from 'axios';
 import moment from 'moment';
 
 import fb from '../../config/firebase';
+const AWS = require('../../../config/aws.js');
 import Layout from '../../components/layout/Layout';
 
 import '../../style/match-me.css';
+
+const teamteam_URL = `${AWS.ec2.DNS}:${AWS.ec2.PORT}`;
 
 class Me extends Component {
     state = {
@@ -39,7 +42,7 @@ class Me extends Component {
                 const params = {
                     uid: user.uid,
                 }
-                axios.get('http://localhost:3333/api/auth/user', {
+                axios.get(`http://${teamteam_URL}/api/auth/user`, {
                     params,
                 })
                 .then((res) => {
@@ -72,7 +75,7 @@ class Me extends Component {
             uid: user.uid,
         };
 
-        axios.get('http://localhost:3333/api/match/me', {
+        axios.get(`http://${teamteam_URL}/api/match/me`, {
             params,
         })
         .then((res) => {
@@ -91,7 +94,7 @@ class Me extends Component {
             uid: user.uid,
         };
 
-        axios.get('http://localhost:3333/api/match/me/apply', {
+        axios.get(`http://${teamteam_URL}/api/match/me/apply`, {
             params,
         })
         .then((res) => {
@@ -108,7 +111,7 @@ class Me extends Component {
         e.preventDefault();
         const { user } = this.state;
         const idmatch = e.target.getAttribute('value');
-        axios.post('http://localhost:3333/api/match/apply/cancel', {
+        axios.post(`http://${teamteam_URL}/api/match/apply/cancel`, {
             data: {
                 uid: user.uid,
                 idmatch,
@@ -138,7 +141,7 @@ class Me extends Component {
                 posts: posts.filter(post => post.idpost !== idpost),
             });
             
-            axios.delete('http://localhost:3333/api/match/me', {
+            axios.delete(`http://${teamteam_URL}/api/match/me`, {
                 params,
             })
             .then((res) => {
