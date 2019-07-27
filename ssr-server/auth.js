@@ -5,10 +5,8 @@ const mysql = require('mysql');
 var cors = require('cors');
 const request = require('request');
 
-const DB_LOCAL = require('../../config/db.js').local;
-const DB_PRODUCTION = require('../../config/db.js').production;
-
-const nCloud = require('../../config/ncloud.js');
+const DB_PRODUCTION = require('../config/db.js');
+const nCloud = require('../config/ncloud.js');
 
 const connection = mysql.createConnection(DB_PRODUCTION);
 

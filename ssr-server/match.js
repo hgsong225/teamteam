@@ -1,13 +1,7 @@
-const express = require('express');
-const router = express.Router();
 const next = require('next');
 const mysql = require('mysql');
-var cors = require('cors');
-const request = require('request');
 
-const DB_LOCAL = require('../../config/db.js').local;
-const DB_PRODUCTION = require('../../config/db.js').production;
-const nCloud = require('../../config/ncloud.js');
+const DB_PRODUCTION = require('../config/db.js');
 
 const connection = mysql.createConnection(DB_PRODUCTION);
 
@@ -43,304 +37,304 @@ router.route('/')
         }
     });
 
-    router.route('/create')
-    .post((req, res) => { // 경기 생성하기
-        try {
-            const {
-                uid,
-                selected_location,
-                selected_sports_category,
-                selected_sports_type,
-                total_guest,
-                match_date,
-                match_start_time,
-                match_end_time,
-                selected_place,
-                contents,
-                fee,
-                deposit_account,
-            } = req.body.data;
+router.route('/create')
+.post((req, res) => { // 경기 생성하기
+    try {
+        const {
+            uid,
+            selected_location,
+            selected_sports_category,
+            selected_sports_type,
+            total_guest,
+            match_date,
+            match_start_time,
+            match_end_time,
+            selected_place,
+            contents,
+            fee,
+            deposit_account,
+        } = req.body.data;
 
-            let postQuery = `
-            INSERT INTO \`post\` (user_iduser, post_type, contents, create_time, source, url)
-            VALUES (
-                    (SELECT iduser
-                    FROM user
-                    WHERE fb_uid = "${uid}"),
-                    "용병모집",
-                    "${contents}",
-                    NOW(),
-                    "teamteam",
-                    "http://www.teamteam.co");
-            `;
+        let postQuery = `
+        INSERT INTO \`post\` (user_iduser, post_type, contents, create_time, source, url)
+        VALUES (
+                (SELECT iduser
+                FROM user
+                WHERE fb_uid = "${uid}"),
+                "용병모집",
+                "${contents}",
+                NOW(),
+                "teamteam",
+                "http://www.teamteam.co");
+        `;
 
-            let post_has_locationQuery = `INSERT INTO \`post_has_location\` (post_idpost, location_idlocation) VALUES `;
+        let post_has_locationQuery = `INSERT INTO \`post_has_location\` (post_idpost, location_idlocation) VALUES `;
+        
+        connection.beginTransaction((err) => {
+            if (err) throw err;
             
-            connection.beginTransaction((err) => {
-                if (err) throw err;
-                
-                connection.query(postQuery, (err, rows) => {
+            connection.query(postQuery, (err, rows) => {
+                if (err) {
+                    console.log(err);
+                    connection.rollback(() => { throw err; });
+                }
+                const selectIdpost = `
+                SELECT idpost FROM post WHERE user_iduser = (SELECT iduser FROM user WHERE fb_uid = "${uid}")
+                                AND post_type = "용병모집"
+                                AND contents = "${contents}"
+                                ORDER BY create_time DESC limit 1
+                `;
+                connection.query(selectIdpost, (err, rows) => {
                     if (err) {
-                        console.log(err);
                         connection.rollback(() => { throw err; });
                     }
-                    const selectIdpost = `
-                    SELECT idpost FROM post WHERE user_iduser = (SELECT iduser FROM user WHERE fb_uid = "${uid}")
-                                    AND post_type = "용병모집"
-                                    AND contents = "${contents}"
-                                    ORDER BY create_time DESC limit 1
+                    const idpost = rows[0].idpost;
+                    console.log(`idpost`, idpost);
+                    const matchQuery = `
+                    INSERT INTO \`match\`(
+                        post_idpost,
+                        sports_category,
+                        match_type,
+                        match_fee,
+                        total_game_capacity,
+                        total_guest,
+                        start_time,
+                        end_time,
+                        match_status,
+                        apply_status,
+                        place_name,
+                        address,
+                        place_latitude,
+                        place_longtitude,
+                        host_account)
+                    VALUES
+                    (
+                        ${idpost},
+                        "${selected_sports_category}",
+                        "${selected_sports_type}",
+                        "${fee}",
+                        "${selected_sports_type * 2}",
+                        "${total_guest}",
+                        "${match_date} ${match_start_time}:00",
+                        "${match_date} ${match_end_time}:00",
+                        "경기 전",
+                        "신청가능",
+                        "${selected_place.place_name}",
+                        "${selected_place.address_name}",
+                        "${selected_place.x}",
+                        "${selected_place.y}",
+                        "${deposit_account}"
+                    );
                     `;
-                    connection.query(selectIdpost, (err, rows) => {
-                        if (err) {
-                            connection.rollback(() => { throw err; });
-                        }
-                        const idpost = rows[0].idpost;
-                        console.log(`idpost`, idpost);
-                        const matchQuery = `
-                        INSERT INTO \`match\`(
-                            post_idpost,
-                            sports_category,
-                            match_type,
-                            match_fee,
-                            total_game_capacity,
-                            total_guest,
-                            start_time,
-                            end_time,
-                            match_status,
-                            apply_status,
-                            place_name,
-                            address,
-                            place_latitude,
-                            place_longtitude,
-                            host_account)
-                        VALUES
-                        (
-                            ${idpost},
-                            "${selected_sports_category}",
-                            "${selected_sports_type}",
-                            "${fee}",
-                            "${selected_sports_type * 2}",
-                            "${total_guest}",
-                            "${match_date} ${match_start_time}:00",
-                            "${match_date} ${match_end_time}:00",
-                            "경기 전",
-                            "신청가능",
-                            "${selected_place.place_name}",
-                            "${selected_place.address_name}",
-                            "${selected_place.x}",
-                            "${selected_place.y}",
-                            "${deposit_account}"
-                        );
-                        `;
-                        connection.query(matchQuery, (err, rows) => {
-                            if (err) {
-                                console.log(err);
-                                connection.rollback(() => { throw err; })
-                            }
-                            console.log(`rows`, rows);
-                            for (let i = 0; i < selected_location.length; i += 1) {
-                                if (i == selected_location.length - 1) {
-                                    post_has_locationQuery += `
-                                    (
-                                        ${idpost},
-                                        (
-                                            SELECT idlocation
-                                            FROM location
-                                            WHERE sido_name = "${selected_location[i].sido}"
-                                            AND sigungu_name = "${selected_location[i].sigungu}"
-                                        )
-                                    )
-                                    `;
-                                } else {
-                                    post_has_locationQuery += `
-                                    (
-                                        ${idpost},
-                                        (
-                                            SELECT idlocation
-                                            FROM location
-                                            WHERE sido_name = "${selected_location[i].sido}"
-                                            AND sigungu_name = "${selected_location[i].sigungu}"
-                                        )
-                                    ),
-                                    `;
-                                }
-                            }
-    
-                            connection.query(post_has_locationQuery, (err, rows) => {
-                                if (err) {
-                                    connection.rollback(() => { throw err; });
-                                }
-                                
-                                connection.commit((err) => {
-                                    if (err) {
-                                        connection.rollback(() => {throw err; });
-                                    }
-                                    console.log('Transactio Completed');
-                                })
-                                res.send({ idpost, });
-                            });
-                        })
-                    });
-                });
-            })
-        } catch (error) {
-            res.status(500).json({ error: error.toString() });
-        }
-    });
-
-    router.route('/edit')
-    .post((req, res) => {
-        try {
-            const data = req.body.data;
-            const postQuery = `
-                update post
-                set contents = '${data.contents}', edit_time = NOW()
-                where idpost = ${data.idpost};
-            `;
-            console.log(data, data.selected_location);
-            const matchQuery = `
-                UPDATE \`match\` 
-                SET    host_account = '${data.deposit_account}', 
-                       match_fee = ${data.fee}, 
-                       sports_category = '${data.selected_sports_category}', 
-                       match_type = ${data.selected_sports_type}, 
-                       total_game_capacity = ${data.selected_sports_type * 2}, 
-                       total_guest = ${data.total_guest}, 
-                       start_time = '${data.match_date} ${data.match_start_time}', 
-                       end_time = '${data.match_date} ${data.match_end_time}',
-                       place_name = '${data.selected_place.place_name}',
-                       address = '${data.selected_place.address_name}'
-                WHERE  post_idpost = ${data.idpost}
-                AND    idmatch = ${data.idmatch};
-            `;
-
-            const delete_post_has_locationQuery = `
-                DELETE 
-                FROM   post_has_location 
-                WHERE  post_idpost = ${data.idpost};
-            `;
-
-            let post_has_locationQuery = `
-                INSERT INTO post_has_location 
-                (post_idpost, 
-                 location_idlocation) 
-                VALUES 
-            `;
-
-            /* Begin transaction */
-            connection.beginTransaction((err) => {
-                if (err) { throw err; }
-                connection.query(postQuery, (err, result) => {
-                    if (err) {
-                        console.log(err);
-                        connection.rollback(() => { throw err; });
-                    }
-
-                    connection.query(matchQuery, (err, result) => {
+                    connection.query(matchQuery, (err, rows) => {
                         if (err) {
                             console.log(err);
-                            connection.rollback(() => { throw err; });
+                            connection.rollback(() => { throw err; })
+                        }
+                        console.log(`rows`, rows);
+                        for (let i = 0; i < selected_location.length; i += 1) {
+                            if (i == selected_location.length - 1) {
+                                post_has_locationQuery += `
+                                (
+                                    ${idpost},
+                                    (
+                                        SELECT idlocation
+                                        FROM location
+                                        WHERE sido_name = "${selected_location[i].sido}"
+                                        AND sigungu_name = "${selected_location[i].sigungu}"
+                                    )
+                                )
+                                `;
+                            } else {
+                                post_has_locationQuery += `
+                                (
+                                    ${idpost},
+                                    (
+                                        SELECT idlocation
+                                        FROM location
+                                        WHERE sido_name = "${selected_location[i].sido}"
+                                        AND sigungu_name = "${selected_location[i].sigungu}"
+                                    )
+                                ),
+                                `;
+                            }
                         }
 
-                        connection.query(delete_post_has_locationQuery, (err, result) => {
+                        connection.query(post_has_locationQuery, (err, rows) => {
                             if (err) {
-                                console.log(err);
                                 connection.rollback(() => { throw err; });
                             }
-
-                            for (let i = 0; i < data.selected_location.length; i += 1) {
-                                if (i == data.selected_location.length - 1) {
-                                    post_has_locationQuery += `(${data.idpost}, ${data.selected_location[i].idlocation});`;
-                                } else {
-                                    post_has_locationQuery += `(${data.idpost}, ${data.selected_location[i].idlocation}), `
+                            
+                            connection.commit((err) => {
+                                if (err) {
+                                    connection.rollback(() => {throw err; });
                                 }
-                            }
-
-                            connection.query(post_has_locationQuery, (err, result) => {
-                                if (err) { 
-                                    console.log(err);
-                                    connection.rollback(() => { throw err; });
-                                }
-
-                                connection.commit((err) => {
-                                    if (err) { 
-                                        console.log(err);
-                                        connection.rollback(() => { throw err; });
-                                    }
-                                    console.log('Transaction Complete.');
-                                    res.send(result);
-                                });
-                            });
+                                console.log('Transactio Completed');
+                            })
+                            res.send({ idpost, });
                         });
-                    });
+                    })
                 });
             });
-            /* End transaction */
-        } catch (error) {
-            res.status(500).json({ error: error.toString() });
-        }
-    });
+        })
+    } catch (error) {
+        res.status(500).json({ error: error.toString() });
+    }
+});
 
-    // 매치 취소
-    router.route('/cancel')
-    .post((req, res) => {
-        try {
-            const data = req.body.data;
-            const matchQuery = `
-                update \`match\`
-                set match_status = '경기취소', apply_status = '신청불가', match_cancel_time = NOW(), match_reason_for_cancel = '개인사정', host_revenue = 0, host_revenue_status = 0
-                where idmatch = ${data.idmatch};
-            `
-            let match_has_userQuery = `
-                update match_has_user
-                set applicant_status = '신청취소', cancel_type = case when cancel_type is NULL then '경기취소' end, cancel_time = case when cancel_type = '경기취소' then NOW() end, reason_for_cancel = case when cancel_type = '경기취소' then '호스트(경기취소)' end,
-            `;
-            let refund_statusQuery = `case `;
-            let refund_fee_rateQuery = `case `;
-            let refund_feeQuery = `case `;
-            let match_has_userLastQuery = `where match_idmatch = ${data.idmatch} and applicant_status != '신청취소';`;
-            
-            for (let i = 0; i < data.applicants.length; i += 1) {
-                if (i !== data.applicants.length - 1) {
-                    refund_feeQuery += `when user_iduser = ${data.applicants[i].iduser} then ${data.applicants[i].amount_of_payment * 1} `;
-                } else {
-                    refund_statusQuery = `case when payment_status = '결제전' then '환불완료' else '환불전' end`
-                    refund_fee_rateQuery = `case when payment_status = '결제전' then 0 else 1 end`
-                    refund_feeQuery += `when user_iduser = ${data.applicants[i].iduser} then ${data.applicants[i].amount_of_payment * 1} end`;
+router.route('/edit')
+.post((req, res) => {
+    try {
+        const data = req.body.data;
+        const postQuery = `
+            update post
+            set contents = '${data.contents}', edit_time = NOW()
+            where idpost = ${data.idpost};
+        `;
+        console.log(data, data.selected_location);
+        const matchQuery = `
+            UPDATE \`match\` 
+            SET    host_account = '${data.deposit_account}', 
+                   match_fee = ${data.fee}, 
+                   sports_category = '${data.selected_sports_category}', 
+                   match_type = ${data.selected_sports_type}, 
+                   total_game_capacity = ${data.selected_sports_type * 2}, 
+                   total_guest = ${data.total_guest}, 
+                   start_time = '${data.match_date} ${data.match_start_time}', 
+                   end_time = '${data.match_date} ${data.match_end_time}',
+                   place_name = '${data.selected_place.place_name}',
+                   address = '${data.selected_place.address_name}'
+            WHERE  post_idpost = ${data.idpost}
+            AND    idmatch = ${data.idmatch};
+        `;
+
+        const delete_post_has_locationQuery = `
+            DELETE 
+            FROM   post_has_location 
+            WHERE  post_idpost = ${data.idpost};
+        `;
+
+        let post_has_locationQuery = `
+            INSERT INTO post_has_location 
+            (post_idpost, 
+             location_idlocation) 
+            VALUES 
+        `;
+
+        /* Begin transaction */
+        connection.beginTransaction((err) => {
+            if (err) { throw err; }
+            connection.query(postQuery, (err, result) => {
+                if (err) {
+                    console.log(err);
+                    connection.rollback(() => { throw err; });
                 }
-            }
-            match_has_userQuery += `refund_status = ${refund_statusQuery}, refund_fee_rate = ${refund_fee_rateQuery}, refund_fee = ${refund_feeQuery} ${match_has_userLastQuery}`;
 
-            console.log(`match_has_userQuery`, match_has_userQuery);
-            
-            /* Begin transaction */
-            connection.beginTransaction((err) => {
-                if (err) { throw err; }
                 connection.query(matchQuery, (err, result) => {
                     if (err) {
                         console.log(err);
                         connection.rollback(() => { throw err; });
                     }
-                    connection.query(match_has_userQuery, (err, result) => {
+
+                    connection.query(delete_post_has_locationQuery, (err, result) => {
                         if (err) {
                             console.log(err);
                             connection.rollback(() => { throw err; });
                         }
-                        connection.commit((err) => {
+
+                        for (let i = 0; i < data.selected_location.length; i += 1) {
+                            if (i == data.selected_location.length - 1) {
+                                post_has_locationQuery += `(${data.idpost}, ${data.selected_location[i].idlocation});`;
+                            } else {
+                                post_has_locationQuery += `(${data.idpost}, ${data.selected_location[i].idlocation}), `
+                            }
+                        }
+
+                        connection.query(post_has_locationQuery, (err, result) => {
                             if (err) { 
                                 console.log(err);
                                 connection.rollback(() => { throw err; });
                             }
-                            console.log('Transaction Complete.');
-                            res.send(result);
+
+                            connection.commit((err) => {
+                                if (err) { 
+                                    console.log(err);
+                                    connection.rollback(() => { throw err; });
+                                }
+                                console.log('Transaction Complete.');
+                                res.send(result);
+                            });
                         });
-                    })
+                    });
+                });
+            });
+        });
+        /* End transaction */
+    } catch (error) {
+        res.status(500).json({ error: error.toString() });
+    }
+});
+
+// 매치 취소
+router.route('/cancel')
+.post((req, res) => {
+    try {
+        const data = req.body.data;
+        const matchQuery = `
+            update \`match\`
+            set match_status = '경기취소', apply_status = '신청불가', match_cancel_time = NOW(), match_reason_for_cancel = '개인사정', host_revenue = 0, host_revenue_status = 0
+            where idmatch = ${data.idmatch};
+        `
+        let match_has_userQuery = `
+            update match_has_user
+            set applicant_status = '신청취소', cancel_type = case when cancel_type is NULL then '경기취소' end, cancel_time = case when cancel_type = '경기취소' then NOW() end, reason_for_cancel = case when cancel_type = '경기취소' then '호스트(경기취소)' end,
+        `;
+        let refund_statusQuery = `case `;
+        let refund_fee_rateQuery = `case `;
+        let refund_feeQuery = `case `;
+        let match_has_userLastQuery = `where match_idmatch = ${data.idmatch} and applicant_status != '신청취소';`;
+        
+        for (let i = 0; i < data.applicants.length; i += 1) {
+            if (i !== data.applicants.length - 1) {
+                refund_feeQuery += `when user_iduser = ${data.applicants[i].iduser} then ${data.applicants[i].amount_of_payment * 1} `;
+            } else {
+                refund_statusQuery = `case when payment_status = '결제전' then '환불완료' else '환불전' end`
+                refund_fee_rateQuery = `case when payment_status = '결제전' then 0 else 1 end`
+                refund_feeQuery += `when user_iduser = ${data.applicants[i].iduser} then ${data.applicants[i].amount_of_payment * 1} end`;
+            }
+        }
+        match_has_userQuery += `refund_status = ${refund_statusQuery}, refund_fee_rate = ${refund_fee_rateQuery}, refund_fee = ${refund_feeQuery} ${match_has_userLastQuery}`;
+
+        console.log(`match_has_userQuery`, match_has_userQuery);
+        
+        /* Begin transaction */
+        connection.beginTransaction((err) => {
+            if (err) { throw err; }
+            connection.query(matchQuery, (err, result) => {
+                if (err) {
+                    console.log(err);
+                    connection.rollback(() => { throw err; });
+                }
+                connection.query(match_has_userQuery, (err, result) => {
+                    if (err) {
+                        console.log(err);
+                        connection.rollback(() => { throw err; });
+                    }
+                    connection.commit((err) => {
+                        if (err) { 
+                            console.log(err);
+                            connection.rollback(() => { throw err; });
+                        }
+                        console.log('Transaction Complete.');
+                        res.send(result);
+                    });
                 })
             })
-        } catch (error) {
-            res.status(500).json({ error: error.toString() });
-        }
-    })
+        })
+    } catch (error) {
+        res.status(500).json({ error: error.toString() });
+    }
+})
 
 router.route('/apply')
     .post((req, res) => { // 매치 신청

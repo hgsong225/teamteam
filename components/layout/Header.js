@@ -153,7 +153,7 @@ class Header extends Component {
                         ></i>
                     </div>
                     <li className="logo">
-                        <Link prefetch href='http://localhost:3000/'><img src={'../../static/logo.png'}/></Link>
+                        <Link prefetch href='/'><img src={'../../static/logo.png'}/></Link>
                     </li>
                     <div className="header-list">
                         <li className="create">

@@ -3,13 +3,10 @@ import Router from 'next/router';
 import axios from 'axios';
 
 import fb from '../config/firebase';
-const AWS = require('../config/aws.js');
 
 import MainView from '../components/layout/MainView';
 
 import '../style/sign-up.css';
-
-const teamteam_URL = `${AWS.ec2.DNS}:${AWS.ec2.PORT}`;
 
 class SignUp extends Component {
     state = {
@@ -78,7 +75,7 @@ class SignUp extends Component {
             };
             console.log(phone);
     
-            axios.post(`http://${teamteam_URL}/api/auth/smsVerification`, {
+            axios.post(`/api/auth/smsVerification`, {
                 data,
             })
             .then((res) => {
@@ -191,7 +188,7 @@ class SignUp extends Component {
                         phone: this.state.phone,
                         display_name: firstDisplayName,
                     };
-                    axios.post(`http://${teamteam_URL}/api/auth/user`, {
+                    axios.post(`/api/user`, {
                         data,
                     })
                     .then((res) => {

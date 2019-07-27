@@ -6,14 +6,11 @@ import axios from 'axios';
 import moment from 'moment';
 
 import fb from '../../config/firebase';
-const AWS = require('../../config/aws.js');
 import MainView from '../../components/layout/MainView';
 
 import '../../style/profile-edit.css';
 
-const teamteam_URL = `${AWS.ec2.DNS}:${AWS.ec2.PORT}`;
-
-class Settings extends Component {
+class EditPayment extends Component {
     completeEdit = React.createRef()
 
     state = {
@@ -32,7 +29,7 @@ class Settings extends Component {
                 const params = {
                     uid: user.uid,
                 };
-                axios.get(`http://${teamteam_URL}/api/auth/user`, {
+                axios.get(`/api/user`, {
                     params, 
                 })
                 .then(res => {
@@ -88,7 +85,7 @@ class Settings extends Component {
 
         fb.auth().currentUser.updateProfile(updateUser)
         .then(res => {
-            axios.put(`http://${teamteam_URL}/api/auth/user`, {
+            axios.put(`/api/user`, {
                 data: user,
             })
             .then((res) => {
@@ -169,4 +166,4 @@ class Settings extends Component {
     }
 }
 
-export default Settings;
+export default EditPayment;

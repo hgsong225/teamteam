@@ -5,13 +5,10 @@ import axios from 'axios';
 import moment from 'moment';
 
 import fb from '../../config/firebase';
-const AWS = require('../../config/aws.js');
 
 import Layout from '../../components/layout/Layout';
 
 import '../../style/match-index.css';
-
-const teamteam_URL = `${AWS.ec2.DNS}:${AWS.ec2.PORT}`;
 
 class Match extends Component {
     copyTarget = React.createRef()
@@ -71,7 +68,7 @@ class Match extends Component {
         const params = {
             id: url.query.id,
         };
-        axios.get(`http://${teamteam_URL}/api/match`, {
+        axios.get(`/api/match`, {
             params,
         })
         .then((res) => {
@@ -94,7 +91,7 @@ class Match extends Component {
             uid: user.uid,
             idmatch: url.query.id,
         };
-        axios.get(`http://${teamteam_URL}/api/match/applicant/me`, {
+        axios.get(`/api/match/applicant/me`, {
             params,
         })
         .then(res => {
@@ -133,7 +130,7 @@ class Match extends Component {
             uid: user.uid,
             id: url.query.id,
         };
-        axios.get(`http://${teamteam_URL}/api/match/applicants`, {
+        axios.get(`/api/match/applicants`, {
             params,
         })
         .then((res) => {
@@ -167,7 +164,7 @@ class Match extends Component {
            cancel.refund_fee = this.state.applicants.filter(applicant => applicant.iduser == iduser)[0].amount_of_payment * cancel.refund_fee_rate;
         }
 
-        axios.post(`http://${teamteam_URL}/api/match/applicants`, {
+        axios.post(`/api/match/applicants`, {
             data: {
                 idmatch: match[0].idmatch,
                 iduser: Number(iduser),
@@ -214,7 +211,7 @@ class Match extends Component {
                 match_has_user_fee: this.state.match[0].match_fee,
             }
     
-            axios.post(`http://${teamteam_URL}/api/match/apply`, {
+            axios.post(`/api/match/apply`, {
                 data,
             })
             .then((res) => {
@@ -231,7 +228,7 @@ class Match extends Component {
         e.preventDefault();
         const { user, match } = this.state;
         console.log(`cancelApply BUTTON 입니다.`, e.target);
-        axios.post(`http://${teamteam_URL}/api/match/apply/cancel`, {
+        axios.post(`/api/match/apply/cancel`, {
             data: {
                 uid: user.uid,
                 idmatch: match[0].idmatch,
@@ -247,7 +244,7 @@ class Match extends Component {
         e.preventDefault();
         const { match, applicants } = this.state;
         console.log(`cancelMatch BUTTON 입니다.`, e.target);
-        axios.post(`http://${teamteam_URL}/api/match/cancel`, {
+        axios.post(`/api/match/cancel`, {
             data: {
                 idmatch: match[0].idmatch,
                 applicants,
@@ -267,7 +264,7 @@ class Match extends Component {
         };
 
         if (confirm("삭제하면 되돌릴 수 없습니다. 정말 삭제하시겠습니까?")) {
-            axios.delete(`http://${teamteam_URL}/api/match/me`, {
+            axios.delete(`/api/match/me`, {
                 params,
             })
             .then((res) => {

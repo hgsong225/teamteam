@@ -1,2 +1,7 @@
 {
+    "editor.wordWrap": "on",
+    "editor.lineHeight": 24,
+    "workbench.colorTheme": "Monokai",
+    "editor.fontLigatures": true,
+    "editor.wordWrapColumn": 120
 }

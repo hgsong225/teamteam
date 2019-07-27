@@ -5,9 +5,6 @@ import axios from 'axios';
 import moment from 'moment';
 
 import fb from '../../../config/firebase';
-const AWS = require('../../../config/aws.js');
-
-const teamteam_URL = `${AWS.ec2.DNS}:${AWS.ec2.PORT}`;
 
 class Profile extends Component {
     state = {
@@ -46,7 +43,7 @@ class Profile extends Component {
                 const params = {
                     uid: user.uid,
                 };
-                axios.get(`http://${teamteam_URL}/api/auth/user`, {
+                axios.get(`/api/user`, {
                     params, 
                 })
                 .then(res => {

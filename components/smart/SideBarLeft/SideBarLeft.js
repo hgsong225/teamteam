@@ -3,10 +3,6 @@ import Link from 'next/link';
 
 import LocationList from '../../dumb/SideBarLeft/LocationList';
 
-const AWS = require('../../../config/aws.js');
-
-const teamteam_URL = `${AWS.ec2.DNS}:${AWS.ec2.PORT}`;
-
 class SideBarLeft extends Component {
     static defaultProps = {
         user: {},
@@ -23,7 +19,7 @@ class SideBarLeft extends Component {
     }
 
     getAllLocation = () => {
-        fetch(`http://${teamteam_URL}/api/location`)
+        fetch(`/api/location`)
         .then(res => res.json())
         .then(data => {
             console.log(data);

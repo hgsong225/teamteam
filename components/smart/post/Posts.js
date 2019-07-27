@@ -4,12 +4,10 @@ import Router from 'next/router';
 const querystring = require('querystring');
 
 import fb from '../../../config/firebase';
-const AWS = require('../../../config/aws.js');
 
 import PostList from '../../dumb/post/PostList';
 import PostFilter from '../../dumb/post/PostFilter';
 
-const teamteam_URL = `${AWS.ec2.DNS}:${AWS.ec2.PORT}`;
 
 class Posts extends Component {
     static defaultProps = {
@@ -101,7 +99,7 @@ class Posts extends Component {
                     match_has_user_fee: selectedMatch[0].match_fee,
                 }
         
-                axios.post(`http://${teamteam_URL}/api/match/apply`, {
+                axios.post(`/api/match/apply`, {
                     data,
                 })
                 .then((res) => {

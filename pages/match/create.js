@@ -4,13 +4,8 @@ import axios from 'axios';
 
 import fb from '../../config/firebase';
 import location from '../../config/location.json';
-const AWS = require('../../config/aws.js');
 
 import MainView from '../../components/layout/MainView';
-
-import '../../style/match-create.css';
-
-const teamteam_URL = `${AWS.ec2.DNS}:${AWS.ec2.PORT}`;
 
 class CreateMatch extends Component {
     state = {
@@ -72,7 +67,7 @@ class CreateMatch extends Component {
                 const params = {
                     uid: user.uid,
                 }
-                axios.get(`http://${teamteam_URL}/api/auth/user`, {
+                axios.get(`/api/user`, {
                     params,
                 })
                 .then((res) => {
@@ -294,7 +289,7 @@ class CreateMatch extends Component {
                 fee,
                 deposit_account,
             };
-            axios.post(`http://${teamteam_URL}/api/match/create`, {
+            axios.post(`/api/match/create`, {
                 data,
             })
             .then((res) => {

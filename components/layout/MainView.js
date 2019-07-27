@@ -4,7 +4,6 @@ import Header from './Header';
 import View from './View';
 import SideBarLeft from '../smart/SideBarLeft/SideBarLeft';
 
-
 class MainView extends Component {
 
     toggleMenu = () => {

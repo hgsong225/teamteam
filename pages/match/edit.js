@@ -4,13 +4,10 @@ import axios from 'axios';
 
 import fb from '../../config/firebase';
 import location from '../../config/location.json';
-const AWS = require('../../config/aws.js');
 
 import MainView from '../../components/layout/MainView';
 
 import '../../style/match-edit.css';
-
-const teamteam_URL = `${AWS.ec2.DNS}:${AWS.ec2.PORT}`;
 
 class EditMatch extends Component {
     state = {
@@ -94,7 +91,7 @@ class EditMatch extends Component {
         const params = {
             id: url.query.id,
         };
-        axios.get(`http://${teamteam_URL}/api/match`, {
+        axios.get(`/api/match`, {
             params,
         })
         .then((res) => {
@@ -130,7 +127,7 @@ class EditMatch extends Component {
         const params = {
             id: url.query.id,
         };
-        axios.get(`http://${teamteam_URL}/api/post/locations`, {
+        axios.get(`/api/post/locations`, {
             params,
         })
         .then(res => {
@@ -149,7 +146,7 @@ class EditMatch extends Component {
             uid: user.uid,
             id: url.query.id,
         };
-        axios.get(`http://${teamteam_URL}/api/match/applicants`, {
+        axios.get(`/api/match/applicants`, {
             params,
         })
         .then((res) => {
@@ -388,7 +385,7 @@ class EditMatch extends Component {
                 deposit_account,
             };
     
-            axios.post(`http://${teamteam_URL}/api/match/edit`, {
+            axios.post(`/api/match/edit`, {
                 data,
             })
             .then((res) => {

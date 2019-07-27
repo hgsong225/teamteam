@@ -4,13 +4,10 @@ const mysql = require('mysql');
 var cors = require('cors');
 const request = require('request');
 
-const dbConfig = require('../config/db.js');
-const nCloud = require('../config/ncloud.js');
-
-const match = require('./api/match');
-const auth = require('./api/auth');
-const post = require('./api/post');
-const location = require('./api/location');
+const match = require('../pages/api/match');
+const auth = require('../pages/api/auth');
+const post = require('../pages/api/post');
+const location = require('../pages/api/location');
 
 const dev = process.env.NODE_ENV !== 'production';
 const app = next({ dev });
@@ -35,10 +32,10 @@ app.prepare()
 
         server.get('*', (req, res) => handle(req, res));
 
-        server.listen(process.env.PORT || 3333, (err) => {
+        server.listen(process.env.PORT || 3000, (err) => {
             if (err) {
                 throw new Error(err);
             }
-            console.log('Server is running on port 3333');
+            console.log('Server is running on port 3000');
         });
     });
