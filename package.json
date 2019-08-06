@@ -5,10 +5,10 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "nodemon ssr-server/index.js",
+    "dev": "next",
     "now-build": "next build",
     "build": "next build",
-    "start": "set NODE_ENV=production && node ssr-server/index.js",
+    "start": "next start",
     "export": "next export",
     "deploy": "npm run build && npm run export"
   },
@@ -24,14 +24,19 @@
     "firebase-admin": "^8.2.0",
     "firebase-functions": "^3.1.0",
     "moment": "^2.24.0",
-    "mysql": "^2.16.0",
-    "next": "^8.1.0",
+    "mysql": "^2.17.1",
+    "next": "^9.0.2",
+    "now": "^16.0.0",
     "react": "^16.8.6",
     "react-accessible-accordion": "^2.4.5",
     "react-dom": "^16.6.3",
-    "request": "^2.88.0"
+    "request": "^2.88.0",
+    "typescript": "^3.5.3"
   },
   "devDependencies": {
     "nodemon": "^1.18.10"
+  },
+  "engines": {
+    "node": ">=8.10.x"
   }
 }

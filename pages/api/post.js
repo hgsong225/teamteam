@@ -1,6 +1,6 @@
 const mysql = require('mysql');
 
-const db = require('../config/db.js');
+const db = require('../../config/db.js');
 
 const connection = mysql.createConnection(db);
 
@@ -12,30 +12,33 @@ export default (req, res) => {
     switch (method) {
         case 'GET':
         // Get data from your database
-
-        res.status(200).json({ message: 'GET 요청' })
+            connection.query('SELECT * FROM post', (err, rows) => {
+                if (err) throw err;
+        
+                res.send(rows);
+            });
 
         break
 
         case 'POST':
         // Create data in your database
 
-        res.status(200).json({ message: 'POST 요청' });
+        res.status(200).json({ });
 
         break
 
         case 'PUT':
         // Update data in your database
 
-        res.status(200).json({ message: 'PUT 요청' });
+        res.status(200).json({ });
 
         break
 
         case 'DELETE':
         // Delete data from your database
 
-        res.status(200).json({ message: 'DELETE 요청' });
-
+        res.status(200).json({ });
+        
         break
 
         default:

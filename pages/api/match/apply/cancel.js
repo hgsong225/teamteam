@@ -90,7 +90,6 @@ export default (req, res) => {
             } catch (error) {
                 res.status(500).json({ error: error.toString() });
             }
-        res.status(200).json({ message: 'POST 요청' });
 
         break
 

@@ -1,8 +1,9 @@
 const mysql = require('mysql');
 const request = require('request');
 
-const db = require('../config/db.js');
-const nCloud = require('../config/ncloud.js');
+const db = require('../../config/db.js');
+const nCloud = require('../../config/ncloud.js');
+console.log('mmmmmmmmㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ', nCloud);
 
 const connection = mysql.createConnection(db);
 
@@ -26,6 +27,7 @@ export default (req, res) => {
         try {
             const phoneNumber = req.body.data.phoneNumber;
             const CERTIFICATION_NUMBER = '123456';
+
             request.post({
                 json: true,
                 url: `https://api-sens.ncloud.com/v1/sms/services/${nCloud.sms.SERVICE_ID}/messages`,

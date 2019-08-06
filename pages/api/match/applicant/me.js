@@ -1,6 +1,6 @@
 const mysql = require('mysql');
 
-const db = require('../../../config/db.js');
+const db = require('../../../../config/db.js');
 
 const connection = mysql.createConnection(db);
 
@@ -14,15 +14,13 @@ export default (req, res) => {
         // Get data from your database
             try {
                 const data = req.query;
-                const query = `SELECT * FROM post
-                LEFT JOIN \`match\` ON post.idpost = \`match\`.post_idpost
-                LEFT JOIN match_has_user ON \`match\`.idmatch = match_has_user.match_idmatch
-                LEFT JOIN user ON user.iduser = match_has_user.user_iduser
-                    WHERE match_has_user.user_iduser =
-                        (SELECT iduser FROM user
-                            WHERE fb_uid = '${data.uid}'
-                        )
-                ORDER BY \`match\`.start_time ASC;
+                const query = `
+                SELECT * FROM match_has_user
+                    WHERE user_iduser =
+                        (SELECT iduser
+                            FROM user
+                            WHERE fb_uid = '${data.uid}')
+                    AND match_idmatch = '${data.idmatch}'
                 `;
 
                 connection.query(query, (err, rows) => {
@@ -32,7 +30,6 @@ export default (req, res) => {
             } catch (error) {
                 res.status(500).json({ error: error.toString() });
             }
-        res.status(200).json({ message: 'GET 요청' })
 
         break
 
