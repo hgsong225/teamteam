@@ -6,7 +6,7 @@ const connection = mysql.createConnection(db);
 
 export default (req, res) => {
     const {
-    method
+        method
     } = req
 
     switch (method) {
@@ -39,7 +39,7 @@ export default (req, res) => {
                     account,
                 } = req.body.data;
                 console.log(req.body.data);
-                const query = `INSERT INTO user (fb_uid, name, email, phone, display_name) VALUES ('${fb_uid}', '${name}', '${email}', '${phone}', '${display_name}', '${account}')`;
+                const query = `INSERT INTO user (fb_uid, name, email, phone, display_name, account) VALUES ('${fb_uid}', '${name}', '${email}', '${phone}', '${display_name}', '${account}')`;
         
                 connection.query(query, (err, rows) => {
                     if (err) throw err;
@@ -69,13 +69,6 @@ export default (req, res) => {
                 } = req.body.data;
                 console.log(req.body.data);
 
-                nullCheck = (data) => {
-                    if (data === null || data === 'null') {
-                        return null
-                    }
-                    return `'${data}'`;
-                }
-
                 const query = `
                     update \`user\`
                     set
@@ -83,11 +76,11 @@ export default (req, res) => {
                         display_name = '${displayName}',
                         email = '${email}',
                         phone = '${phoneNumber}',
-                        bod = ${nullCheck(bod)},
-                        gender = ${nullCheck(gender)},
+                        bod = '${bod}',
+                        gender = '${gender}',
                         height = ${height},
                         weight = ${weight},
-                        introduction = ${nullCheck(introduction)},
+                        introduction = '${introduction}',
                         name = '${name}'
                     where iduser = ${iduser};
                 `;

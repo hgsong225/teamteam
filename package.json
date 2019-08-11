@@ -26,7 +26,7 @@
     "moment": "^2.24.0",
     "mysql": "^2.17.1",
     "next": "^9.0.2",
-    "now": "^16.0.0",
+    "now": "^16.1.1",
     "react": "^16.8.6",
     "react-accessible-accordion": "^2.4.5",
     "react-dom": "^16.6.3",

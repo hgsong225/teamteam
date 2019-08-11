@@ -1,6 +1,6 @@
 const mysql = require('mysql');
 
-const db = require('../../config/db.js');
+const db = require('../../../config/db.js');
 
 const connection = mysql.createConnection(db);
 
@@ -48,7 +48,8 @@ export default (req, res) => {
                     FROM   post_has_location 
                     WHERE  post_idpost = ${data.idpost};
                 `;
-        
+                
+                // insert into가 아니라 update set으로 바꿀 것 ㅡㅡ
                 let post_has_locationQuery = `
                     INSERT INTO post_has_location 
                     (post_idpost, 
@@ -108,7 +109,6 @@ export default (req, res) => {
             } catch (error) {
                 res.status(500).json({ error: error.toString() });
             }
-        res.status(200).json({ message: 'POST 요청' });
 
         break
 

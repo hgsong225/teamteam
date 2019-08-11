@@ -1,6 +1,6 @@
 const mysql = require('mysql');
 
-const db = require('../../config/db.js');
+const db = require('../../../config/db.js');
 
 const connection = mysql.createConnection(db);
 
@@ -55,7 +55,6 @@ export default (req, res) => {
             } catch (error) {
                 res.status(500).json({ error: error.toString() });
             }
-        res.status(200).json({ message: 'POST 요청' });
 
         break
 

@@ -1,6 +1,6 @@
 const mysql = require('mysql');
 
-const db = require('../../../config/db.js');
+const db = require('../../../../config/db.js');
 
 const connection = mysql.createConnection(db);
 
@@ -44,7 +44,7 @@ export default (req, res) => {
                         const timeDiff = (new Date(start_time).getTime() - new Date().getTime()) / 1000;
 
                         let query2 = ``;
-                        // 24시간 넘기 전에 취소시 - 전액 환불
+                        // 경기시작 24시간 전에 취소시 - 전액 환불
                         if (timeDiff > 86400) {
                             query2 = `
                                 update match_has_user
@@ -58,7 +58,7 @@ export default (req, res) => {
                                 where user_iduser = (select iduser from user where fb_uid = '${data.uid}')
                             `;
                         }
-                        // 24시간 넘어서 취소 시 - 환불 x
+                        // 경기시작 24시간 이내 취소시 - 환불 x
                         if (timeDiff <= 86400 && timeDiff > 0) {
                             query2 = `
                                 update match_has_user
