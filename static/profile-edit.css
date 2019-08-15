@@ -1,4 +1,7 @@
 select, input {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
     background-color: inherit;
     margin-bottom: 0.5rem;
     width: 100%;
@@ -11,6 +14,9 @@ select, input {
     border-radius: 4px;
 }
 input {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
     box-sizing: border-box;
     letter-spacing: 1.2px;
 }
@@ -53,6 +59,12 @@ input {
 
 .definition-word {
     color: #757575;
+}
+
+button {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
 }
 
 button[type=submit] {

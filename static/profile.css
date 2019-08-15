@@ -51,6 +51,9 @@
 
 
 nav {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
     margin-top: 65px;
     height: 100vh;
     position: fixed;
