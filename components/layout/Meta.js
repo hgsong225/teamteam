@@ -10,7 +10,7 @@ export default () => (
     <style jsx global>{`
          body {
             margin: 0px;
-            height: 100vh;
+            height: 100%;
         }
 
         html {
@@ -96,7 +96,7 @@ export default () => (
             cursor: not-allowed;
         }
         .mask {
-            position: absolute;
+            position: fixed;
             width: 100%;
             height: 100%;
             z-index: 10;
