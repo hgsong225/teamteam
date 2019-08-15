@@ -29,12 +29,16 @@ class MainView extends Component {
                     .container{
                         display: flex;
                         flex-direction: column;
-                        margin-bottom: 80px;
+                        min-height: 100vh;
+                        padding-bottom: 80px;
                     }
                     .content {
                         display: flex;
                         justify-content: center;
                         margin-top: 64px;
+                    }
+                    .content aside {
+                        border-left:1px solid gray;
                     }
                     .view-container {
                         display: flex;
@@ -44,6 +48,10 @@ class MainView extends Component {
                     }
                     .sidebar-left-container#sidebar-left-container {
                         display: none;
+                    }
+                    aside {
+                    }
+                    main {
                     }
                     
                     @media screen and (max-width: 375px) {
@@ -56,6 +64,39 @@ class MainView extends Component {
                         }
                     }
                     @media screen and (max-width: 992px) {
+                        nav {
+                            -webkit-appearance: none;
+                            -moz-appearance: none;
+                            appearance: none;
+                            margin-top: 65px;
+                            height: 100vh;
+                            position: fixed;
+                            overflow-y: hidden;
+                            background-color: #fff;
+                        }
+                        nav:hover {
+                            overflow-y: scroll;
+                        }
+                        nav::-webkit-scrollbar-track
+                        {
+                            border-radius: 10px;
+                            background-color: #f1f1f1;
+                        }
+                        nav::-webkit-scrollbar
+                        {
+                            width: 8px;
+                            border-radius: 10px;
+                        }
+                        nav:hover::-webkit-scrollbar
+                        {
+                        }
+                        nav::-webkit-scrollbar-thumb
+                        {
+                            border-radius: 10px;
+                        }
+                        nav:hover::-webkit-scrollbar-thumb {
+                            background-color: #e0e0e0;
+                        }
                         .sidebar-left-container {
                             z-index: 999;
                             margin-top: 0;
@@ -68,6 +109,13 @@ class MainView extends Component {
                         }
                         .sidebar-left-container#sidebar-left-container {
                             display: block;
+                        }
+                        .content {
+                            margin-left: 0;
+                            margin-right: 0;
+                        }
+                        main {
+                            padding: 0 8px;
                         }
                     }
                 `}</style>

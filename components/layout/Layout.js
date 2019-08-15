@@ -53,6 +53,9 @@ class Layout extends Component {
                         border-left:1px solid gray;
                     }
                     nav {
+                        -webkit-appearance: none;
+                        -moz-appearance: none;
+                        appearance: none;
                         margin-top: 65px;
                         height: 100vh;
                         position: fixed;

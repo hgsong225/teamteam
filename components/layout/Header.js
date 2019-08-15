@@ -75,6 +75,9 @@ class Header extends Component {
                             cursor: pointer;
                         }
                         ul {
+                            -webkit-appearance: none;
+                            -moz-appearance: none;
+                            appearance: none;
                             display: flex;
                             justify-content: flex-start;
                             width: 100%;
@@ -85,6 +88,9 @@ class Header extends Component {
                             overflow: hidden;
                         }
                         li {
+                            -webkit-appearance: none;
+                            -moz-appearance: none;
+                            appearance: none;
                             padding: 0 16px;
                         }
                         li:last-child {

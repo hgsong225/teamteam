@@ -8,7 +8,7 @@ export default () => (
       <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous"></link>
     </Head>
     <style jsx global>{`
-         body { 
+         body {
             margin: 0px;
             height: 100vh;
         }
@@ -28,6 +28,9 @@ export default () => (
             letter-spacing: 1px;
         }
         ol, ul {
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
             list-style: none;
         }
         blockquote, q {
@@ -40,6 +43,9 @@ export default () => (
         }
 
         a {
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
             color: #757575;
         }
 
@@ -70,6 +76,9 @@ export default () => (
         }
 
         button {
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
             -webkit-transition: all 200ms cubic-bezier(0.390, 0.500, 0.150, 1.360);
             -moz-transition: all 200ms cubic-bezier(0.390, 0.500, 0.150, 1.360);
             -ms-transition: all 200ms cubic-bezier(0.390, 0.500, 0.150, 1.360);
