@@ -1,13 +1,12 @@
 import React, { Component } from 'react';
 import Router from 'next/router';
+import Head from 'next/head';
 import axios from 'axios';
 
 import fb from '../../config/firebase';
 import location from '../../config/location.json';
 
 import MainView from '../../components/layout/MainView';
-
-import '../../style/match-edit.css';
 
 class EditMatch extends Component {
     state = {
@@ -420,6 +419,10 @@ class EditMatch extends Component {
                             max-width: 550px;
                         }
                     `}</style>
+                    <Head>
+                        <title>팀팀 - 경기 수정</title>
+                        <link href="../../static/match-edit.css" rel="stylesheet" />
+                    </Head>
                     <p className="page-title">경기 수정</p>
                     <form
                         onSubmit={this.handleSubmit}

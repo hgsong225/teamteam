@@ -1,10 +1,9 @@
 //추후 Container로 작업 할 것
 import React, { Component } from 'react';
+import Head from 'next/head';
 
 import fb from '../config/firebase';
 import MainView from '../components/layout/MainView';
-
-import '../style/settings.css';
 
 class Settings extends Component {
     completeEdit = React.createRef()
@@ -116,6 +115,10 @@ class Settings extends Component {
     render() {
         return (
             <MainView>
+                <Head>
+                    <title>팀팀 - 설정</title>
+                    <link href="../static/settings.css" rel="stylesheet" />
+                </Head>
                 <div className="">
                     <header>
                         <h1>계정 관리</h1>

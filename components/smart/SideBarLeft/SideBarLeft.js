@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import Link from 'next/link';
+import Head from 'next/head';
 
 import LocationList from '../../dumb/SideBarLeft/LocationList';
 
@@ -84,6 +85,9 @@ class SideBarLeft extends Component {
                         border: .5px solid #e1e1e1;
                     }
                 `}</style>
+                <Head>
+                    <link href="../static/sidebar-left.css" rel="stylesheet" />
+                </Head>
                 <div className="logo-container">
                     <img src="../../../static/logo.png"/>
                 </div>

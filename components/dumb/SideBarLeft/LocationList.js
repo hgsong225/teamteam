@@ -12,7 +12,9 @@ import axios from 'axios';
 // import 'react-accessible-accordion/dist/minimal-example.css';/
 
 // 'Fancy' theme - boilerplate styles for all components, as seen on our demo:
-import '../../../style/sidebar-left.css';
+
+// import '../../../style/sidebar-left.css';
+
 // import 'react-accessible-accordion/dist/fancy-example.css';
 
 class LocationList extends Component {

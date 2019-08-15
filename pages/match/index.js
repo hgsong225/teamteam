@@ -1,14 +1,13 @@
 import React, { Component }from 'react';
 import Link from 'next/link';
 import Router from 'next/router';
+import Head from 'next/head';
 import axios from 'axios';
 import moment from 'moment';
 
 import fb from '../../config/firebase';
 
 import Layout from '../../components/layout/Layout';
-
-import '../../style/match-index.css';
 
 class Match extends Component {
     copyTarget = React.createRef()
@@ -301,6 +300,10 @@ class Match extends Component {
                     <style jsx>{`
 
                     `}</style>
+                    <Head>
+                        <title>팀팀 - 경기</title>
+                        <link href="../../static/match-index.css" rel="stylesheet" />
+                    </Head>
                     <div className="post-container">
                         {
                             match.length > 0 &&

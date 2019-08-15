@@ -2,13 +2,12 @@
 import React, { Component } from 'react';
 import Link from 'next/link';
 import Router from 'next/router';
+import Head from 'next/head';
 import axios from 'axios';
 import moment from 'moment';
 
 import fb from '../../config/firebase';
 import MainView from '../../components/layout/MainView';
-
-import '../../style/profile-edit.css';
 
 class EditProfile extends Component {
     completeEdit = React.createRef()
@@ -122,6 +121,10 @@ class EditProfile extends Component {
         const { user } = this.state;
         return (
             <MainView>
+            <Head>
+                <title>팀팀 - 프로필 수정</title>
+                <link href="../../static/profile-edit.css" rel="stylesheet" />
+            </Head>
             <div className="profile-edit-container">
                 <p className="profile-edit-title">프로필 수정</p>
                 {

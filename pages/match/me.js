@@ -1,14 +1,12 @@
 import React, { Component } from 'react';
 import Router from 'next/router';
+import Head from 'next/head';
 import Link from 'next/link';
 import axios from 'axios';
 import moment from 'moment';
 
 import fb from '../../config/firebase';
 import Layout from '../../components/layout/Layout';
-
-import '../../style/match-me.css';
-
 
 class Me extends Component {
     state = {
@@ -184,6 +182,10 @@ class Me extends Component {
                             width: 100%;
                         }
                     `}</style>
+                        <Head>
+                            <title>팀팀 - 경기 생성</title>
+                            <link href="../static/match-me.css" rel="stylesheet" />
+                        </Head>
                         <div className="title-box">
                             <h3 className="title">다가오는 내 매치</h3>
                         </div>

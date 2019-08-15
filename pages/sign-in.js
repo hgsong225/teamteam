@@ -1,12 +1,11 @@
 import React, { Component } from 'react';
 import Link from 'next/link';
 import Router from 'next/router';
+import Head from 'next/head';
 
 import fb from '../config/firebase';
 
 import MainView from '../components/layout/MainView';
-
-import '../style/sign-in.css';
 
 class SignUp extends Component {
     state = {
@@ -49,6 +48,10 @@ class SignUp extends Component {
             <MainView>
                 <style jsx>{`
                 `}</style>
+                <Head>
+                    <title>My styled page</title>
+                    <link href="../static/sign-in.css" rel="stylesheet" />
+                </Head>
                 <div className="sign-container">
                     <p className="page-title">로그인</p>
                     <form

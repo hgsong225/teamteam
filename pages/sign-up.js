@@ -1,12 +1,11 @@
 import React, { Component } from 'react';
 import Router from 'next/router';
+import Head from 'next/head';
 import axios from 'axios';
 
 import fb from '../config/firebase';
 
 import MainView from '../components/layout/MainView';
-
-import '../style/sign-up.css';
 
 class SignUp extends Component {
     state = {
@@ -222,6 +221,10 @@ class SignUp extends Component {
                 <style jsx>{`
 
                 `}</style>
+                <Head>
+                    <title>팀팀 - 회원가입</title>
+                    <link href="../static/sign-up.css" rel="stylesheet" />
+                </Head>
                 <div className="sign-container">
                     <div className="page-title-box">
                         <p className="page-title">teamteam에 오신 것을 환영합니다!</p>

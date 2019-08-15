@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import Router from 'next/router';
+import Head from 'next/head';
 import axios from 'axios';
 
 import fb from '../../config/firebase';
@@ -324,6 +325,10 @@ class CreateMatch extends Component {
                             max-width: 550px;
                         }
                     `}</style>
+                    <Head>
+                        <title>팀팀 - 경기 생성</title>
+                        <link href="../static/match-create.css" rel="stylesheet" />
+                    </Head>
                     <p className="page-title">빠르게 경기를 생성해 팀팀 게스트를 초대하세요!</p>
                     <form
                         onSubmit={this.handleSubmit}
