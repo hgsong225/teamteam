@@ -116,7 +116,7 @@ class SideBarLeft extends Component {
                     </div>
                     <div className="footer-box">
                         <p className="sidebar-sub-title">사업자 번호</p>
-                        <p className="account">00-000-0000</p>
+                        <p className="account">228-53-00472</p>
                     </div>
                 </footer>
             </div>
