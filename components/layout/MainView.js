@@ -75,6 +75,7 @@ class MainView extends Component {
                             background-color: #fff;
                         }
                         nav:hover {
+                            -webkit-overflow-scrolling: touch;
                             overflow-y: scroll;
                         }
                         nav::-webkit-scrollbar-track
