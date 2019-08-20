@@ -381,7 +381,7 @@ class SignUp extends Component {
                                         ex) 신한 000-000-00000
                                     </p>
                                     <p className="definition-word-desc">
-                                        * 호스트 환급, 게스트 환불 목적 이외에 사용되지 않으며 제 3자에게 공개되지 않습니다.
+                                        * 호스트 참여금 환급 목적 이외 사용되지 않으며 제 3자에게 공개되지 않습니다.
                                     </p>
                                 </div>
                             </div>

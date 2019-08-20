@@ -9,7 +9,7 @@ import moment from 'moment';
 import fb from '../../config/firebase';
 import MainView from '../../components/layout/MainView';
 
-class EditPayment extends Component {
+class EditAccount extends Component {
     completeEdit = React.createRef()
 
     state = {
@@ -127,7 +127,7 @@ class EditPayment extends Component {
                 <link href="../../static/profile-edit.css" rel="stylesheet" />
             </Head>
             <div className="profile-edit-container">
-                <p className="profile-edit-title">결제 관리</p>
+                <p className="profile-edit-title">계좌 관리</p>
                 {
                     user !== null &&
                     <main>
@@ -169,4 +169,4 @@ class EditPayment extends Component {
     }
 }
 
-export default EditPayment;
+export default EditAccount;

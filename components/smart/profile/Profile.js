@@ -144,7 +144,7 @@ class Profile extends Component {
                         <Link href='profile/edit'><a>프로필 수정</a></Link>
                     </section>
                     <section className="profile-section">
-                        <Link href='profile/payment'><a>결제 관리</a></Link>
+                        <Link href='profile/account'><a>계정 관리</a></Link>
                     </section>
                     <section className="profile-section">
                         <Link href='settings'><a>계정 관리</a></Link>
