@@ -301,7 +301,7 @@ class Match extends Component {
 
                     `}</style>
                     <Head>
-                        <title>팀팀 - 경기</title>
+                        <title>팀팀 | 경기</title>
                         <link href="../../static/match-index.css" rel="stylesheet" />
                     </Head>
                     <div className="post-container">

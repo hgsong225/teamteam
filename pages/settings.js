@@ -116,7 +116,7 @@ class Settings extends Component {
         return (
             <MainView>
                 <Head>
-                    <title>팀팀 - 설정</title>
+                    <title>팀팀 | 설정</title>
                     <link href="../static/settings.css" rel="stylesheet" />
                 </Head>
                 <div className="">

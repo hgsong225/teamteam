@@ -183,7 +183,7 @@ class Me extends Component {
                         }
                     `}</style>
                         <Head>
-                            <title>팀팀 - 경기 생성</title>
+                            <title>팀팀 | 내 경기</title>
                             <link href="../static/match-me.css" rel="stylesheet" />
                         </Head>
                         <div className="title-box">

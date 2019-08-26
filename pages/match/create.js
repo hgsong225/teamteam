@@ -326,7 +326,7 @@ class CreateMatch extends Component {
                         }
                     `}</style>
                     <Head>
-                        <title>팀팀 - 경기 생성</title>
+                        <title>팀팀 | 경기 생성</title>
                         <link href="../static/match-create.css" rel="stylesheet" />
                     </Head>
                     <p className="page-title">빠르게 경기를 생성해 팀팀 게스트를 초대하세요!</p>

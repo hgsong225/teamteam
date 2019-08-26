@@ -49,7 +49,7 @@ class SignUp extends Component {
                 <style jsx>{`
                 `}</style>
                 <Head>
-                    <title>My styled page</title>
+                    <title>팀팀 | 로그인</title>
                     <link href="../static/sign-in.css" rel="stylesheet" />
                 </Head>
                 <div className="sign-container">

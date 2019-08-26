@@ -222,7 +222,7 @@ class SignUp extends Component {
 
                 `}</style>
                 <Head>
-                    <title>팀팀 - 회원가입</title>
+                    <title>팀팀 | 회원가입</title>
                     <link href="../static/sign-up.css" rel="stylesheet" />
                 </Head>
                 <div className="sign-container">

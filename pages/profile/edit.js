@@ -122,7 +122,7 @@ class EditProfile extends Component {
         return (
             <MainView>
             <Head>
-                <title>팀팀 - 프로필 수정</title>
+                <title>팀팀 | 프로필 수정</title>
                 <link href="../../static/profile-edit.css" rel="stylesheet" />
             </Head>
             <div className="profile-edit-container">

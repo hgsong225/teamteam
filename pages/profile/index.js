@@ -9,7 +9,7 @@ class Profile extends Component {
         return (
             <MainView>
                 <Head>
-                    <title>팀팀 - 프로필</title>
+                    <title>팀팀 | 프로필</title>
                     <link href="../../static/profile.css" rel="stylesheet" />
                 </Head>
                 <ProfileComp />

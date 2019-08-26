@@ -123,7 +123,7 @@ class EditAccount extends Component {
         return (
             <MainView>
             <Head>
-                <title>팀팀</title>
+                <title>팀팀 | 계좌 관리</title>
                 <link href="../../static/profile-edit.css" rel="stylesheet" />
             </Head>
             <div className="profile-edit-container">

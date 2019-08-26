@@ -420,7 +420,7 @@ class EditMatch extends Component {
                         }
                     `}</style>
                     <Head>
-                        <title>팀팀 - 경기 수정</title>
+                        <title>팀팀 | 경기 수정</title>
                         <link href="../../static/match-edit.css" rel="stylesheet" />
                     </Head>
                     <p className="page-title">경기 수정</p>

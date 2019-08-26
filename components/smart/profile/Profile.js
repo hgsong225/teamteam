@@ -125,7 +125,7 @@ class Profile extends Component {
                         </section>
                     </div>
                     <div className="profile-section-container">
-                        <p className="profile-section-title">결제</p>
+                        <p className="profile-section-title">환급</p>
                         <section className="profile-section">
                             <div className="profile-section-contents">
                                 <div className="profile-content-definition-container">
@@ -134,7 +134,7 @@ class Profile extends Component {
                                         <p>{account !== null ? account : '-'}</p>
                                     </div>
                                     <p className="definition-word-desc">
-                                        * 호스트 환급, 게스트 환불 목적 이외에 사용되지 않으며 제 3자에게 공개되지 않습니다.
+                                        * 호스트 환급 목적 이외 사용되지 않으며 제 3자에게 공개되지 않습니다.
                                     </p>
                                 </div>
                             </div>
@@ -144,7 +144,7 @@ class Profile extends Component {
                         <Link href='profile/edit'><a>프로필 수정</a></Link>
                     </section>
                     <section className="profile-section">
-                        <Link href='profile/account'><a>계정 관리</a></Link>
+                        <Link href='profile/account'><a>계좌 관리</a></Link>
                     </section>
                     <section className="profile-section">
                         <Link href='settings'><a>계정 관리</a></Link>
