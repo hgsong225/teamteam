@@ -66,8 +66,8 @@ class SideBarLeft extends Component {
                             width: 100%;
                         }
                         .logo-container img {
-                            height: 40px;
-                            padding: 40px;
+                            height: 80px;
+                            padding: 20px;
                         }
                         .sidebar-header-list {
                             font-size: 16px;

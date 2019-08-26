@@ -99,7 +99,7 @@ class Header extends Component {
                         .logo {
                             display: flex !important;
                             align-items: center;
-                            margin-left: 40px;
+                            margin-left: 30px;
                             padding: 0 !important;
                             height: 64px;
                             cursor: pointer;
@@ -107,7 +107,7 @@ class Header extends Component {
                             transition: all .8s ease-out;
                         }
                         .logo img {
-                            height: 40px;
+                            height: 60px;
                             text-align: center;
                         }
                         .logo, .header-list a, .create a{
