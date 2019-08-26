@@ -111,10 +111,6 @@ class SideBarLeft extends Component {
                 <hr />
                 <footer>
                     <div className="footer-box">
-                        <p className="sidebar-sub-title">계좌번호</p>
-                        <p className="account">신한 110-439-532672 팀팀</p>
-                    </div>
-                    <div className="footer-box">
                         <p className="sidebar-sub-title">카카오톡 플러스친구</p>
                         <p className="account">@팀팀</p>
                     </div>
