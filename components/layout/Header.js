@@ -55,12 +55,11 @@ class Header extends Component {
                         .navbar {
                             overflow: hidden;
                             background-color: #fff;
-                            border-bottom:1px solid #f1f1f1;
+                            border-bottom:1px solid #E0E0E0;
                             position: fixed;
                             width: 100%;
                             height: 64px;
                             z-index: 998;
-                            box-shadow: 0 4px 5px 0 rgba(0,0,0,0.14), 0 1px 10px 0 rgba(0,0,0,0.12), 0 2px 4px -1px rgba(0,0,0,0.2);
                         }
                         .menu-box {
                             position: absolute;
