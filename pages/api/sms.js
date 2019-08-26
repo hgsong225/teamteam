@@ -3,16 +3,27 @@ const request = require('request');
 
 const db = require('../../config/db.js');
 const nCloud = require('../../config/ncloud.js');
-console.log('mmmmmmmmㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ', nCloud);
 
 const connection = mysql.createConnection(db);
 
 export default (req, res) => {
     const {
-    method
-    } = req
+        method
+    } = req;
 
-    console.log('hey', req.body);
+    let randomNum = {};
+    //0~9까지의 난수
+    randomNum.random = (n1, n2) => {
+        return parseInt(Math.random() * (n2 -n1 +1)) + n1;
+    };
+    //인증번호를 뽑을 난수 입력 n 5이면 5자리
+    randomNum.authNo = (n) => {
+        let value = "";
+        for (let i = 0; i < n; i++) {
+            value += randomNum.random(0,9);
+        }
+        return value;
+    };
 
     switch (method) {
         case 'GET':
@@ -26,7 +37,7 @@ export default (req, res) => {
         // Create data in your database
         try {
             const phoneNumber = req.body.data.phoneNumber;
-            const CERTIFICATION_NUMBER = '123456';
+            const CERTIFICATION_NUMBER = randomNum.authNo(6);
 
             request.post({
                 json: true,

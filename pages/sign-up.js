@@ -74,7 +74,7 @@ class SignUp extends Component {
             };
             console.log(phone);
     
-            axios.post(`/api/auth/smsVerification`, {
+            axios.post(`/api/sms`, {
                 data,
             })
             .then((res) => {
