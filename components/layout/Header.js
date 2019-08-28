@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import Link from 'next/link';
+import Head from 'next/head';
 
 import fb from '../../config/firebase';
 
@@ -45,111 +46,114 @@ class Header extends Component {
     render() {
         return (
             <div className="navbar">
-                    <style jsx>{`
-                        .toggle {
-                            display: none;
-                        }
-                        .active {
-                            display: block;
-                        }
-                        .navbar {
-                            overflow: hidden;
-                            background-color: #fff;
-                            border-bottom:1px solid #E0E0E0;
-                            position: fixed;
-                            width: 100%;
-                            height: 64px;
-                            z-index: 998;
-                        }
-                        .menu-box {
-                            position: absolute;
-                            box-sizing: border-box;
-                            visibility: hidden;
-                            opacity: 0;
-                        }
-                        .menu {
-                            box-sizing: border-box;
-                            padding: 20px 20px;
-                            font-size: 24px;
-                            cursor: pointer;
-                        }
-                        ul {
-                            -webkit-appearance: none;
-                            -moz-appearance: none;
-                            appearance: none;
-                            display: flex;
-                            justify-content: flex-start;
-                            width: 100%;
-                            height: 100%;
-                            list-style-type: none;
-                            margin: 0;
-                            padding: 0;
-                            overflow: hidden;
-                        }
-                        li {
-                            -webkit-appearance: none;
-                            -moz-appearance: none;
-                            appearance: none;
-                            padding: 0 16px;
-                        }
-                        li:last-child {
-                            padding-right: 40px;
+                <style jsx>{`
+                    .toggle {
+                        display: none;
+                    }
+                    .active {
+                        display: block;
+                    }
+                    .navbar {
+                        overflow: hidden;
+                        background-color: #fff;
+                        border-bottom:1px solid #E0E0E0;
+                        position: fixed;
+                        width: 100%;
+                        height: 64px;
+                        z-index: 998;
+                    }
+                    .menu-box {
+                        position: absolute;
+                        box-sizing: border-box;
+                        visibility: hidden;
+                        opacity: 0;
+                    }
+                    .menu {
+                        box-sizing: border-box;
+                        padding: 20px 20px;
+                        font-size: 24px;
+                        cursor: pointer;
+                    }
+                    ul {
+                        -webkit-appearance: none;
+                        -moz-appearance: none;
+                        appearance: none;
+                        display: flex;
+                        justify-content: flex-start;
+                        width: 100%;
+                        height: 100%;
+                        list-style-type: none;
+                        margin: 0;
+                        padding: 0;
+                        overflow: hidden;
+                    }
+                    li {
+                        -webkit-appearance: none;
+                        -moz-appearance: none;
+                        appearance: none;
+                        padding: 0 16px;
+                    }
+                    li:last-child {
+                        padding-right: 40px;
+                    }
+                    .logo {
+                        display: flex !important;
+                        align-items: center;
+                        margin-left: 30px;
+                        padding: 0 !important;
+                        height: 64px;
+                        cursor: pointer;
+                        transform: translateX(0px);
+                        transition: all .8s ease-out;
+                    }
+                    .logo img {
+                        height: 60px;
+                        text-align: center;
+                    }
+                    .logo, .header-list a, .create a{
+                        display: block;
+                        padding: 21.5px 16px;
+                        text-decoration: none;
+                    }
+                    .header-list {
+                        display: flex !important;
+                        justify-content: flex-end;
+                        width: 100%;
+                        display: inline-block;
+                    }
+                    .header-list li a:hover:not(.active) {
+                        color: #2196f3;
+                        font-weight: bold;
+                    }
+                    .create a{
+                        background-color: #2196f3;
+                        color: #fff;
+                    }
+                    .create a:hover {
+                        color: #fff !important;
+                        font-weight: bold !important;
+                    }
+                    @media screen and (max-width: 992px) {
+                        .header-list {
+                            display: none !important;
                         }
                         .logo {
-                            display: flex !important;
-                            align-items: center;
-                            margin-left: 30px;
-                            padding: 0 !important;
-                            height: 64px;
-                            cursor: pointer;
-                            transform: translateX(0px);
+                            margin: auto;
                             transition: all .8s ease-out;
                         }
-                        .logo img {
-                            height: 60px;
-                            text-align: center;
+                        .menu-box {
+                            visibility: visible;
+                            opacity: 1;
                         }
-                        .logo, .header-list a, .create a{
-                            display: block;
-                            padding: 21.5px 16px;
-                            text-decoration: none;
+                    }
+                    @media screen and (max-width: 1200px) and (min-width: 993px) {
+                        .logo {
                         }
-                        .header-list {
-                            display: flex !important;
-                            justify-content: flex-end;
-                            width: 100%;
-                            display: inline-block;
-                        }
-                        .header-list li a:hover:not(.active) {
-                            color: #2196f3;
-                            font-weight: bold;
-                        }
-                        .create a{
-                            background-color: #2196f3;
-                            color: #fff;
-                        }
-                        .create a:hover {
-                            color: #fff !important;
-                            font-weight: bold !important;
-                        }
-                        @media screen and (max-width: 992px) {
-                            .header-list {
-                                display: none !important;
-                            }
-                            .logo {
-                                margin: auto;
-                                transition: all .8s ease-out;
-                            }
-                            .menu-box {
-                                visibility: visible;
-                                opacity: 1;
-                            }
-                        }
-                        @media screen and (max-width: 1200px) and (min-width: 993px) {
-                            .logo {
-                            }
-                        }
-                    `}</style>
+                    }
+                `}</style>
+                <Head>
+                    <link rel="shortcut icon" type="image/png" href="../../static/favicon2.png"/>
+                </Head>
                 <ul>
                     <div className="menu-box">
                         <i
