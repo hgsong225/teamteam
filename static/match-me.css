@@ -16,6 +16,7 @@
     border: solid 1px #90caf9;
     border-radius: 4px;
     background-color: #bbdefb;
+    display: none;
 }
 .match-me-notice-type {
     margin: 0;
