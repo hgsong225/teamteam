@@ -27,14 +27,15 @@ class CreateMatch extends Component {
         selected_sports_type: '10 : 10',
         // 이제 location을 db에 insert 할 때 server단에서 예외처리 작업해서 집어 넣을 것.
         total_guest: 1,
+        total_guest_arr: [],
         location,
         selected_location: [],
         selected_sido: '세종특별자치시',
         selected_sigungu: '',
         match_date: new Date().toISOString().slice(0,10),
         match_time_type: '2',
-        match_start_time: `${new Date().getHours() + 1}`,
-        match_end_time: `${new Date().getHours() + 2}`,
+        match_start_time: `${new Date().getHours() + 1}:00`,
+        match_end_time: `${new Date().getHours() + 3}:00`,
         keyword: '',
         places: [],
         selected_place: [],
@@ -60,6 +61,31 @@ class CreateMatch extends Component {
         script.src = "//dapi.kakao.com/v2/maps/sdk.js?appkey=7aa07991d231ab8c2de8a2ca3feca8e6&autoload=false&libraries=services";
         script.async = true;
         document.body.appendChild(script);
+
+        let NEEDED_GUEST_NUMBER = Number(this.state.selected_sports_type.split(" ")[0]) - 1;
+        let total_guest_arr = [];
+        for (let i = 1; i <= NEEDED_GUEST_NUMBER; i += 1) {
+            total_guest_arr.push(i);
+        }
+        this.setState({ total_guest_arr });
+    }
+
+    componentDidUpdate(prevProps, prevState, snapshot) {
+        if (prevState.match_start_time != this.state.match_start_time) {
+            this.setState({
+                match_end_time: `${+this.state.match_start_time.split(":")[0] + +this.state.match_time_type}:00`
+             })
+        }
+        else if (prevState.selected_sports_type != this.state.selected_sports_type) {
+            let NEEDED_GUEST_NUMBER = Number(this.state.selected_sports_type.split(" ")[0]) - 1;
+            let total_guest_arr = [];
+            for (let i = 1; i <= NEEDED_GUEST_NUMBER; i += 1) {
+                total_guest_arr.push(i);
+            }
+            this.setState({ total_guest_arr });
+            return true;
+        }
+        return false;
     }
 
     authListener = () => {
@@ -179,7 +205,7 @@ class CreateMatch extends Component {
             });
         } else if (name === "match_time_type") {
             this.setState({
-                match_end_time: +this.state.match_start_time + +e.target.value
+                match_end_time: `${+this.state.match_start_time.split(":")[0] + +e.target.value}:00`
             })
         }
     }
@@ -385,14 +411,18 @@ class CreateMatch extends Component {
                             </div>
                             <div className="section-contents">
                                 <h3 className="contents-title">게스트가 몇 명이 필요하나요?</h3>
-                                <input
+                                <select
                                     onChange={this.handleChange}
-                                    type="number"
                                     name="total_guest"
-                                    value={this.state.total_guest}
-                                    min="1"
-                                    max={Number(this.state.selected_sports_type.split(" ")[0]) - 1}
-                                />
+                                >
+                                    {
+                                        this.state.total_guest_arr.map(num => {
+                                            return (
+                                                <option>{num}</option>
+                                            )
+                                        })
+                                    }
+                                </select>
                             </div>
                             <div className="section-contents">
                                 <h3 className="contents-title">지역 선택</h3>
@@ -478,35 +508,50 @@ class CreateMatch extends Component {
                             </div>
                             <div className="section-contents">
                                 <h3 className="contents-title">경기 시간</h3>
-                                <p className="contents-desc">경기 시작</p>
-                                    <input
+                                {/* <p className="contents-desc">경기 시작</p> */}
+                                    <select
+                                        onChange={this.handleChange}
+                                        name="match_start_time"
+                                        className="select-time"
+                                    >
+                                        {
+                                            ['00', '01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23'].map(hours => {
+                                                return (
+                                                    <option value={hours + ":00"}>{hours}:00</option>
+                                                )
+                                            })
+                                        }
+                                    </select>
+                                    {/* <input
                                         onChange={this.handleChange}
                                         type="time"
                                         name="match_start_time"
                                         step="1800"
                                         value={this.state.match_start_time+":00"}
-                                    />
-                                    <label className="radio-label">2시간
-                                        <input
-                                            onChange={this.handleChange}
-                                            type="radio"
-                                            name="match_time_type"
-                                            value="2"
-                                            checked={this.state.match_time_type === '2'}
-                                        />
-                                        <span className="checkmark"></span>
-                                    </label>
-                                    <label className="radio-label">3시간
-                                        <input
-                                            onChange={this.handleChange}
-                                            type="radio"
-                                            name="match_time_type"
-                                            value="3"
-                                            checked={this.state.match_time_type === '3'}
-                                        />
-                                        <span className="checkmark"></span>
-                                    </label>
-                                <p>{this.state.match_end_time}시 경기 종료</p>
+                                    /> */}
+                                    <div>
+                                        <label className="radio-label">2시간
+                                            <input
+                                                onChange={this.handleChange}
+                                                type="radio"
+                                                name="match_time_type"
+                                                value="2"
+                                                checked={this.state.match_time_type === '2'}
+                                            />
+                                            <span className="checkmark"></span>
+                                        </label>
+                                        <label className="radio-label">3시간
+                                            <input
+                                                onChange={this.handleChange}
+                                                type="radio"
+                                                name="match_time_type"
+                                                value="3"
+                                                checked={this.state.match_time_type === '3'}
+                                            />
+                                            <span className="checkmark"></span>
+                                        </label>
+                                    </div>
+                                <p>{this.state.match_start_time} ~ {this.state.match_end_time}</p>
                             </div>
                             <div className="section-contents">
                                 <h3 className="contents-title">경기장</h3>
