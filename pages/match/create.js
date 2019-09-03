@@ -85,6 +85,7 @@ class CreateMatch extends Component {
             this.setState({ total_guest_arr });
             return true;
         }
+
         return false;
     }
 
@@ -104,7 +105,6 @@ class CreateMatch extends Component {
                         user,
                         phone: data[0].phone,
                         deposit_account: data[0].account,
-
                     });
                 })
                 .catch((error) => {
@@ -207,6 +207,9 @@ class CreateMatch extends Component {
             this.setState({
                 match_end_time: `${+this.state.match_start_time.split(":")[0] + +e.target.value}:00`
             })
+        } else if (name === "new_deposit_account" && target.value === "") {
+            const new_deposit = document.getElementById("new_deposit")
+            new_deposit.style.display = "inline-block";
         }
     }
 
@@ -295,11 +298,13 @@ class CreateMatch extends Component {
                 phone,
                 contents,
                 fee,
-                deposit_account,
+                new_deposit_account,
             } = this.state;
     
             const sports_type = selected_sports_type.split(' ')[0];
             
+            let deposit_account = new_deposit_account;
+
             const data = {
                 uid: user.uid,
                 selected_sports_category,
@@ -656,11 +661,24 @@ class CreateMatch extends Component {
                             <div className="section-contents">
                                 <h3 className="contents-title">입금 계좌</h3>
                                 <p className="contents-desc">참가비를 입금 받을 계좌를 입력해주세요. <br />경기 종료 후 24시간 이내 참가비에 수수료 20%를 제외한 금액이 입금됩니다.</p>
+                                <select
+                                    onChange={this.handleChange}
+                                    name="new_deposit_account"
+                                >
+                                    <option
+                                        value={this.state.deposit_account}
+                                    >
+                                        {this.state.deposit_account}</option>
+                                    <option
+                                        value={""}
+                                    >다른 계좌번호 입력</option>
+                                </select>
                                 <input
                                     onChange={this.handleChange}
                                     type="text"
-                                    name="deposit_account"
-                                    value={this.state.deposit_account}
+                                    name="new_deposit_account"
+                                    value={this.state.new_deposit_account}
+                                    id="new_deposit"
                                 />
                                 <p className="error-msg">{this.state.errors.deposit_account}</p>
                             </div>

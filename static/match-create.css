@@ -85,6 +85,9 @@ input {
     box-sizing: border-box;
     letter-spacing: 1.2px;
 }
+#new_deposit {
+    display: none;
+}
 .add-location-button {
     background-color: #fff;
     border: none;
