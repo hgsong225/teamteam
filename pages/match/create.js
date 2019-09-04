@@ -42,6 +42,7 @@ class CreateMatch extends Component {
         phone: '',
         contents: '',
         fee: '10000',
+        new_price: '10000',
         deposit_account: '',
         errors: {},
     }
