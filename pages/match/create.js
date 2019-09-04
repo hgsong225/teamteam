@@ -41,7 +41,7 @@ class CreateMatch extends Component {
         selected_place: [],
         phone: '',
         contents: '',
-        fee: '',
+        fee: '10000',
         deposit_account: '',
         errors: {},
     }
@@ -194,7 +194,7 @@ class CreateMatch extends Component {
     handleChange = (e) => {
         const target = e.target;
         const name = target.name;
-        console.log(name, target.value);
+        const id = target.id;
         this.setState({
             [name]: target.value
         });
@@ -207,9 +207,35 @@ class CreateMatch extends Component {
             this.setState({
                 match_end_time: `${+this.state.match_start_time.split(":")[0] + +e.target.value}:00`
             })
-        } else if (name === "new_deposit_account" && target.value === "") {
+        } else if (name === "new_deposit_account" && id === "new_deposit_select") {
+            const index = target.selectedIndex;
+            const optionElement = target.childNodes[index]
             const new_deposit = document.getElementById("new_deposit")
-            new_deposit.style.display = "inline-block";
+
+            if (optionElement.title === "new") {
+                new_deposit.style.display = "inline-block";
+            } else {
+                new_deposit.style.display = "none";
+            }
+            
+        } else if (name === "fee" && id === "price_select") {
+            const index = target.selectedIndex;
+            const optionElement = target.childNodes[index]
+            const price = document.getElementById("price")
+
+            if (optionElement.title === "new") {
+                price.style.display = "inline-block";
+            } else {
+                price.style.display = "none";
+                this.setState({ new_price: target.value })
+            }
+        } else if (name === "fee") {
+            const PRICE = target.value;
+            const CUTTING_UNIT = 1; // 1, 10, 100, 1000 ...
+            let CUTTED_PRICE = PRICE / CUTTING_UNIT;
+            let NEW_PRICE = Math.round(CUTTED_PRICE); // ROUNDED PRICE
+
+            this.setState({ fee: NEW_PRICE });
         }
     }
 
@@ -236,6 +262,7 @@ class CreateMatch extends Component {
             phone,
             fee,
             deposit_account,
+            new_price,
         } = this.state;
 
 
@@ -259,15 +286,20 @@ class CreateMatch extends Component {
             errors["phone"] = "전화번호를 입력하세요.";
         }
 
-        if (isNaN(Number(fee))) {
+        if (isNaN(Number(new_price)) || new_price !== undefined && !new_price.length > 0) {
             formIsValid = false;
-            errors["fee"] = "숫자로 입력하세요.";
+            errors["new_price"] = "참가비를 숫자로 입력하세요.";
         }
 
-        if (!fee.length > 0) {
+        if (new_price !== undefined && !new_price.length > 0) {
             formIsValid = false;
-            errors["fee"] = "참가비를 입력하세요.";
+            errors["new_price"] = "참가비를 입력하세요.";
         }
+
+       if (new_price < 5000) {
+            formIsValid = false;
+            errors["new_price"] = "최소 금액은 5000원 이상입니다.";
+       }
 
         if (!deposit_account.length > 0) {
             formIsValid = false;
@@ -299,6 +331,7 @@ class CreateMatch extends Component {
                 contents,
                 fee,
                 new_deposit_account,
+                new_price,
             } = this.state;
     
             const sports_type = selected_sports_type.split(' ')[0];
@@ -318,7 +351,7 @@ class CreateMatch extends Component {
                 selected_place: selected_place[0],
                 phone,
                 contents,
-                fee,
+                fee: new_price.length === 0 ? fee : new_price,
                 deposit_account,
             };
             axios.post(`/api/match/create`, {
@@ -648,15 +681,34 @@ class CreateMatch extends Component {
                             <div className="section-contents">
                                 <h3 className="contents-title">참가비</h3>
                                 <div className="price-box">
+                                    <select
+                                        onChange={this.handleChange}
+                                        value={this.state.fee}
+                                        name="fee"
+                                        id="price_select"
+                                    >
+                                        <option value="5000" title="fixed">5000원</option>
+                                        <option value="6000" title="fixed">6000원</option>
+                                        <option value="7000" title="fixed">7000원</option>
+                                        <option value="8000" title="fixed">8000원</option>
+                                        <option value="9000" title="fixed">9000원</option>
+                                        <option value="10000" title="fixed">10000원</option>
+                                        <option
+                                            value=""
+                                            title="new"
+                                        >직접 입력</option>
+                                    </select>
                                     <input
                                         onChange={this.handleChange}
                                         type="text"
-                                        name="fee"
-                                        value={this.state.fee}
+                                        name="new_price"
+                                        placeholder=""
+                                        value={this.state.new_price}
+                                        id="price"
                                     />
                                     <span id="price-unit">원</span>
                                 </div>
-                                <p className="error-msg">{this.state.errors.fee}</p>
+                                <p className="error-msg">{this.state.errors.new_price}</p>
                             </div>
                             <div className="section-contents">
                                 <h3 className="contents-title">입금 계좌</h3>
@@ -664,19 +716,22 @@ class CreateMatch extends Component {
                                 <select
                                     onChange={this.handleChange}
                                     name="new_deposit_account"
+                                    id="new_deposit_select"
                                 >
                                     <option
                                         value={this.state.deposit_account}
                                     >
                                         {this.state.deposit_account}</option>
                                     <option
-                                        value={""}
-                                    >다른 계좌번호 입력</option>
+                                        value=""
+                                        title="new"
+                                    >직접 입력</option>
                                 </select>
                                 <input
                                     onChange={this.handleChange}
                                     type="text"
                                     name="new_deposit_account"
+                                    placeholder=""
                                     value={this.state.new_deposit_account}
                                     id="new_deposit"
                                 />
