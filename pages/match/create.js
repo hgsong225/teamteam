@@ -42,10 +42,7 @@ class CreateMatch extends Component {
         phone: '',
         contents: '',
         fee: '10000',
-<<<<<<< HEAD
         new_price: '10000',
-=======
->>>>>>> 7e1ef3281f596810cf0308dee3be2b2c5c008074
         deposit_account: '',
         errors: {},
     }
@@ -229,7 +226,6 @@ class CreateMatch extends Component {
 
             if (optionElement.title === "new") {
                 price.style.display = "inline-block";
-<<<<<<< HEAD
             } else {
                 price.style.display = "none";
                 this.setState({ new_price: target.value })
@@ -241,17 +237,6 @@ class CreateMatch extends Component {
             let NEW_PRICE = Math.round(CUTTED_PRICE); // ROUNDED PRICE
 
             this.setState({ fee: NEW_PRICE });
-=======
-                const PRICE = target.value;
-                const CUTTING_UNIT = 1; // 1, 10, 100, 1000 ...
-                let CUTTED_PRICE = PRICE / CUTTING_UNIT;
-                const NEW_PRICE = Math.round(CUTTED_PRICE) // ROUNDED PRICE
-                
-                this.setState({ fee: NEW_PRICE });
-            } else {
-                price.style.display = "none";
-            }
->>>>>>> 7e1ef3281f596810cf0308dee3be2b2c5c008074
         }
     }
 
@@ -312,15 +297,9 @@ class CreateMatch extends Component {
             errors["new_price"] = "참가비를 입력하세요.";
         }
 
-<<<<<<< HEAD
        if (new_price < 5000) {
             formIsValid = false;
             errors["new_price"] = "최소 금액은 5000원 이상입니다.";
-=======
-       if (fee < 5000) {
-            formIsValid = false;
-            errors["fee"] = "최소 금액은 5000원 이상입니다.";
->>>>>>> 7e1ef3281f596810cf0308dee3be2b2c5c008074
        }
 
         if (!deposit_account.length > 0) {
@@ -723,15 +702,9 @@ class CreateMatch extends Component {
                                     <input
                                         onChange={this.handleChange}
                                         type="text"
-<<<<<<< HEAD
                                         name="new_price"
                                         placeholder=""
                                         value={this.state.new_price}
-=======
-                                        name="fee"
-                                        placeholder=""
-                                        value={this.state.fee}
->>>>>>> 7e1ef3281f596810cf0308dee3be2b2c5c008074
                                         id="price"
                                     />
                                     <span id="price-unit">원</span>
