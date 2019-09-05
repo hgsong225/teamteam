@@ -66,6 +66,10 @@ export default () => (
             text-decoration: none;
         }
 
+        a:visited.button {
+            color: white;
+        }
+
         input[type=number]::-webkit-inner-spin-button, 
         input[type=number]::-webkit-outer-spin-button { 
           -webkit-appearance: none; 
@@ -75,7 +79,7 @@ export default () => (
             background-color: rgb(235, 235, 228);
         }
 
-        button {
+        button, a.button, a:visited.button {
             -webkit-appearance: none;
             -moz-appearance: none;
             appearance: none;
@@ -88,12 +92,18 @@ export default () => (
             text-decoration: none;
             border-radius: 4px;
             outline: none;
-            font-size: .8rem;
+            font-size: 1rem;
             cursor: pointer;
         }
         button:disabled {
             color: #bdbdbd;
             cursor: not-allowed;
+        }
+        button>a {
+            display: inline-block
+        }
+        button>a:visited {
+            color: white;
         }
         .mask {
             position: fixed;

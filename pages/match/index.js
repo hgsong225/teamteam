@@ -65,7 +65,7 @@ class Match extends Component {
         const self = this;
         const { url } = this.props;
         const params = {
-            id: url.query.id,
+            id: url.query.post,
         };
         axios.get(`/api/match`, {
             params,
@@ -178,6 +178,7 @@ class Match extends Component {
         .catch((err) => console.log(err));
     }
 
+    // This 'handlePrompt' function would be used no more
     handlePrompt = (e) => {
         let depositor = prompt('입금자명을 입력하세요.');
         console.log(depositor);
@@ -681,12 +682,21 @@ class Match extends Component {
                                             {
                                                 (match[0].apply_status === '신청가능')
                                                 && <div className="button-box">
-                                                    <input
-                                                        className="apply"
-                                                        onClick={this.handlePrompt}
+                                                    {/* <button
+                                                        className="button"
                                                         value="신청하기"
-                                                        type="submit"
-                                                    />
+                                                        // type="submit"
+                                                    > */}
+                                                        <Link
+                                                            href={{ pathname: 'payment', query: { post: match[0].idpost, match: match[0].idmatch }}}
+                                                        >
+                                                            <a
+                                                                className="button" value="신청하기"
+                                                            >
+                                                                신청하기
+                                                            </a>
+                                                        </Link>
+                                                    {/* </button> */}
                                                 </div>
                                             }
                                             {
