@@ -27,7 +27,7 @@ export default () => (
         p {
             letter-spacing: 1px;
         }
-        ol, ul {
+        ol, ul, li {
             -webkit-appearance: none;
             -moz-appearance: none;
             appearance: none;
@@ -47,6 +47,7 @@ export default () => (
             -moz-appearance: none;
             appearance: none;
             color: #757575;
+            display: inline-block;
         }
 
         a:link {
@@ -94,7 +95,31 @@ export default () => (
             outline: none;
             font-size: 1rem;
             cursor: pointer;
+            background-color: #1e88e5;
+            box-sizing:border-box;
+
         }
+        .button, a.button {
+            width: 160px;
+            outline: none;
+            margin: 0;
+            cursor: pointer;
+            display: inline-block;
+            text-decoration: none;
+            border: none;
+            background-color: #1e88e5;
+            font-size: 16px;
+            color: white;
+            padding: 15px 32px;
+            text-align: center;
+            box-shadow: 0 6px 6px 0 rgba(0,0,0,0.24);
+        }
+
+        .button:hover, a.button:hover {
+            background-color: #42a5f5;
+            box-shadow: 0 12px 12px 0 rgba(0,0,0,0.24)
+        }
+
         button:disabled {
             color: #bdbdbd;
             cursor: not-allowed;

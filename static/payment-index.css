@@ -1,0 +1,36 @@
+.payment_container {
+    margin-left: 16px;
+    margin-right: 16px;
+    max-width: 550px;
+}
+
+.payment_title {
+    margin-top: 3rem;
+    margin-bottom: 3rem;
+    font-size: 2rem;
+}
+
+.payment_section_container {
+    margin-bottom: 3rem;
+}
+
+.button {
+    width: 160px;
+    outline: none;
+    margin: 0;
+    cursor: pointer;
+    display: inline-block;
+    text-decoration: none;
+    border: none;
+    background-color: #1e88e5;
+    font-size: 16px;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    box-shadow: 0 6px 6px 0 rgba(0,0,0,0.24);
+}
+
+.button:hover {
+    background-color: #42a5f5;
+    box-shadow: 0 12px 12px 0 rgba(0,0,0,0.24)
+}
