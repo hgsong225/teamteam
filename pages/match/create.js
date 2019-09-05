@@ -302,9 +302,9 @@ class CreateMatch extends Component {
             errors["new_price"] = "최소 금액은 5000원 이상입니다.";
        }
 
-        if (!deposit_account.length > 0) {
+        if (!new_deposit_account.length > 0) {
             formIsValid = false;
-            errors["deposit_account"] = "계좌번호를 입력하세요.";
+            errors["new_deposit_account"] = "계좌번호를 입력하세요.";
         }
 
         this.setState({
@@ -736,7 +736,7 @@ class CreateMatch extends Component {
                                     value={this.state.new_deposit_account}
                                     id="new_deposit"
                                 />
-                                <p className="error-msg">{this.state.errors.deposit_account}</p>
+                                <p className="error-msg">{this.state.errors.new_deposit_account}</p>
                             </div>
                         </div>
                         <div className="button-box">
