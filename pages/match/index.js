@@ -65,7 +65,7 @@ class Match extends Component {
         const self = this;
         const { url } = this.props;
         const params = {
-            id: url.query.post,
+            id: url.query.id,
         };
         axios.get(`/api/match`, {
             params,
