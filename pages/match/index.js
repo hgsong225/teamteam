@@ -677,7 +677,7 @@ class Match extends Component {
                                         /* 신청 전일 때 (로그인) */
                                         (match[0].fb_uid !== user.uid && ((!appliedAndBeforePayments.length > 0 && !appliedAndCompletedPayments.length > 0 && !acceptedAndCompletdPayments.length > 0)))
                                         && <div>
-                                            <p>신청 전일 때 (로그인), (경기전 + 신청가능 + 신청취소 + 결제전), (경기전 + 신청가능 + 신청취소 + 결제완료)</p>
+                                            {/* <p>신청 전일 때 (로그인), (경기전 + 신청가능 + 신청취소 + 결제전), (경기전 + 신청가능 + 신청취소 + 결제완료)</p> */}
                                             {
                                                 (match[0].apply_status === '신청가능')
                                                 && <div className="button-box">
@@ -692,6 +692,10 @@ class Match extends Component {
                                             {
                                                 (match[0].match_status === '신청마감')
                                                 && <p>신청이 마감됐습니다.</p>
+                                            }
+                                            {
+                                                (match[0].match_status === '경기종료')
+                                                && <p>종료된 경기입니다.</p>
                                             }
                                             {
                                                 (match[0].match_status === '경기취소')
