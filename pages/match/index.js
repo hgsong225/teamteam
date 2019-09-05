@@ -345,7 +345,7 @@ class Match extends Component {
                                         <p className="info">{match[0].sports_category} {match[0].match_type} : {match[0].match_type}</p>
                                     </div>
                                 </div>
-                                <div className="post-box">
+                                <div className="post-box" id="payment-container">
                                     <h3>결제</h3>
                                     <p>o 계좌 이체</p>
                                     <div>
