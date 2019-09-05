@@ -90,11 +90,11 @@ class Post extends Component {
             const sigungu_name = selectedLocation.sigungu_name;
             const checkSigungu = sigungu_name == undefined ? false : true;
             console.log(checkSigungu);
-            if (!checkSigungu) {
-                return self.setState({
-                    posts: [],
-                });
-            }
+            // if (!checkSigungu) {
+            //     return self.setState({
+            //         posts: [],
+            //     });
+            // }
             const params = {
                 sido_name,
                 sigungu_name,

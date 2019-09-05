@@ -37,16 +37,14 @@ export default (req, res) => {
                     `
                     : `
                     SELECT *, p.user_iduser as hostID FROM post p
-                    LEFT JOIN \`match\` ON p.idpost = \`match\`.post_idpost
+                    left join \`match\` on p.idpost = \`match\`.post_idpost
                     LEFT JOIN post_has_location
-                    ON idpost = post_idpost
-                    LEFT JOIN
-                    location
-                    ON location_idlocation = idlocation WHERE sido_name = '${sido_name}'
-                    LIMIT 100
+                    ON p.idpost = post_has_location.post_idpost
+                    LEFT JOIN location
+                    ON location_idlocation = idlocation
+                    WHERE sido_name = '${sido_name}'
                     ORDER BY create_time DESC;
                     `;
-        
         
                 connection.query(query, (err, rows) => {
                     if (err) throw err;

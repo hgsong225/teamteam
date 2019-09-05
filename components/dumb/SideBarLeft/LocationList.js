@@ -95,6 +95,18 @@ class LocationList extends Component {
                     >
                         <AccordionItemTitle>
                             {
+                                <Link
+                                    href={{ pathname: '/post', query: { location: location.sido_name }}}
+                                >
+                                    <a
+                                        onClick={this.selectSido}
+                                    >
+                                        {location.sido_name}
+                                    </a>
+                                </Link>
+                            }
+                            {// 나중에 지역 세분화 필요 할 때 사용.
+                                /* {
                                 location.sido_name === '세종특별자치시' ?
                                 <Link
                                     href={{ pathname: '/post', query: { location: location.sido_name }}}
@@ -104,8 +116,8 @@ class LocationList extends Component {
                                     >{location.sido_name}</a>
                                 </Link>
                                 : <a>{location.sido_name}</a>
-                            }
-                            {
+                            } */}
+                            { /* {
                                 location.sigungus.map((sigungu, j) => {
                                     if (sigungu.sigungu_name !== "" && sigungu.sigungu_name !== "null") {
                                         return (
@@ -128,7 +140,7 @@ class LocationList extends Component {
                                         );
                                     }
                                 })
-                            }
+                            } */}
                         </AccordionItemTitle>
                     </AccordionItem>
                 );

@@ -141,9 +141,7 @@ class Posts extends Component {
                 >
                     {url.query.sigungu ? url.query.location + ' ' : url.query.location}{url.query.sigungu}
                 </p>
-                {
-                    url.query.location === '세종특별자치시'
-                    && <div className="posts-sub-container">
+                <div className="posts-sub-container">
                     <PostFilter
                         handleFilter={this.handleFilter}
                         renderFilter={this.renderFilter}
@@ -160,29 +158,49 @@ class Posts extends Component {
                         selectedFilter={selectedFilter}
                         depositor={this.props.depositor}
                     />
-                    </div>
+                 </div>
+                { // 나중에 지역 세분화 할 때 사용
+                    // url.query.location === '세종특별자치시'
+                    // && <div className="posts-sub-container">
+                    // <PostFilter
+                    //     handleFilter={this.handleFilter}
+                    //     renderFilter={this.renderFilter}
+                    //     filterList={filterList}
+                    //     selectedFilter={selectedFilter}
+                    //     renderFilterList={renderFilterList}
+                    // />
+                    // <PostList
+                    //     renderPosts={this.renderPosts}
+                    //     applyMatch={this.applyMatch}
+                    //     user={this.props.user}
+                    //     posts={this.props.posts}
+                    //     postList={postList}
+                    //     selectedFilter={selectedFilter}
+                    //     depositor={this.props.depositor}
+                    // />
+                    // </div>
                 }
-                {
-                   (url.query.sigungu && url.query.location !== '세종특별자치시')
-                    ? <div className="posts-sub-container">
-                        <PostFilter
-                            handleFilter={this.handleFilter}
-                            renderFilter={this.renderFilter}
-                            filterList={filterList}
-                            selectedFilter={selectedFilter}
-                            renderFilterList={renderFilterList}
-                        />
-                        <PostList
-                            renderPosts={this.renderPosts}
-                            applyMatch={this.applyMatch}
-                            user={this.props.user}
-                            posts={this.props.posts}
-                            postList={postList}
-                            selectedFilter={selectedFilter}
-                            depositor={this.props.depositor}
-                        />
-                        </div>
-                    : '하위 지역을 선택하세요.'         
+                { // 나중에 지역 세분화 할 때 사용
+                //    (url.query.sigungu && url.query.location !== '세종특별자치시')
+                //     ? <div className="posts-sub-container">
+                //         <PostFilter
+                //             handleFilter={this.handleFilter}
+                //             renderFilter={this.renderFilter}
+                //             filterList={filterList}
+                //             selectedFilter={selectedFilter}
+                //             renderFilterList={renderFilterList}
+                //         />
+                //         <PostList
+                //             renderPosts={this.renderPosts}
+                //             applyMatch={this.applyMatch}
+                //             user={this.props.user}
+                //             posts={this.props.posts}
+                //             postList={postList}
+                //             selectedFilter={selectedFilter}
+                //             depositor={this.props.depositor}
+                //         />
+                //         </div>
+                //     : '하위 지역을 선택하세요.'         
                 }
 
             </div>
