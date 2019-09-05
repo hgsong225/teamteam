@@ -140,24 +140,33 @@ class Profile extends Component {
                             </div>
                         </section>
                     </div>
-                    <section className="profile-section">
-                        <Link href='profile/edit'><a>프로필 수정</a></Link>
-                    </section>
-                    <section className="profile-section">
-                        <Link href='profile/account'><a>계좌 관리</a></Link>
-                    </section>
-                    <section className="profile-section">
-                        <Link href='settings'><a>계정 관리</a></Link>
-                    </section>
-                    <section className="profile-section">
-                        <Link
-                        href='/'
-                        >
-                            <a
-                                onClick={this.signOut}
-                            >로그아웃</a>
-                        </Link>
-                    </section>
+                    <div className="profile-section-container section_btn">
+                        <section className="profile-section">
+                            <Link href='profile/edit'><a>프로필 수정</a></Link>
+                        </section>
+                    </div>
+                    <div className="profile-section-container section_btn">
+                        <section className="profile-section">
+                            <Link href='profile/account'><a>계좌 관리</a></Link>
+                        </section>
+                    </div>
+                    <div className="profile-section-container section_btn">
+                        <section className="profile-section">
+                            <Link href='settings'><a>계정 관리</a></Link>
+                        </section>
+                    </div>
+                    <div className="profile-section-container section_btn">
+                        <section className="profile-section">
+                            <Link
+                            href='/'
+                            >
+                                <a
+                                    onClick={this.signOut}
+                                >로그아웃</a>
+                            </Link>
+                        </section>
+                    </div>
+
                 </main>
             </div>
         );
