@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import Head from 'next/head';
-import axios from 'axios';
 import Link from 'next/link';
+import { withRouter } from 'next/router'
+import axios from 'axios';
 
 import fb from '../../config/firebase';
 
@@ -33,9 +34,9 @@ class PaymentComplete extends Component {
 
     getMatch = () => {
         const self = this;
-        const { url } = this.props;
+        const { router } = this.props;
         const params = {
-            id: url.query.post,
+            id: router.query.post,
         };
         axios.get(`/api/match`, {
             params,
@@ -51,6 +52,7 @@ class PaymentComplete extends Component {
 
     render() {
         const { match } = this.state;
+        const { router } = this.props;
 
         return (
             <MainView>
@@ -147,7 +149,7 @@ class PaymentComplete extends Component {
                                         <section className="">
                                             <div>
                                                 <Link
-                                                    href='/'
+                                                    href={{ pathname: '/match', query: { id: router.query.post } }}
                                                 >
                                                     <a
                                                         className="button"
@@ -169,4 +171,4 @@ class PaymentComplete extends Component {
     }
 }
 
-export default PaymentComplete;
+export default withRouter(PaymentComplete);
