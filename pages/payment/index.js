@@ -136,7 +136,8 @@ class Payment extends Component {
             buyer_addr : '없음',
             buyer_postcode : '없음',
             // m_redirect_url : `https://localhost:3000/payment/complete?post=${router.query.post}&match=${router.query.match}`
-            m_redirect_url : `https://localhost:3000/payment/complete?post=161&match=66`
+            // m_redirect_url : `https://localhost:3000/payment/complete?post=161&match=66`
+            m_redirect_url : `https://teamteam.co.kr/payment/complete?post=${router.query.post}&match=${router.query.match}`
             // m_redirect_url : 'https://teamteam.co.kr/payment/complete?post=161&match=66'
         }, (rsp) => {
             if ( rsp.success ) {
