@@ -37,10 +37,10 @@ class PostList extends Component {
         }
     }
 
-    dateAscending = (a, b) => { // 날짜 오름차순, dateA가 크면 true, dateB가 크거나 같으면 false
+    dateDescendingOrder = (a, b) => { // 날짜 오름차순, dateA가 크면 true, dateB가 크거나 같으면 false
         let timeA = new Date(a['start_time']).getTime();
         let timeB = new Date(b['start_time']).getTime();
-        return timeA > timeB ? 1 : -1;
+        return timeA < timeB ? 1 : -1;
     }
 
     convertDay = (day_number) => {
@@ -156,7 +156,7 @@ class PostList extends Component {
                 `}</style>
                 <ul>
                     {
-                        posts.length > 0 ? posts.sort(this.dateAscending).map(
+                        posts.length > 0 ? posts.sort(this.dateDescendingOrder).map(
                             (post, i) => {
                                 if (selectedFilter == '전체' && post.idmatch != null) {
                                     const start_year = new Date(post.start_time).getFullYear();
@@ -195,30 +195,50 @@ class PostList extends Component {
                                                                 // 신청하기 (로그인유저)
                                                                 this.props.user !== null
                                                                 && (post.hostID !== this.props.user.data[0].iduser && (post.match_has_users === undefined || post.match_has_users.filter(match_has_user => match_has_user.iduser === this.props.user.data[0].iduser && match_has_user.applicant_status !== '신청취소').length < 1))
-                                                                    && <button
-                                                                            className="match-apply-button"
-                                                                            onClick={this.handlePrompt}
-                                                                            name={post.idmatch}
-                                                                            type="submit"
-                                                                            value="신청하기"
+                                                                    // && <button
+                                                                    //         className="match-apply-button"
+                                                                    //         onClick={this.handlePrompt}
+                                                                    //         name={post.idmatch}
+                                                                    //         type="submit"
+                                                                    //         value="신청하기"
+                                                                    //     >
+                                                                    //         <p className="apply">신청하기</p>
+                                                                    //         <p className="price">{post.match_fee}원</p>
+                                                                    //     </button>
+                                                                    &&
+                                                                    <Link
+                                                                        href={{ pathname: 'payment', query: { post: post.idpost, match: post.idmatch }}}
+                                                                    >
+                                                                        <a
+                                                                            className="button" value="신청하기"
                                                                         >
-                                                                            <p className="apply">신청하기</p>
-                                                                            <p className="price">{post.match_fee}원</p>
-                                                                        </button>
+                                                                            신청하기
+                                                                        </a>
+                                                                    </Link>
                                                             }
                                                             {
                                                                 // 내가 만든 경기
                                                                 this.props.user !== null
                                                                 && (post.hostID === this.props.user.data[0].iduser)
-                                                                    && <button
-                                                                            className="match-edit-button"
-                                                                            onClick={this.handlePrompt}
-                                                                            name={post.idmatch}
-                                                                            type="submit"
-                                                                            value="수정"
+                                                                    // && <button
+                                                                    //         className="match-edit-button"
+                                                                    //         onClick={this.handlePrompt}
+                                                                    //         name={post.idmatch}
+                                                                    //         type="submit"
+                                                                    //         value="수정"
+                                                                    //     >
+                                                                    //         <p className="apply">경기 수정</p>
+                                                                    //     </button>
+                                                                    &&
+                                                                    <Link
+                                                                        href={{ pathname: '/match', query: { id: post.idpost }}}
+                                                                    >
+                                                                        <a
+                                                                            className="button" value="신청하기"
                                                                         >
-                                                                            <p className="apply">경기 수정</p>
-                                                                        </button>
+                                                                            수정하기
+                                                                        </a>
+                                                                    </Link>
                                                             }
                                                             {
                                                                 // 내가 신청한 경기
