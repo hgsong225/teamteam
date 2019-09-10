@@ -246,7 +246,7 @@ class PostList extends Component {
                                 }
                             }
                         )
-                        : <p>경기가 없습니다 ㅠㅠ</p>
+                        : <p>loading...</p>
                     }
                 </ul>
             </div>
