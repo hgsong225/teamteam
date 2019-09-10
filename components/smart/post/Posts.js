@@ -79,39 +79,39 @@ class Posts extends Component {
         return this.state;
     }
 
-    applyMatch = async (e, depositor) => {
-        const { user, posts } = this.props;
+    // applyMatch = async (e, depositor) => {
+    //     const { user, posts } = this.props;
         
-        if (user === null) {
-            return Router.push('/sign-in')
-        }
+    //     if (user === null) {
+    //         return Router.push('/sign-in')
+    //     }
 
-        console.log(user, e.target, depositor);
-        if (user !== null && e.target.name !== undefined) {
-            const idmatch = e.target.name;
-            const selectedMatch = posts.filter(post => post.idmatch == idmatch);
-            console.log(user, idmatch, selectedMatch);
-            if (selectedMatch.length > 0) {
-                const data = {
-                    idmatch: selectedMatch[0].idmatch,
-                    uid: user.uid,
-                    depositor,
-                    match_has_user_fee: selectedMatch[0].match_fee,
-                }
+    //     console.log(user, e.target, depositor);
+    //     if (user !== null && e.target.name !== undefined) {
+    //         const idmatch = e.target.name;
+    //         const selectedMatch = posts.filter(post => post.idmatch == idmatch);
+    //         console.log(user, idmatch, selectedMatch);
+    //         if (selectedMatch.length > 0) {
+    //             const data = {
+    //                 idmatch: selectedMatch[0].idmatch,
+    //                 uid: user.uid,
+    //                 depositor,
+    //                 match_has_user_fee: selectedMatch[0].match_fee,
+    //             }
         
-                axios.post(`/api/match/apply`, {
-                    data,
-                })
-                .then((res) => {
-                    console.log(res.data);
-                    alert('신청 완료');
-                })
-                .catch((error) => {
-                    console.log(error);
-                });
-            }
-        }
-    }
+    //             axios.post(`/api/match/apply`, {
+    //                 data,
+    //             })
+    //             .then((res) => {
+    //                 console.log(res.data);
+    //                 alert('신청 완료');
+    //             })
+    //             .catch((error) => {
+    //                 console.log(error);
+    //             });
+    //         }
+    //     }
+    // }
     
     render() {
         console.log('Posts에서 render() 실행');
