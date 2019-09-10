@@ -37,10 +37,10 @@ class PostList extends Component {
         }
     }
 
-    dateDescendingOrder = (a, b) => { // 날짜 오름차순, dateA가 크면 true, dateB가 크거나 같으면 false
+    dateAscendingOrder = (a, b) => { // 날짜 오름차순, dateA가 크면 true, dateB가 크거나 같으면 false
         let timeA = new Date(a['start_time']).getTime();
         let timeB = new Date(b['start_time']).getTime();
-        return timeA < timeB ? 1 : -1;
+        return timeA > timeB ? 1 : -1;
     }
 
     convertDay = (day_number) => {
@@ -156,7 +156,7 @@ class PostList extends Component {
                 `}</style>
                 <ul>
                     {
-                        posts.length > 0 ? posts.sort(this.dateDescendingOrder).map(
+                        posts.length > 0 ? posts.sort(this.dateAscendingOrder).map(
                             (post, i) => {
                                 if (selectedFilter == '전체' && post.idmatch != null) {
                                     const start_year = new Date(post.start_time).getFullYear();

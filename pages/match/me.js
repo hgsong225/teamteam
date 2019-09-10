@@ -60,10 +60,10 @@ class Me extends Component {
         });
     }
 
-    dateDescending = (a, b) => {
+    dateAscendingOrder = (a, b) => {
         let dateA = new Date(a['start_time']).getTime();
         let dateB = new Date(b['start_time']).getTime();
-        return dateA < dateB ? 1 : -1;
+        return dateA > dateB ? 1 : -1;
     }
 
     getMyMatch = (user) => {
@@ -200,7 +200,7 @@ class Me extends Component {
                         </div> 
                         <ul>
                             {
-                                this.state.posts !== undefined && this.state.posts.sort(this.dateDescending).map((post, i) => {
+                                this.state.posts !== undefined && this.state.posts.sort(this.dateAscendingOrder).map((post, i) => {
                                     if (post.start_time !== undefined) {
                                         const start_year = new Date(post.start_time).getFullYear();
                                         const start_month = new Date(post.start_time).getMonth();
