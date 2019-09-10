@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import Head from 'next/head';
 import Router from 'next/router';
+import { withRouter } from 'next/router'
 import axios from 'axios';
 
 import fb from '../config/firebase';
@@ -20,6 +21,7 @@ class Post extends Component {
         user: null,
         selectedLocation: {},
         posts: [],
+        didYouGetResponseWithPostsFromServer: false,
     }
     
     componentDidMount() {
@@ -106,6 +108,7 @@ class Post extends Component {
             .then((res) => {
                 self.setState({
                     posts: res.data,
+                    didYouGetResponseWithPostsFromServer: true,
                 })
                 console.log(res.data);
             })
@@ -118,8 +121,7 @@ class Post extends Component {
     render() {
         console.log('post.js에서 render() 실행');
         const { user, selectedLocation, posts, myMatch, myApplicationMatch } = this.state;
-        const { url } = this.props;
-        console.log('url', url);
+        const { url, router } = this.props;
 
         return (
             <Layout
@@ -127,18 +129,22 @@ class Post extends Component {
                 selectedLocation={selectedLocation}
             >
                 <Head>
-                    <script type="text/javascript" src="https://code.jquery.com/jquery-1.12.4.min.js" ></script>
-                    <script type="text/javascript" src="https://cdn.iamport.kr/js/iamport.payment-1.1.5.js"></script>
+                    <title>팀팀 | 매치찾기 - {router.query.location}</title>
                 </Head>
-                <Posts 
-                    url={url}
-                    user={user}
-                    selectedLocation={selectedLocation}
-                    posts={posts}
-                />
+                {
+                    this.state.didYouGetResponseWithPostsFromServer === true
+                    ? <Posts 
+                        url={url}
+                        user={user}
+                        selectedLocation={selectedLocation}
+                        posts={posts}
+                    />
+                    : <p>loading...</p>
+                }
+
             </Layout>
         );
     }
 }
 
-export default Post;
+export default withRouter(Post);
