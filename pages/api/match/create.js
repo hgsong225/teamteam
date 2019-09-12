@@ -88,7 +88,9 @@ export default (req, res) => {
                                 address,
                                 place_latitude,
                                 place_longtitude,
-                                host_account)
+                                host_account,
+                                host_revenue,
+                                host_revenue_status)
                             VALUES
                             (
                                 ${idpost},
@@ -105,7 +107,9 @@ export default (req, res) => {
                                 "${selected_place.address_name}",
                                 "${selected_place.x}",
                                 "${selected_place.y}",
-                                "${deposit_account}"
+                                "${deposit_account}",
+                                "0",
+                                "지급전",
                             );
                             `;
                             connection.query(matchQuery, (err, rows) => {

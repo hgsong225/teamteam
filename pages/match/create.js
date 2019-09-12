@@ -106,6 +106,7 @@ class CreateMatch extends Component {
                         user,
                         phone: data[0].phone,
                         deposit_account: data[0].account,
+                        new_deposit_account: data[0].account,
                     });
                 })
                 .catch((error) => {
@@ -261,8 +262,7 @@ class CreateMatch extends Component {
             selected_location,
             selected_place,
             phone,
-            fee,
-            deposit_account,
+            new_deposit_account,
             new_price,
         } = this.state;
 
