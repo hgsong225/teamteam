@@ -128,7 +128,7 @@ class Payment extends Component {
             pg : 'inicis', // version 1.1.0부터 지원.
             pay_method : 'card',
             merchant_uid : 'merchant_' + new Date().getTime(),
-            name : '주문명:결제테스트',
+            name : `${match[0].sports_category} ${match[0].match_type}:${match[0].match_type} 게스트`,
             amount : 100,
             buyer_email : 'hgsong225@gmail.com',
             buyer_name : user.name,
@@ -153,6 +153,9 @@ class Payment extends Component {
                         total_player: this.state.total_player,
                         pay_method: this.state.pay_method,
                         applicant_status: this.state.applicant_status,
+                        host_revenue: match[0].host_revenue,
+                        total_commission: match[0].total_commission,
+                        total_match_payment_amount: match[0].total_match_payment_amount,
                         rsp: {
                             imp_uid: rsp.imp_uid,
                             merchant_uid: rsp.merchant_uid,
@@ -168,7 +171,7 @@ class Payment extends Component {
                         match: router.query.match
                     };
 
-                    if (res.data.status === 200) {
+                    if (res.status === 200) {
                         var msg = '결제를 완료했습니다.';
     
                         Router.push({
@@ -189,7 +192,10 @@ class Payment extends Component {
                         alert(msg);
                     }
                 })
-                .catch((err) => alert(err));
+                .catch((err) => {
+                    console.log(err);
+                    alert(err);
+                });
             } else {
                 var msg = '결제에 실패하였습니다.';
                 msg += '에러내용 : ' + rsp.error_msg; // 추후 주석 처리
