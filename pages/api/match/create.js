@@ -25,7 +25,7 @@ export default (req, res) => {
                     selected_location,
                     selected_sports_category,
                     selected_sports_type,
-                    total_guest,
+                    total_needed_guest,
                     match_date,
                     match_start_time,
                     match_end_time,
@@ -79,7 +79,7 @@ export default (req, res) => {
                                 match_type,
                                 match_fee,
                                 total_game_capacity,
-                                total_guest,
+                                total_needed_guest,
                                 start_time,
                                 end_time,
                                 match_status,
@@ -98,7 +98,7 @@ export default (req, res) => {
                                 "${selected_sports_type}",
                                 "${fee}",
                                 "${selected_sports_type * 2}",
-                                "${total_guest}",
+                                "${total_needed_guest}",
                                 "${match_date} ${match_start_time}",
                                 "${match_date} ${match_end_time}",
                                 "경기 전",
@@ -109,7 +109,7 @@ export default (req, res) => {
                                 "${selected_place.y}",
                                 "${deposit_account}",
                                 "0",
-                                "지급전",
+                                "지급전"
                             );
                             `;
                             connection.query(matchQuery, (err, rows) => {
