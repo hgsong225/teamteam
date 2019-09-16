@@ -26,7 +26,7 @@ class CreateMatch extends Component {
         selected_sports_category: '축구',
         selected_sports_type: '10 : 10',
         // 이제 location을 db에 insert 할 때 server단에서 예외처리 작업해서 집어 넣을 것.
-        total_needed_guest: 1,
+        total_guests_to_need: 1,
         total_guest_arr: [],
         location,
         selected_location: [],
@@ -321,7 +321,7 @@ class CreateMatch extends Component {
                 user,
                 selected_sports_category,
                 selected_sports_type,
-                total_needed_guest,
+                total_guests_to_need,
                 selected_location,
                 match_date,
                 match_start_time,
@@ -343,7 +343,7 @@ class CreateMatch extends Component {
                 uid: user.uid,
                 selected_sports_category,
                 selected_sports_type: sports_type,
-                total_needed_guest,
+                total_guests_to_need,
                 selected_location,
                 match_date,
                 match_start_time,
@@ -452,7 +452,7 @@ class CreateMatch extends Component {
                                 <h3 className="contents-title">게스트가 몇 명이 필요하나요?</h3>
                                 <select
                                     onChange={this.handleChange}
-                                    name="total_needed_guest"
+                                    name="total_guests_to_need"
                                 >
                                     {
                                         this.state.total_guest_arr.map(num => {
