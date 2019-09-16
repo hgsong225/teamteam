@@ -35,8 +35,9 @@ class PaymentComplete extends Component {
     getMatch = () => {
         const self = this;
         const { router } = this.props;
+        const idpost = router.query.order.split('-')[0];
         const params = {
-            id: router.query.post,
+            id: idpost,
         };
         axios.get(`/api/match`, {
             params,
@@ -149,7 +150,7 @@ class PaymentComplete extends Component {
                                         <section className="">
                                             <div>
                                                 <Link
-                                                    href={{ pathname: '/match', query: { id: router.query.post } }}
+                                                    href={{ pathname: '/match', query: { id: router.query.order.split('-')[0] } }}
                                                 >
                                                     <a
                                                         className="button"

@@ -124,6 +124,24 @@ class Payment extends Component {
             router
         } = this.props; 
 
+        let randomNum = {};
+        //0~9까지의 난수
+        randomNum.random = (n1, n2) => {
+            return parseInt(Math.random() * (n2 -n1 +1)) + n1;
+        };
+        //인증번호를 뽑을 난수 입력 n 5이면 5자리
+        randomNum.authNo = (n) => {
+            let value = "";
+            for (let i = 0; i < n; i++) {
+                value += randomNum.random(0, 9);
+            }
+            return value;
+        };
+
+        // 주문번호 생성 (형식: 경기번호-유저번호-6자리 난수)
+        const random_number = randomNum.authNo(6); // 6자리 난수 생성
+        const order_number = `${match[0].idpost}-${match[0].idmatch}-${user.iduser}-${random_number}`;
+
         IMP.request_pay({
             pg : 'inicis', // version 1.1.0부터 지원.
             pay_method : 'card',
@@ -146,7 +164,7 @@ class Payment extends Component {
 
                 axios.post(`/api/match/apply`, {
                     data: {
-                        uid: user.uid,
+                        iduser: user.iduser,
                         idmatch,
                         match_has_user_fee: match[0].match_fee,
                         total_price: 100,
@@ -156,6 +174,7 @@ class Payment extends Component {
                         host_revenue: match[0].host_revenue,
                         total_commission: match[0].total_commission,
                         total_match_payment_amount: match[0].total_match_payment_amount,
+                        order_number,
                         rsp: {
                             imp_uid: rsp.imp_uid,
                             merchant_uid: rsp.merchant_uid,
@@ -166,14 +185,12 @@ class Payment extends Component {
                 })
                 .then((res) => {
                     console.log(res.data);
-                    const query = {
-                        post: router.query.post,
-                        match: router.query.match
-                    };
+                    let query = {};
 
                     if (res.status === 200) {
                         var msg = '결제를 완료했습니다.';
-    
+                        
+                        query.order = order_number;
                         Router.push({
                             pathname: '/payment/complete',
                             query,
@@ -181,6 +198,9 @@ class Payment extends Component {
 
                         alert(msg);
                     } else {
+                        query.post = router.query.post;
+                        query.match = router.query.match;
+
                         Router.push({
                             pathname: '/payment',
                             query,

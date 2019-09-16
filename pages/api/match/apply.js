@@ -1,5 +1,6 @@
 const mysql = require('mysql');
 const request = require('request');
+const moment = require('moment');
 
 const db = require('../../../config/db.js');
 const imp = require('../../../config/iamport.js');
@@ -69,12 +70,18 @@ export default (req, res) => {
                                     console.log(`data.host_revenue`, data.host_revenue);
                                     console.log(`host_revenue`, host_revenue);
                                     console.log(`total_host_revenue`, total_host_revenue);
+                                    
+                                    const payment_time = moment(response.paid_at).format("YYYY-MM-DD HH:mm:ss");
+                                    console.log(`response.paid_at:`, response.paid_at);
+                                    console.log(`payment_time`, payment_time);
+                                    console.log(`data.order_number`, data.order_number);
 
                                     const insertMatchUser = `
                                     INSERT INTO match_has_user 
                                             (match_idmatch,
                                             user_iduser, 
-                                            apply_time, 
+                                            apply_time,
+                                            payment_time,
                                             match_has_user_fee, 
                                             applicant_status,
                                             amount_of_payment,
@@ -82,10 +89,12 @@ export default (req, res) => {
                                             payment_method,
                                             total_player,
                                             commission_rate, 
-                                            commission)
+                                            commission,
+                                            order_number)
                                     VALUES  (${data.idmatch},
-                                            (SELECT iduser FROM user WHERE fb_uid = '${data.uid}'), 
+                                            ${data.iduser}, 
                                             NOW(),
+                                            '${payment_time}',
                                             '${data.match_has_user_fee}',
                                             '${data.applicant_status}',
                                             '${response.amount}',
@@ -93,13 +102,16 @@ export default (req, res) => {
                                             '${data.pay_method}',
                                             '${data.total_player}',
                                             '${commission_rate}',
-                                            '${commission}');
+                                            '${commission}',
+                                            '${data.order_number}');
                                     `;
+
+                                    //error 발생시 결제 취소까지
+
                                     connection.beginTransaction((err) => {
                                         if (err) { throw err; }
                                         connection.query(insertMatchUser, (err, rows) => {
-                                            if (err) connection.rollback(() => { throw err; });
-                                            
+                                            if (err) { connection.rollback(() => { throw err; }); }
                                             const updateHostRevenue = `
                                             update \`match\`
                                             set
@@ -110,7 +122,7 @@ export default (req, res) => {
                                             `;
                                             
                                             connection.query(updateHostRevenue, (err, rows) => {
-                                                if (err) connection.rollback(() => { throw err; });
+                                            if (err) { connection.rollback(() => { throw err; }); }
                                                 
                                                 connection.commit((err) => {
                                                     if (err) { 
