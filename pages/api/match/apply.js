@@ -87,7 +87,7 @@ export default (req, res) => {
                                             amount_of_payment,
                                             payment_status, 
                                             payment_method,
-                                            total_player,
+                                            guests_to_play,
                                             commission_rate, 
                                             commission,
                                             order_number)
@@ -100,42 +100,76 @@ export default (req, res) => {
                                             '${response.amount}',
                                             '결제완료',
                                             '${data.pay_method}',
-                                            '${data.total_player}',
+                                            '${data.guests_to_play}',
                                             '${commission_rate}',
                                             '${commission}',
                                             '${data.order_number}');
                                     `;
 
-                                    //error 발생시 결제 취소까지
+                                    /*
+
+                                        error 발생시 결제 취소까지
+
+                                    */
 
                                     connection.beginTransaction((err) => {
                                         if (err) { throw err; }
                                         connection.query(insertMatchUser, (err, rows) => {
-                                            if (err) { connection.rollback(() => { throw err; }); }
-                                            const updateHostRevenue = `
-                                            update \`match\`
-                                            set
-                                                total_match_payment_amount = ${total_match_payment_amount},
-                                                total_commission = ${total_commission},
-                                                host_revenue = ${total_host_revenue}
-                                            where idmatch = ${data.idmatch};
-                                            `;
-                                            
-                                            connection.query(updateHostRevenue, (err, rows) => {
-                                            if (err) { connection.rollback(() => { throw err; }); }
+                                            if (err) {
+                                                console.err(err);
+                                                connection.rollback(() => { throw err; });
+                                                res.status(500).json({
+                                                    msg: '결제 실패',
+                                                    status: response.status,
+                                                    err,
+                                                })
+                                            } else {
+                                                // the type of guests_to_play and origin.guests_to_play is string. So this have to be converted into type of number.
+                                                const total_guests_to_play = +data.guests_to_play + +data.origin.guests_to_play; // (new)플레이 할 인원 + (origin)플레이 할 인원
+                                                const total_guests_available = data.total_guests_to_need - total_guests_to_play;
+                                                let apply_status = "신청가능";
+    
+                                                if (total_guests_available === 0) apply_status = "인원마감";
+    
+                                                console.log(`data.origin.guests_to_play`, data.origin.guests_to_play);
+                                                console.log(`data.guests_to_play`, data.guests_to_play);
+                                                console.log(`total_guests_to_play`, total_guests_to_play);
+                                                console.log(`total_guests_available`, total_guests_available);
+    
+                                                const updateHostRevenue = `
+                                                update \`match\`
+                                                set
+                                                    apply_status = '${apply_status}',
+                                                    total_guests_to_play = ${total_guests_to_play},
+                                                    total_guests_available = ${total_guests_available},
+                                                    total_match_payment_amount = ${total_match_payment_amount},
+                                                    total_commission = ${total_commission},
+                                                    host_revenue = ${total_host_revenue}
+                                                where idmatch = ${data.idmatch};
+                                                `;
                                                 
-                                                connection.commit((err) => {
-                                                    if (err) { 
-                                                        console.log(err);
-                                                        connection.rollback(() => { throw err; });
-                                                    }
-                                                    console.log('Apply Match Transaction Complete.');
-                                                    res.status(200).json({
-                                                        msg: '결제 완료',
-                                                        status: response.status,
-                                                    })
-                                                });
-                                            })
+                                                connection.query(updateHostRevenue, (err, rows) => {
+                                                if (err) { connection.rollback(() => { throw err; }); }
+                                                    
+                                                    connection.commit((err) => {
+                                                        if (err) { 
+                                                            console.err(err);
+                                                            res.status(500).json({
+                                                                msg: '결제 실패',
+                                                                status: response.status,
+                                                                err,
+                                                            })
+                                                            connection.rollback(() => { throw err; });
+                                                        } else {
+                                                            console.log('Apply Match Transaction Completed.');
+                                                            res.status(200).json({
+                                                                msg: '결제 완료',
+                                                                status: response.status,
+                                                            })
+                                                        }
+                                                    });
+                                                })
+                                            }
                                         });
                                     })
                                 } else {

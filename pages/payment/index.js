@@ -14,14 +14,38 @@ class Payment extends Component {
     state = {
         user: {},
         total_price: '',
-        total_player: 1,
-        total_guest: [],
+        guests_to_play: 1,
+        total_guests_available_array: [],
         applicant_status: '수락',
         pay_method: 'card',
+        order_number: '',
     }
 
     componentDidMount() {
         this.getUserInfo();
+    }
+
+    makeOrderNumber = () => {
+        const { match, user } = this.state;
+        let randomNum = {};
+        //0~9까지의 난수
+        randomNum.random = (n1, n2) => {
+            return parseInt(Math.random() * (n2 -n1 +1)) + n1;
+        };
+        //인증번호를 뽑을 난수 입력 n 5이면 5자리
+        randomNum.authNo = (n) => {
+            let value = "";
+            for (let i = 0; i < n; i++) {
+                value += randomNum.random(0, 9);
+            }
+            return value;
+        };
+
+        // 주문번호 생성 (형식: 경기번호-유저번호-6자리 난수)
+        const random_number = randomNum.authNo(6); // 6자리 난수 생성
+        const order_number = `${match[0].idpost}-${match[0].idmatch}-${user.iduser}-${random_number}`;
+
+        this.setState({ order_number });
     }
     
     getUserInfo = () => {
@@ -83,7 +107,8 @@ class Payment extends Component {
             this.setState({
                 match,
             }, () => {
-                this.createTotalGuestArray(match[0].total_guest, match[0].match_fee);
+                this.createTotalGuestsAvailableArray(match[0].total_guests_available, match[0].match_fee);
+                this.makeOrderNumber();
             });
         })
         .catch((err) => console.log(err));
@@ -92,11 +117,12 @@ class Payment extends Component {
     handleChange = (e) => {
         e.preventDefault();
 
-        if (e.target.name === "total_player") {
-            const total_price = e.target.value * this.state.match[0].match_fee;
+        if (e.target.name === "guests_to_play") {
+            const guests_to_play = e.target.value;
+            const total_price = guests_to_play * this.state.match[0].match_fee;
             console.log(`total_price`, total_price);
             this.setState({
-                total_player: e.target.value,
+                guests_to_play,
                 total_price,
             });
         } else {
@@ -117,37 +143,19 @@ class Payment extends Component {
         IMP.init(imp.identification_code); // 'iamport' 대신 부여받은 "가맹점 식별코드"를 사용
 
         const {
-            match, user
+            match, user, order_number,
         } = this.state;
 
         const {
             router
         } = this.props; 
 
-        let randomNum = {};
-        //0~9까지의 난수
-        randomNum.random = (n1, n2) => {
-            return parseInt(Math.random() * (n2 -n1 +1)) + n1;
-        };
-        //인증번호를 뽑을 난수 입력 n 5이면 5자리
-        randomNum.authNo = (n) => {
-            let value = "";
-            for (let i = 0; i < n; i++) {
-                value += randomNum.random(0, 9);
-            }
-            return value;
-        };
-
-        // 주문번호 생성 (형식: 경기번호-유저번호-6자리 난수)
-        const random_number = randomNum.authNo(6); // 6자리 난수 생성
-        const order_number = `${match[0].idpost}-${match[0].idmatch}-${user.iduser}-${random_number}`;
-
         IMP.request_pay({
             pg : 'inicis', // version 1.1.0부터 지원.
             pay_method : 'card',
             merchant_uid : 'merchant_' + new Date().getTime(),
             name : `${match[0].sports_category} ${match[0].match_type}:${match[0].match_type} 게스트`,
-            amount : 100,
+            amount : 100 * this.state.guests_to_play,
             buyer_email : 'hgsong225@gmail.com',
             buyer_name : user.name,
             buyer_tel : '01028833742',
@@ -167,8 +175,12 @@ class Payment extends Component {
                         iduser: user.iduser,
                         idmatch,
                         match_has_user_fee: match[0].match_fee,
-                        total_price: 100,
-                        total_player: this.state.total_player,
+                        total_price: 100 * this.state.guests_to_play,
+                        total_guests_to_need: this.state.match[0].total_guests_to_need,
+                        origin: {
+                            guests_to_play: this.state.match[0].total_guests_to_play,    
+                        },
+                        guests_to_play: this.state.guests_to_play,
                         pay_method: this.state.pay_method,
                         applicant_status: this.state.applicant_status,
                         host_revenue: match[0].host_revenue,
@@ -224,22 +236,25 @@ class Payment extends Component {
         });
     }
 
-
-    createTotalGuestArray(num, initial_price) {
-        let total_guest = [];
+    createTotalGuestsAvailableArray(num, initial_price) {
+        let total_guests_available_array = [];
         let i;
 
         for (i = 1; i <= num; i += 1) {
-            total_guest.push(
+            total_guests_available_array.push(
                 <option key={num}>{i}</option>
             )
         }
         
-        this.setState({ total_guest, total_player: 1, total_price: initial_price });
+        this.setState({
+            total_guests_available_array,
+            guests_to_play: 1,
+            total_price: initial_price
+        });
     }
 
     render() {
-        const { match, total_guest, total_player, total_price } = this.state;
+        const { match, total_guests_available_array, guests_to_play, total_price } = this.state;
         return (
             <MainView>
                 <Head>
@@ -318,14 +333,14 @@ class Payment extends Component {
                                                 <div className="">
                                                     <div className="">
                                                        <p className="">인원 수</p>
-                                                       <p className="">최대 {match[0].total_guest}명까지 신청/결제 할 수 있습니다.</p>
+                                                       <p className="">최대 {match[0].total_guests_available}명까지 신청/결제 할 수 있습니다.</p>
                                                        <select
                                                            onChange={this.handleChange}
-                                                           name="total_player"
+                                                           name="guests_to_play"
                                                        >
-                                                           {total_guest}
+                                                           {total_guests_available_array}
                                                        </select>
-                                                       <p>{this.state.total_player}</p>
+                                                       <p>{guests_to_play}</p>
                                                     </div>
                                                 </div>
                                             </div>
@@ -338,7 +353,7 @@ class Payment extends Component {
                                                 <div className="">
                                                     <div className="">
                                                        <p className="">총 금액</p>
-                                                       <p>{this.state.total_price}</p>
+                                                       <p>{total_price}</p>
                                                     </div>
                                                 </div>
                                             </div>
