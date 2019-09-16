@@ -14,32 +14,65 @@ class PaymentComplete extends Component {
     }
 
     componentDidMount() {
-        this.authListener();
+        this.getUserInfo();
     }
     
-    authListener() {
+    getUserInfo = () => {
         fb.auth().onAuthStateChanged((user) => {
             if (user) {
-                this.setState({
-                    user,
+                console.log(user);
+                const { displayName, email, phoneNumber, photoURL, providerId } = user.providerData[0];
+                const params = {
+                    uid: user.uid,
+                };
+                axios.get(`/api/user`, {
+                    params, 
+                })
+                .then(res => {
+                    const data = res.data[0];
+                    console.log(res);
+                    this.setState({
+                        user: {
+                            account: data.account,
+                            displayName,
+                            email,
+                            emailVerified: user.emailVerified,
+                            phoneNumber: data.phone,
+                            photoURL,
+                            providerId,
+                            uid: user.uid,
+                            bod: data.bod,
+                            gender: data.gender,
+                            height: data.height,
+                            weight: data.weight,
+                            iduser: data.iduser,
+                            introduction: data.introduction,
+                            name: data.name
+                        }
+                    }, () => this.getPaymentInformation() );
+                })
+                .catch((error) => {
+                    console.log(error);
                 });
-                this.getMatch();
             } else {
-                this.setState({
-                    user: null,
-                });
+                console.log('user가 없습니다.');
+                Router.push('/sign-in');
             }
-        })
+        });
     }
 
-    getMatch = () => {
+    getPaymentInformation = () => {
         const self = this;
+        const { user } = this.state;
         const { router } = this.props;
-        const idpost = router.query.order.split('-')[0];
+        const order_number = router.query.order;
+        const idpost = order_number.split('-')[0];
         const params = {
-            id: idpost,
+            iduser: user.iduser,
+            order_number,
+            need: 'order_number',
         };
-        axios.get(`/api/match`, {
+        axios.get(`/api/match/applicant/me`, {
             params,
         })
         .then((res) => {
@@ -54,6 +87,7 @@ class PaymentComplete extends Component {
     render() {
         const { match } = this.state;
         const { router } = this.props;
+        const application_information = match && match[0].match_has_users[0];
 
         return (
             <MainView>
@@ -78,6 +112,7 @@ class PaymentComplete extends Component {
                                                 <div className="">
                                                     <div className="">
                                                        <p className="">경기번호</p>
+                                                       <p>{application_information.order_number}</p>
                                                     </div>
                                                 </div>
                                                 <div className="">
@@ -118,7 +153,7 @@ class PaymentComplete extends Component {
                                                 <div className="">
                                                     <div className="">
                                                        <p className="">인원 수</p>
-                                                       <p>{this.state.total_player}</p>
+                                                       <p>{application_information.guests_to_play}</p>
                                                     </div>
                                                 </div>
                                             </div>
@@ -130,8 +165,8 @@ class PaymentComplete extends Component {
                                             <div className="">
                                                 <div className="">
                                                     <div className="">
-                                                       <p className="">총 금액</p>
-                                                       <p>{this.state.total_price}</p>
+                                                       <p className="">결제 금액</p>
+                                                       <p>{application_information.amount_of_payment}</p>
                                                     </div>
                                                 </div>
                                             </div>

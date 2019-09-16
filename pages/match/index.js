@@ -29,7 +29,7 @@ class Match extends Component {
     
     componentDidMount() {
         console.log('컴포넌트디드마운트 실행 in match');
-        this.authListener();
+        this.getUserInfo();
         const script = document.createElement("script");
         document.body.appendChild(script);
         // script.onload = () => {
@@ -44,21 +44,54 @@ class Match extends Component {
         document.body.appendChild(script);
     }
 
-    authListener() {
+    getUserInfo = () => {
         fb.auth().onAuthStateChanged((user) => {
             if (user) {
-                this.setState({
-                    user,
+                console.log(user);
+                const { displayName, email, phoneNumber, photoURL, providerId } = user.providerData[0];
+                const params = {
+                    uid: user.uid,
+                };
+                axios.get(`/api/user`, {
+                    params, 
+                })
+                .then(res => {
+                    const data = res.data[0];
+                    console.log(res);
+                    this.setState({
+                        user: {
+                            account: data.account,
+                            displayName,
+                            email,
+                            emailVerified: user.emailVerified,
+                            phoneNumber: data.phone,
+                            photoURL,
+                            providerId,
+                            uid: user.uid,
+                            bod: data.bod,
+                            gender: data.gender,
+                            height: data.height,
+                            weight: data.weight,
+                            iduser: data.iduser,
+                            introduction: data.introduction,
+                            name: data.name
+                        }
+                    }, () => {
+                        this.getMyApplicationInfo(user);
+                        this.getApplicants(user);
+                        this.getMatch();
+                    });
+                })
+                .catch((error) => {
+                    console.log(error);
                 });
-                this.getMyApplicationInfo(user);
-                this.getApplicants(user);
-                this.getMatch();
             } else {
+                console.log('user가 없습니다.');
                 this.setState({
                     user: null,
                 });
             }
-        })
+        });
     }
 
     getMatch = () => {
@@ -82,13 +115,15 @@ class Match extends Component {
         .catch((err) => console.log(err));
     }
 
-    getMyApplicationInfo = (user) => {
+    getMyApplicationInfo = () => {
         const self = this;
+        const { user } = this.state;
         const { url } = this.props;
         console.log(user);
         const params = {
-            uid: user.uid,
+            iduser: user.iduser,
             idmatch: url.query.id,
+            need: 'all',
         };
         axios.get(`/api/match/applicant/me`, {
             params,
