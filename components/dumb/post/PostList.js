@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import Link from 'next/link';
+import Head from 'next/head';
 
 class PostList extends Component {
     static defaultProps = {
@@ -55,105 +56,9 @@ class PostList extends Component {
 
         return (
             <div>
-                <style jsx>{`
-                    ul {
-                        list-style-type: none;
-                        margin: 0;
-                        padding: 0;
-                    }
-                    .match {
-                        display: flex;
-                        justify-content: space-around;
-                        width: 100%;
-                        height: 5rem;
-                        padding: 6px 0;
-                        background-color: #eeeeee;
-                        margin-bottom: 1rem;
-                        align-items: center;
-                    }
-                    .match:hover {
-                        border: 1px solid #bbdefb;
-                    }
-                    .match_date {
-                        margin-top: 2rem;
-                        font-size: 1.2rem;
-                        font-weight: 600;
-                        color: #424242;
-                    }
-                    .match-time {
-                        display: flex;
-                        justify-content: center;
-                        align-items: center;
-                        height: 80%;
-                        padding: 0 6px;
-                        color: #424242;
-                        font-size: 1.5rem;
-                        font-weight: 600;
-                        letter-spacing: 0.25rem;
-                    }
-                    .match-place {
-                        display: flex;
-                        height: 80%;
-                        padding: 0 6px;
-                        justify-content: center;
-                        flex-direction: column;
-                        color: #212121;
-                    }
-                    .place {
-                        margin: 0;
-                        padding-bottom: 0.5rem;
-                        width: 100%;
-                        font-size: 1rem;
-                    }
-                    .match-type {
-                        margin: 0;
-                        width: 100%;
-                        font-size: 0.8rem;
-                        color: #757575;
-                    }
-                    .match-apply {
-                        display: flex;
-                        justify-content: center;
-                        align-items: center;
-                        padding: 0 6px;
-                    }
-                    .match-apply-button {
-                        z-index: 1;
-                        margin: 0;
-                        cursor: pointer;
-                        text-decoration: none;
-                        border: none;
-                        background-color: #2196f3;
-                        color: white;
-                        padding: 1px 40px;
-                    }
-                    .apply, .price {
-                        margin: 0;
-                    }
-                    .apply {
-                        margin-top: 0.5rem;
-                        font-size: 1rem;
-                    }
-                    .price {
-                        margin-top: 0.5rem;
-                        margin-bottom: 0.5rem;
-                    }
-                    
-                    .match-apply-button:hover {
-                        background-color: #42a5f5;
-                    }
-                    
-                    @media screen and (max-width: 457px) {
-                        .match-apply-button {
-                            padding: 1px 20px;
-                        }
-                    }
-                    @media screen and (max-width: 375px) {
-                        .match-apply-button {
-                            padding: 1px 20px;
-                        }
-                    }
-                `}</style>
+                <Head>
+                    <link href="../../static/postlist.css" rel="stylesheet" />
+                </Head>
                 <ul>
                     {
                         posts.length > 0 ? posts.sort(this.dateAscendingOrder).map(

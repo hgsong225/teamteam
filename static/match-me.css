@@ -48,9 +48,12 @@ ul {
     height: 8rem;
     background-color: #eeeeee;
     border-radius: 4px;
+    transition: box-shadow .2s;
 }
 .match:hover {
-    border: 1px solid #bbdefb;
+    -webkit-box-shadow: 0 10px 6px -6px rgba(33,33,33,.2);
+    -moz-box-shadow: 0 10px 6px -6px rgba(33,33,33,.2);
+    box-shadow: 0 10px 6px -6px rgba(33,33,33,.2);
 }
 .match_date {
     margin-top: 2rem;
