@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import Link from 'next/link';
 import Head from 'next/head';
+import moment from 'moment';
 
 class PostList extends Component {
     static defaultProps = {
@@ -44,10 +45,18 @@ class PostList extends Component {
         return timeA > timeB ? 1 : -1;
     }
 
-    convertDay = (day_number) => {
-        const dayOfTheWeek = ['일', '월', '화', '수', '목', '금', '토'];
+    convertDay = (day) => {
+        const dayOfTheWeek = {
+            Sunday: '일',
+            Monday: '월',
+            Tuesday: '화',
+            Wednesday: '수',
+            Thursday: '목',
+            Friday: '금',
+            Saturday: '토'
+        };
 
-        return dayOfTheWeek[day_number];
+        return dayOfTheWeek[day];
     }
 
     render() {
@@ -77,8 +86,9 @@ class PostList extends Component {
                                                     isSameDate == true
                                                     ? true
                                                     :
+
                                                     <h3 className="match_date">
-                                                        {post.start_time.slice(5, 7)}월 {post.start_time.slice(8, 10)}일 {this.convertDay(new Date(post.start_time).getDay())}요일
+                                                        {`${moment.parseZone(post.start_time).local().format('MM월 DD일')} ${this.convertDay(moment.parseZone(post.start_time).local().format('dddd'))}요일`}
                                                     </h3>
                                                 }
                                                 <Link
@@ -88,7 +98,7 @@ class PostList extends Component {
                                                 >
                                                     <div className="match">
                                                         <div className="match-time">
-                                                            {post.start_time.slice(11, 16)}
+                                                            {moment.parseZone(post.start_time).local().format('HH:mm')}
                                                         </div>
                                                         <div className="match-place">
                                                             <p className="place">{post.place_name}</p>
