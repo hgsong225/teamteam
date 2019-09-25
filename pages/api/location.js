@@ -2,22 +2,43 @@ const mysql = require('mysql');
 
 const db = require('../../config/db.js');
 
-const connection = mysql.createConnection(db);
+// const connection = mysql.createConnection(db);
+
+const pool = mysql.createPool(db);
 
 export default (req, res) => {
     const {
-    method
+        method
     } = req
 
     switch (method) {
         case 'GET':
         // Get data from your database
             const query = `SELECT * FROM location order by sido_code asc, sigungu_name asc;`;
-            connection.query(query, (err, rows) => {
-                if (err) throw err;
+
+            pool.getConnection(async (err, connection) => {
+                if (err) throw err; // not connected!
+              
+                // Use the connection
+                connection.query(query, (error, results, fields) => {
+
+                    res.send(results);
+              
+                    // Handle error after the release.
+                    if (error) throw error;
+              
+                    // Don't use the connection here, it has been returned to the pool.
+                });
+
+                // When done with the connection, release it.
+                connection.release();
+              });
+            
+            // connection.query(query, (err, rows) => {
+            //     if (err) throw err;
           
-                res.send(rows);
-            });
+            //     res.send(rows);
+            // });
 
         break
 
