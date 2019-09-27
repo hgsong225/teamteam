@@ -238,12 +238,16 @@ class Me extends Component {
                                                                     className="status-box-remove"
                                                                     name={post.idpost}
                                                                 >
-                                                                    <p
-                                                                        className="edit-match"
-                                                                        name={post.idpost}
-                                                                    >
-                                                                        수정하기
-                                                                    </p>
+                                                                    {
+                                                                        post.match_status !== "경기종료"
+                                                                        &&
+                                                                        <p
+                                                                            className="edit-match"
+                                                                            name={post.idpost}
+                                                                        >
+                                                                            수정하기
+                                                                        </p>
+                                                                    }
                                                                 </div>
                                                             </div>
                                                         </Link>
@@ -271,7 +275,6 @@ class Me extends Component {
                                                                     <p className="applicant-status">{post.applicant_status}</p>
                                                                     <p
                                                                         className="match-me-cancel-apply"
-                                                                        onClick={this.cancelApply}
                                                                         name="신청취소"
                                                                         type="submit"
                                                                         value={post.idmatch}

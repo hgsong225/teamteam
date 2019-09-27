@@ -410,7 +410,6 @@ class Match extends Component {
                                                             <th>신청자</th>
                                                             <th>신청 일시</th>
                                                             <th>입금 상태</th>
-                                                            {/* {applicants.filter(applicant => applicant.applicant_status === '결제완료').length > 0 && <th></th>} */}
                                                             <th>신청 상태</th>
                                                         </tr>
                                                     </thead>
@@ -477,206 +476,6 @@ class Match extends Component {
                             </div>
                         }
                         {
-                            // 신청자 경기 안내
-                            (match.length > 0 && user !== null)
-                            && <div>
-                                {
-                                    /*
-                                        신청 전일 때 (비로그인)
-                                        신청 전일 때 (경기전 + 신청가능 + 로그인)
-
-                                        이미 신청했을 때 (경기전 + 신청가능 + 승인대기 + 결제전)
-                                        이미 신청했을 때 (경기전 + 신청가능 + 승인대기 + 결제완료)
-                                        이미 신청했을 때 (경기전 + 신청가능 + 수락 + 결제완료)
-
-                                        신청 취소됐을 때 (경기전 + 신청가능 + 신청취소 + 결제전)
-                                        신청 취소됐을 때 (경기전 + 신청가능 + 신청취소 + 결제완료)
-
-                                        신청 불가능 할 때 (경기전 + 신청불가 + 신청취소)
-                                        경기 취소 됐을 때 (경기취소 + 신청불가 + 신청취소)
-                                    */
-
-                                    /*
-                                        appliedAndBeforePayments,
-                                        appliedAndCompletedPayments,
-                                        acceptedAndCompletdPayments,
-                                        canceledAndBeforePayments,
-                                        canceledAndCompletdPayments,
-                                    */
-                                }
-                                {
-                                    /* 신청 전일 때 (비로그인) */
-                                    (user === null)
-                                    && <div className="applicant-status-container">신청 전일 때 (비로그인)</div>
-                                }
-                                {
-                                    /* 지우지 말 것 */
-                                    /* 신청 전일 때 (비로그인) */
-                                    /* 신청 전일 때 (로그인) */ 
-                                    // (match[0].fb_uid !== user.uid && (!appliedAndBeforePayments.length > 0 && !appliedAndCompletedPayments.length > 0 && !acceptedAndCompletdPayments.length > 0))
-                                    // && <div className="applicant-status-container">신청 전일 때 (로그인)</div>
-                                }
-                                {
-                                    /* 이미 신청했을 때 (승인대기 + 결제전) */
-                                    (match[0].fb_uid !== user.uid && appliedAndBeforePayments.length > 0)
-                                    && <div className="applicant-status-container">
-                                        <p>이미 신청했을 때 (승인대기 + 결제전)</p>
-                                        <p className="applicant-status-title">입금 대기중입니다.</p>
-                                        <p>입금 계좌: 신한 110-439-532672</p>
-                                        <div className="applicant-contents">
-                                           <p className="applicant-contents-label">결제금액</p>
-                                           <p className="applicant_contents_desc">{`${match[0].match_fee}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")}원</p>
-                                       </div>
-                                    </div>
-                                }
-                                {
-                                    /* 이미 신청했을 때 (승인대기 + 결제완료) */
-                                    (match[0].fb_uid !== user.uid && appliedAndCompletedPayments.length > 0)
-                                    && <div className="applicant-status-container">
-                                        <p>이미 신청했을 때 (승인대기 + 결제완료)</p>
-                                        <p className="applicant-status-title">호스트 승인대기중입니다.</p>
-                                        <div>
-                                           {
-                                               appliedAndCompletedPayments.map(info => {
-                                                   return (
-                                                       <div className="applicant-contents-container">
-                                                           <div className="applicant-contents">
-                                                               <p className="applicant-contents-label">신청일시</p>
-                                                               <p className="applicant_contents_desc">{moment.parseZone(info.apply_time).local().format('YYYY-MM-DD HH:mm:ss')}</p>
-                                                           </div>
-                                                           <div className="applicant-contents">
-                                                               <p className="applicant-contents-label">결제금액</p>
-                                                               <p className="applicant_contents_desc">{info.amount_of_payment.replace(/\B(?=(\d{3})+(?!\d))/g, ",")}원</p>
-                                                           </div>
-                                                           <div className="applicant-contents">
-                                                               <p className="applicant-contents-label">결제상태</p>
-                                                               <p className="applicant_contents_desc">{info.payment_status} ({info.payment_method})</p>
-                                                           </div>
-                                                           <div className="applicant-contents">
-                                                               <p className="applicant-contents-label">결제일시</p>
-                                                               <p className="applicant_contents_desc">{moment.parseZone(info.payment_time).local().format('YYYY-MM-DD HH:mm:ss')}</p>
-                                                           </div>
-                                                       </div>
-                                                   )
-                                               })
-                                           }
-                                        </div>
-                                    </div>
-                                }
-                                {
-                                    /* 이미 신청했을 때 (수락 + 결제 완료) */
-                                    (match[0].fb_uid !== user.uid && acceptedAndCompletdPayments.length > 0)
-                                    && <div className="applicant-status-container accepted">
-                                        <p>이미 신청했을 때 (수락 + 결제 완료)</p>
-                                        <p className="applicant-status-title">호스트 승인 완료! 경기 갈 준비되셨나요?</p>
-                                        <div>
-                                           {
-                                               acceptedAndCompletdPayments.map(info => {
-                                                   return (
-                                                       <div className="applicant-contents-container">
-                                                           <div className="applicant-contents">
-                                                               <p className="applicant-contents-label">신청일시</p>
-                                                               <p className="applicant_contents_desc">{moment.parseZone(info.apply_time).local().format('YYYY-MM-DD HH:mm:ss')}</p>
-                                                           </div>
-                                                           <div className="applicant-contents">
-                                                               <p className="applicant-contents-label">결제금액</p>
-                                                               <p className="applicant_contents_desc">{info.amount_of_payment.replace(/\B(?=(\d{3})+(?!\d))/g, ",")}원</p>
-                                                           </div>
-                                                           <div className="applicant-contents">
-                                                               <p className="applicant-contents-label">결제상태</p>
-                                                               <p className="applicant_contents_desc">{info.payment_status} ({info.payment_method})</p>
-                                                           </div>
-                                                           <div className="applicant-contents">
-                                                               <p className="applicant-contents-label">결제일시</p>
-                                                               <p className="applicant_contents_desc">{moment.parseZone(info.payment_time).local().format('YYYY-MM-DD HH:mm:ss')}</p>
-                                                           </div>
-                                                       </div>
-                                                   )
-                                               })
-                                           }
-                                        </div>
-                                    </div>
-                                }
-                                {
-                                    /* 신청 취소됐을 때 (신청취소 + 결제전) */
-                                    (match[0].fb_uid !== user.uid && canceledAndBeforePayments.length > 0)
-                                    && <div className="applicant-status-container refund">
-                                        <p>신청 취소됐을 때 (신청취소 + 결제전)</p>
-                                        <p className="applicant-status-title">신청이 취소되었습니다.</p>
-                                        <div>
-                                           {
-                                               canceledAndBeforePayments.map(info => {
-                                                   return (
-                                                        <div className="refund-contents-container">
-                                                            <div className="refund-contents">
-                                                                <p className="refund-contents-label">취소사유</p>
-                                                                <p className="refund_contents_desc">{info.reason_for_cancel}</p>
-                                                            </div>
-                                                            <div className="refund-contents">
-                                                                <p className="refund-contents-label">결제상태</p>
-                                                                <p className="refund_contents_desc">{info.payment_status} ({info.payment_method})</p>
-                                                            </div>
-                                                            <div className="refund-contents">
-                                                                <p className="refund-contents-label">환불금액</p>
-                                                                <p className="refund_contents_desc">{info.refund_fee === null && 0}</p>
-                                                            </div>
-                                                        </div>
-                                                   )
-                                               })
-                                           }
-                                        </div>
-                                    </div>
-                                }
-                                {
-                                    /* 신청 취소됐을 때 (신청취소 + 결제완료) */
-                                    (match[0].fb_uid !== user.uid && canceledAndCompletdPayments.length > 0)
-                                    && <div className="applicant-status-container refund">
-                                        <p>신청 취소됐을 때 (신청취소 + 결제완료)</p>
-                                        <p className="applicant-status-title">신청이 취소되었습니다.</p>
-                                        <p>결제한 금액은 취소시점 이후 24시간 내에 100% 환불됩니다.</p>
-                                        <div>
-                                           {
-                                               canceledAndCompletdPayments.map(info => {
-                                                   return (
-                                                       <div className="refund-contents-container">
-                                                           <div className="refund-contents">
-                                                               <p className="refund-contents-label">취소사유</p>
-                                                               <p className="refund_contents_desc">{info.reason_for_cancel}</p>
-                                                           </div>
-                                                           <div className="refund-contents">
-                                                               <p className="refund-contents-label">결제금액</p>
-                                                               <p className="refund_contents_desc">{info.amount_of_payment.replace(/\B(?=(\d{3})+(?!\d))/g, ",")}원</p>
-                                                           </div>
-                                                           <div className="refund-contents">
-                                                               <p className="refund-contents-label">결제상태</p>
-                                                               <p className="refund_contents_desc">{info.payment_status} ({info.payment_method})</p>
-                                                           </div>
-                                                           <div className="refund-contents">
-                                                               <p className="refund-contents-label">결제일시</p>
-                                                               <p className="refund_contents_desc">{moment.parseZone(info.payment_time).local().format('YYYY-MM-DD HH:mm:ss')}</p>
-                                                           </div>
-                                                           <div className="refund-contents">
-                                                               <p className="refund-contents-label">환불상태</p>
-                                                               <p className="refund_contents_desc">{info.refund_status}</p>
-                                                           </div>
-                                                           <div className="refund-contents">
-                                                               <p className="refund-contents-label">환불계좌</p>
-                                                               <p className="refund_contents_desc">{info.account}</p>
-                                                           </div>
-                                                           <div className="refund-contents">
-                                                               <p className="refund-contents-label">환불금액</p>
-                                                               <p className="refund_contents_desc">{`${info.refund_fee}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")}원</p>
-                                                           </div>
-                                                       </div>
-                                                   )
-                                               })
-                                           }
-                                        </div>
-                                    </div>
-                                }
-                            </div>
-                        }
-                        {
                             /* 내 경기인 경우 */
                             (match.length > 0 && user !== null)
                             && match[0].fb_uid == user.uid
@@ -698,11 +497,17 @@ class Match extends Component {
                                             value="경기 삭제"
                                         />
                                     }
-                                    <button
-                                        className="edit"
-                                    >
-                                        <Link prefetch href={{ pathname: '/match/edit', query: { id: this.props.url.query.id }}}><a>수정하기</a></Link>
-                                    </button>
+                                    {
+                                         (this.state.completedPaymentForApplicants.length > 0 && this.state.acceptedApplicants.length > 0)
+                                         ? <p>수정 불가</p>
+                                         : <Link prefetch href={{ pathname: '/match/edit', query: { id: this.props.url.query.id }}}>
+                                                <a
+                                                    className="button"
+                                                >
+                                                    수정하기
+                                                </a>
+                                         </Link>
+                                    }
                                 </div>
                         }
                         {
@@ -713,30 +518,24 @@ class Match extends Component {
                                         /* 신청 전일 때 (로그인) */
                                         (match[0].fb_uid !== user.uid && ((!appliedAndBeforePayments.length > 0 && !appliedAndCompletedPayments.length > 0 && !acceptedAndCompletdPayments.length > 0)))
                                         && <div>
-                                            {/* <p>신청 전일 때 (로그인), (경기전 + 신청가능 + 신청취소 + 결제전), (경기전 + 신청가능 + 신청취소 + 결제완료)</p> */}
                                             {
                                                 (match[0].apply_status === '신청가능')
                                                 && <div className="button-box">
-                                                    {/* <button
-                                                        className="button"
-                                                        value="신청하기"
-                                                        // type="submit"
-                                                    > */}
-                                                        <Link
-                                                            href={{ pathname: 'payment', query: { post: match[0].idpost, match: match[0].idmatch }}}
+                                                    <Link
+                                                        href={{ pathname: 'payment', query: { post: match[0].idpost, match: match[0].idmatch }}}
+                                                    >
+                                                        <a
+                                                            className="button" value="신청하기"
                                                         >
-                                                            <a
-                                                                className="button" value="신청하기"
-                                                            >
-                                                                신청하기
-                                                            </a>
-                                                        </Link>
+                                                            신청하기
+                                                        </a>
+                                                    </Link>
                                                     {/* </button> */}
                                                 </div>
                                             }
                                             {
-                                                (match[0].match_status === '신청마감')
-                                                && <p>신청이 마감됐습니다.</p>
+                                                (match[0].apply_status === '인원마감')
+                                                && <p>인원이 마감됐습니다.</p>
                                             }
                                             {
                                                 (match[0].match_status === '경기종료')
@@ -746,21 +545,6 @@ class Match extends Component {
                                                 (match[0].match_status === '경기취소')
                                                 && <p>호스트에의해 취소된 경기입니다. 결제한 금액은 취소시점 이후 24시간 내에 100% 환불됩니다.</p>
                                             }
-                                        </div>
-                                    }
-                                    {
-                                        /* 이미 신청했을 때 */
-                                        (match[0].fb_uid !== user.uid && (appliedAndBeforePayments.length > 0 || appliedAndCompletedPayments.length > 0 || acceptedAndCompletdPayments.length > 0))
-                                        && <div>
-                                            <p>이미 신청했을 때 (승인대기 + 결제전), (경기전 + 신청가능 + 승인대기 + 결제완료), (경기전 + 신청가능 + 수락 + 결제완료)</p>
-                                            <div className="button-box">
-                                                <input
-                                                    className="cancel-apply"
-                                                    onClick={this.cancelApply}
-                                                    value="신청 취소"
-                                                    type="submit"
-                                                />
-                                            </div>
                                         </div>
                                     }
                                 </div>
