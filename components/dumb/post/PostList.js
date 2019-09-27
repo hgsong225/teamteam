@@ -3,6 +3,30 @@ import Link from 'next/link';
 import Head from 'next/head';
 import moment from 'moment';
 
+const applyStatusOption = {
+    신청가능: {
+        color: "#2196f3",
+        text: "신청하기",
+        value: "신청하기",
+    },
+    신청불가: {
+        color: "#ff4d4f",
+        text: "신청불가",
+        value: "신청불가",
+    },
+    인원마감: {
+        color: "#faad14",
+        text: "인원마감",
+        value: "신청불가",
+    }
+}
+
+const styles = {
+    button: {
+        color: "#2196f3",
+    },
+}
+
 class PostList extends Component {
     static defaultProps = {
         applyMatch: () => {},
@@ -107,43 +131,63 @@ class PostList extends Component {
                                                         </div>
                                                         <div className="match-apply">
                                                             {
-                                                                // 신청하기 (로그인유저)
-                                                                this.props.user !== null
-                                                                && (post.hostID !== this.props.user.data[0].iduser && (post.match_has_users === undefined || post.match_has_users.filter(match_has_user => match_has_user.iduser === this.props.user.data[0].iduser && match_has_user.applicant_status !== '신청취소').length < 1))
-                                                                    // && <button
-                                                                    //         className="match-apply-button"
-                                                                    //         onClick={this.handlePrompt}
-                                                                    //         name={post.idmatch}
-                                                                    //         type="submit"
-                                                                    //         value="신청하기"
-                                                                    //     >
-                                                                    //         <p className="apply">신청하기</p>
-                                                                    //         <p className="price">{post.match_fee}원</p>
-                                                                    //     </button>
+                                                                // 신청하기 (로그인유저) - 신청 가능한 경기
+                                                                this.props.user !== null // check signed in
+                                                                && (post.hostID !== this.props.user.data[0].iduser) // check match host 'false'
+                                                                && (post.apply_status === "신청가능") //check guest full 'false'
                                                                     &&
                                                                     <Link
                                                                         href={{ pathname: 'payment', query: { post: post.idpost, match: post.idmatch }}}
                                                                     >
                                                                         <a
-                                                                            className="button" value="신청하기"
+                                                                            className="button"
+                                                                            value={applyStatusOption[post.apply_status].value}
+                                                                            style={{backgroundColor: applyStatusOption[post.apply_status].color}}
                                                                         >
-                                                                            신청하기
+                                                                            {applyStatusOption[post.apply_status].text}
                                                                         </a>
                                                                     </Link>
+                                                            }
+                                                            {
+                                                                // 신청하기 (로그인유저) - 인원 마감된 경기
+                                                                this.props.user !== null // check signed in
+                                                                && (post.hostID !== this.props.user.data[0].iduser) // check match host 'false'
+                                                                && (post.apply_status === "인원마감") //check guest full 'true'
+                                                                    &&
+                                                                    <Link
+                                                                        href={{ pathname: '/match', query: { id: post.idpost }}}
+                                                                    >
+                                                                        <a
+                                                                            className="button"
+                                                                            value={applyStatusOption[post.apply_status].value}
+                                                                            style={{backgroundColor: applyStatusOption[post.apply_status].color}}
+                                                                        >
+                                                                            {applyStatusOption[post.apply_status].text}
+                                                                        </a>
+                                                                    </Link>
+                                                            }
+                                                            {
+                                                                // 신청하기 (로그인유저) - 신청 불가능한 경기
+                                                                this.props.user !== null // check signed in
+                                                                && (post.hostID !== this.props.user.data[0].iduser) // check match host 'false'
+                                                                && (post.apply_status === "신청불가") //check guest full 'false'
+                                                                    &&
+                                                                    <a
+                                                                        className="button"
+                                                                        value={applyStatusOption[post.apply_status].value}
+                                                                        style={{
+                                                                            backgroundColor: applyStatusOption[post.apply_status].color,
+                                                                            cursor: "auto",
+                                                                            boxShadow: 0,
+                                                                        }}
+                                                                    >
+                                                                        {applyStatusOption[post.apply_status].text}
+                                                                    </a>
                                                             }
                                                             {
                                                                 // 내가 만든 경기
                                                                 this.props.user !== null
                                                                 && (post.hostID === this.props.user.data[0].iduser)
-                                                                    // && <button
-                                                                    //         className="match-edit-button"
-                                                                    //         onClick={this.handlePrompt}
-                                                                    //         name={post.idmatch}
-                                                                    //         type="submit"
-                                                                    //         value="수정"
-                                                                    //     >
-                                                                    //         <p className="apply">경기 수정</p>
-                                                                    //     </button>
                                                                     &&
                                                                     <Link
                                                                         href={{ pathname: '/match', query: { id: post.idpost }}}

@@ -38,6 +38,7 @@ export default (req, res) => {
                     : `
                     SELECT *, p.user_iduser as hostID FROM post p
                     left join \`match\` on p.idpost = \`match\`.post_idpost
+                    LEFT JOIN match_has_user ON \`match\`.idmatch = match_has_user.match_idmatch
                     LEFT JOIN post_has_location
                     ON p.idpost = post_has_location.post_idpost
                     LEFT JOIN location
