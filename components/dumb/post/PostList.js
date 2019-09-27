@@ -127,7 +127,8 @@ class PostList extends Component {
                                                         <div className="match-place">
                                                             <p className="place">{post.place_name}</p>
                                                             <p className="match-type">
-                                                            <span className="">{post.sports_category}</span> {post.match_type} : {post.match_type}</p>
+                                                                <span className="">{post.sports_category}</span> {post.match_type} : {post.match_type}       {post.total_guests_available}명남음!
+                                                            </p>
                                                         </div>
                                                         <div className="match-apply">
                                                             {
@@ -144,7 +145,7 @@ class PostList extends Component {
                                                                             value={applyStatusOption[post.apply_status].value}
                                                                             style={{backgroundColor: applyStatusOption[post.apply_status].color}}
                                                                         >
-                                                                            {applyStatusOption[post.apply_status].text}
+                                                                            {applyStatusOption[post.apply_status].text} {post.match_fee}
                                                                         </a>
                                                                     </Link>
                                                             }
@@ -158,7 +159,7 @@ class PostList extends Component {
                                                                         href={{ pathname: '/match', query: { id: post.idpost }}}
                                                                     >
                                                                         <a
-                                                                            className="button"
+                                                                            className="button closed"
                                                                             value={applyStatusOption[post.apply_status].value}
                                                                             style={{backgroundColor: applyStatusOption[post.apply_status].color}}
                                                                         >
@@ -186,32 +187,10 @@ class PostList extends Component {
                                                             }
                                                             {
                                                                 // 내가 만든 경기
-                                                                this.props.user !== null
-                                                                && (post.hostID === this.props.user.data[0].iduser)
+                                                                this.props.user !== null // check signed in
+                                                                && (post.hostID === this.props.user.data[0].iduser) // check host true
                                                                     &&
-                                                                    <Link
-                                                                        href={{ pathname: '/match', query: { id: post.idpost }}}
-                                                                    >
-                                                                        <a
-                                                                            className="button" value="신청하기"
-                                                                        >
-                                                                            수정하기
-                                                                        </a>
-                                                                    </Link>
-                                                            }
-                                                            {
-                                                                // 내가 신청한 경기
-                                                                this.props.user !== null
-                                                                && (post.match_has_users.filter(match_has_user => match_has_user.iduser === this.props.user.data[0].iduser && match_has_user.applicant_status !== '신청취소').length > 0)
-                                                                    && <button
-                                                                            className="match-apply-cancel-button"
-                                                                            onClick={this.handlePrompt}
-                                                                            name={post.idmatch}
-                                                                            type="submit"
-                                                                            value="신청취소"
-                                                                        >
-                                                                            <p className="apply">신청취소</p>
-                                                                        </button>
+                                                                    <p>내 경기</p>
                                                             }
                                                             {
                                                                 // 신청하기 (비로그인유저)

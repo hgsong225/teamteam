@@ -72,6 +72,10 @@ ul {
     color: white;
     padding: 1px 40px;
 }
+.closed, .closed:hover {
+    color: rgba(0,0,0,0.45);
+    box-shadow: 0;
+}
 .apply, .price {
     margin: 0;
 }
