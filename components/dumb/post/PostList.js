@@ -109,28 +109,6 @@ class PostList extends Component {
         })
     }
 
-    compareMatchDate = (startTime) => {
-        const { selectedDay: { YYYY, MM, DD, type} } = this.props;
-        let today = '';
-
-        let selectedDate = [YYYY, MM - 1, DD];
-
-        let selectedDateTemp = moment(selectedDate);
-        let startDate = moment.parseZone(startTime).local().format('YYYY MM DD').split(' ');
-        let startDateTemp = moment([startDate[0], startDate[1] - 1, startDate[2]]);
-        const result = selectedDateTemp.diff(startDateTemp, 'days') // 1
-
-        console.log(selectedDateTemp);
-        console.log(startDateTemp);
-
-
-        today = result === 0 ? true : false;
-
-        console.log(today);
-
-        return today;
-    }
-
 
 
     render() {
@@ -156,7 +134,7 @@ class PostList extends Component {
                     {
                         allPosts.length > 0 ? allPosts.sort(this.dateAscendingOrder).map(
                             (post, i) => {
-                                if (selectedFilter == '전체' && post.idmatch != null && this.compareMatchDate(post.start_time)) {
+                                if (selectedFilter == '전체' && post.idmatch != null && this.props.compareMatchDate(post.start_time)) {
                                     return (
                                             <li className="match-list">
                                                 <Link

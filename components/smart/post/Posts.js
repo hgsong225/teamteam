@@ -99,23 +99,40 @@ class Posts extends Component {
         return this.state;
     }
 
-    handleDateFilter = (value) => {
-        console.log(`value`, value);
+    handleDateFilter = (selectedDay) => {
+        console.log(`selectedDay`, selectedDay);
 
         this.setState(prevState => {
-            let newDate = Object.assign({}, value);
+            let newDate = Object.assign({}, selectedDay);
             newDate.type = 'selected';
             return { selectedDay: newDate };
+        }, () => {
+            let start_time = `${selectedDay.YYYY}-${selectedDay.MM}-${selectedDay.DD}`;
+            let addedSelectedLocation = Object.assign(this.props.selectedLocation, { start_time });
+            this.props.getLocationBasedPosts(addedSelectedLocation);
         })
 
-        // this.setState(prevState => ({
-        //     selectedDay: {                   // object that we want to update
-        //         ...prevState.selectedDay,    // keep all other key-value pairs
-        //         type: 'selected'       // update the value of specific key
-        //     }
-        // }))
     }
-    
+
+    compareMatchDate = (startTime) => {
+        const { selectedDay: { YYYY, MM, DD, type} } = this.state;
+        let haveAGameOnThisDay = false;
+
+        let selectedDate = [YYYY, MM - 1, DD];
+
+        let selectedDateTemp = moment(selectedDate);
+        let startDate = moment.parseZone(startTime).local().format('YYYY MM DD').split(' ');
+        let startDateTemp = moment([startDate[0], startDate[1] - 1, startDate[2]]);
+        const result = selectedDateTemp.diff(startDateTemp, 'days') // result = 0 당일임. result가 0보다 크거나 작으면 없음.
+
+        console.log(selectedDateTemp);
+        console.log(startDateTemp);
+
+        haveAGameOnThisDay = result === 0 ? true : false;
+
+        return haveAGameOnThisDay;
+    }
+
     render() {
         console.log('Posts에서 render() 실행');
         const { postList, filterList, selectedFilter, renderFilterList } = this.state;
@@ -161,6 +178,7 @@ class Posts extends Component {
                         convertDay={this.convertDay}
                         selectedDay={this.state.selectedDay}
                         handleDateFilter={this.handleDateFilter}
+                        compareMatchDate={this.compareMatchDate}
                     />
                  </div>
             </div>

@@ -91,6 +91,7 @@ class Post extends Component {
             const self = this;
             const sido_name = selectedLocation.sido_name;
             const sigungu_name = selectedLocation.sigungu_name;
+            const start_time = selectedLocation.start_time;
             const checkSigungu = sigungu_name == undefined ? false : true;
             console.log(checkSigungu);
             // if (!checkSigungu) {
@@ -101,6 +102,7 @@ class Post extends Component {
             const params = {
                 sido_name,
                 sigungu_name,
+                start_time,
             };
             axios.get(`/api/post/location`, {
                 params,
@@ -137,6 +139,7 @@ class Post extends Component {
                         url={url}
                         user={user}
                         selectedLocation={selectedLocation}
+                        getLocationBasedPosts={this.getLocationBasedPosts}
                         allPosts={allPosts}
                     />
                     : <p>loading...</p>

@@ -17,6 +17,7 @@ export default (req, res) => {
                 console.log(data);
                 const sido_name = data.sido_name;
                 const sigungu_name = data.sigungu_name;
+                const start_time = data.start_time;
                 const query = sigungu_name
                     ? `
                     SELECT *, p.user_iduser as hostID FROM post p
@@ -43,7 +44,7 @@ export default (req, res) => {
                     ON p.idpost = post_has_location.post_idpost
                     LEFT JOIN location
                     ON location_idlocation = idlocation
-                    WHERE sido_name = '${sido_name}'
+                    WHERE sido_name = '${sido_name}' and DATE(start_time) = '${start_time}'
                     ORDER BY create_time DESC;
                     `;
         
