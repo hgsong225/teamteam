@@ -30,58 +30,23 @@ const styles = {
 
 class PostList extends Component {
     static defaultProps = {
-        applyMatch: () => {},
-        depositor: '',
         user: null,
-        posts: [],
+        allPosts: [],
         postList: [],
         selectedFilter: '전체',
+        selectedDay: {
+
+        },
     }
 
     async componentDidMount() {
         console.log('PostList에서 componentDidMount 실행');
     }
 
-    handlePrompt = (e) => {
-        let depositor = prompt('입금자명을 입력하세요.');
-        console.log(depositor);
-        if (depositor == null) {
-            e.preventDefault();
-            alert('신청 취소');
-            return; 
-        }
-        if (depositor.length !== 0) {
-            if (confirm(`입금자명: '${depositor}' 님이 맞습니까? \n입금자명을 잘 확인해주세요.`)) {
-                e.preventDefault();
-                this.props.applyMatch(e, depositor);
-            } else {
-                e.preventDefault();
-                alert('신청 취소');
-                this.props.applyMatch('');
-            }
-        } else {
-            return this.handlePrompt(e);
-        }
-    }
-
     dateAscendingOrder = (a, b) => { // 날짜 오름차순, dateA가 크면 true, dateB가 크거나 같으면 false
         let timeA = new Date(a['start_time']).getTime();
         let timeB = new Date(b['start_time']).getTime();
         return timeA > timeB ? 1 : -1;
-    }
-
-    convertDay = (day) => {
-        const dayOfTheWeek = {
-            Sunday: '일',
-            Monday: '월',
-            Tuesday: '화',
-            Wednesday: '수',
-            Thursday: '목',
-            Friday: '금',
-            Saturday: '토'
-        };
-
-        return dayOfTheWeek[day];
     }
 
     getDate = (number) => {
@@ -104,38 +69,53 @@ class PostList extends Component {
         }
 
         for (let i = 0; i < number; i += 1) {
-            let DD = moment().add(i, 'd').format("D일")
+            let YYYY = moment().add(i, 'd').format("YYYY")
+            let MM = moment().add(i, 'd').format("MM")
+            let DD = moment().add(i, 'd').format("DD")
             let dddd = moment().add(i, 'd').format("dddd")
-            let type = "";
+            let type = "default";
 
-            type = i === 0 ? "today": "default";
-            date.push({DD, dddd, type});
+            // type = i === 0 ? "today": "default";
+            date.push({
+                YYYY,
+                MM,
+                DD,
+                dddd,
+                type
+            });
         }
 
+        const { selectedDay: { MM, DD, type} } = this.props;
+
         return date.map(data => {
+            const checkSelected = data.MM === MM && data.DD === DD;
             return (
                 <div
                     className="select_date"
+                    onClick={() => this.props.handleDateFilter(data)}
                     style={{
                         display: 'flex',
                         flexDirection: 'column',
                         alignItems: 'center',
                         width: `${100/number}%`,
-                        backgroundColor: `${dateFilterOption[data.type].backgroundColor}`,
-                        color: `${dateFilterOption[data.type].color}`,
+                        backgroundColor: `${dateFilterOption[checkSelected ? type : data.type].backgroundColor}`,
+                        color: `${dateFilterOption[checkSelected ? type : data.type].color}`,
                         cursor: 'pointer',
+                        borderRadius: '0.5rem',
                     }}
                 >
-                    <p>{data.DD}</p>
-                    <p>{this.convertDay(data.dddd)}</p>
+                    <p>{data.DD}일</p>
+                    <p>{this.props.convertDay(data.dddd)}</p>
                 </div>
             )
         })
     }
 
+
+
     render() {
         console.log('PostList에서 render 실행');
-        const { posts, selectedFilter } = this.props;
+        const { allPosts, selectedFilter } = this.props;
 
         return (
             <div>
@@ -155,14 +135,14 @@ class PostList extends Component {
                 </div>
                 <ul>
                     {
-                        posts.length > 0 ? posts.sort(this.dateAscendingOrder).map(
+                        allPosts.length > 0 ? allPosts.sort(this.dateAscendingOrder).map(
                             (post, i) => {
                                 if (selectedFilter == '전체' && post.idmatch != null) {
                                     const start_year = new Date(post.start_time).getFullYear();
                                     const start_month = new Date(post.start_time).getMonth();
                                     const start_date = new Date(post.start_time).getDate();
                                     const isSameDate = i >= 1
-                                    ? (new Date(start_year, start_month, start_date).getTime() == new Date(new Date(posts[i - 1].start_time).getFullYear(), new Date(posts[i - 1].start_time).getMonth(), new Date(posts[i - 1].start_time).getDate()).getTime())
+                                    ? (new Date(start_year, start_month, start_date).getTime() == new Date(new Date(allPosts[i - 1].start_time).getFullYear(), new Date(allPosts[i - 1].start_time).getMonth(), new Date(allPosts[i - 1].start_time).getDate()).getTime())
                                     : false;
                 
                                     return (
@@ -173,7 +153,7 @@ class PostList extends Component {
                                                     :
 
                                                     <h3 className="match_date">
-                                                        {`${moment.parseZone(post.start_time).local().format('MM월 DD일')} ${this.convertDay(moment.parseZone(post.start_time).local().format('dddd'))}요일`}
+                                                        {`${moment.parseZone(post.start_time).local().format('MM월 DD일')} ${this.props.convertDay(moment.parseZone(post.start_time).local().format('dddd'))}요일`}
                                                     </h3>
                                                 }
                                                 <Link

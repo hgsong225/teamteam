@@ -1,0 +1,103 @@
+[1mdiff --git a/components/dumb/post/PostList.js b/components/dumb/post/PostList.js[m
+[1mindex b9bfc3f..9ffd4f3 100644[m
+[1m--- a/components/dumb/post/PostList.js[m
+[1m+++ b/components/dumb/post/PostList.js[m
+[36m@@ -30,40 +30,17 @@[m [mconst styles = {[m
+ [m
+ class PostList extends Component {[m
+     static defaultProps = {[m
+[31m-        applyMatch: () => {},[m
+[31m-        depositor: '',[m
+         user: null,[m
+         posts: [],[m
+         postList: [],[m
+         selectedFilter: '전체',[m
+[32m+[m[32m        selectedDayNumber: '',[m
+     }[m
+ [m
+     async componentDidMount() {[m
+         console.log('PostList에서 componentDidMount 실행');[m
+     }[m
+ [m
+[31m-    handlePrompt = (e) => {[m
+[31m-        let depositor = prompt('입금자명을 입력하세요.');[m
+[31m-        console.log(depositor);[m
+[31m-        if (depositor == null) {[m
+[31m-            e.preventDefault();[m
+[31m-            alert('신청 취소');[m
+[31m-            return; [m
+[31m-        }[m
+[31m-        if (depositor.length !== 0) {[m
+[31m-            if (confirm(`입금자명: '${depositor}' 님이 맞습니까? \n입금자명을 잘 확인해주세요.`)) {[m
+[31m-                e.preventDefault();[m
+[31m-                this.props.applyMatch(e, depositor);[m
+[31m-            } else {[m
+[31m-                e.preventDefault();[m
+[31m-                alert('신청 취소');[m
+[31m-                this.props.applyMatch('');[m
+[31m-            }[m
+[31m-        } else {[m
+[31m-            return this.handlePrompt(e);[m
+[31m-        }[m
+[31m-    }[m
+[31m-[m
+     dateAscendingOrder = (a, b) => { // 날짜 오름차순, dateA가 크면 true, dateB가 크거나 같으면 false[m
+         let timeA = new Date(a['start_time']).getTime();[m
+         let timeB = new Date(b['start_time']).getTime();[m
+[1mdiff --git a/components/smart/post/Posts.js b/components/smart/post/Posts.js[m
+[1mindex dc6a193..ee97ffd 100644[m
+[1m--- a/components/smart/post/Posts.js[m
+[1m+++ b/components/smart/post/Posts.js[m
+[36m@@ -17,7 +17,6 @@[m [mclass Posts extends Component {[m
+ [m
+     state = {[m
+         user: null,[m
+[31m-        depositor: '',[m
+         willBeAppliedMatch: [],[m
+         postList: [],[m
+         selectedFilter: '전체', // default: 전체[m
+[36m@@ -47,7 +46,9 @@[m [mclass Posts extends Component {[m
+             //     desc: '팀에 새로 가입하고 싶은 사람들의 게시물입니다.',[m
+             // },[m
+         ],[m
+[32m+[m[32m        selectedDayNumber: 0,[m
+         renderFilterList: [],[m
+[32m+[m
+     }[m
+ [m
+     componentDidMount() {[m
+[36m@@ -78,6 +79,11 @@[m [mclass Posts extends Component {[m
+     getState = () => {[m
+         return this.state;[m
+     }[m
+[32m+[m
+[32m+[m[32m    handleDateFilter = () => {[m
+[32m+[m[32m        e.preventDefault();[m
+[32m+[m[41m        [m
+[32m+[m[32m    }[m
+     [m
+     render() {[m
+         console.log('Posts에서 render() 실행');[m
+[36m@@ -122,7 +128,7 @@[m [mclass Posts extends Component {[m
+                         posts={this.props.posts}[m
+                         postList={postList}[m
+                         selectedFilter={selectedFilter}[m
+[31m-                        depositor={this.props.depositor}[m
+[32m+[m[32m                        selectedDayNumber={this.props.selectedDayNumber}[m
+                     />[m
+                  </div>[m
+                 { // 나중에 지역 세분화 할 때 사용[m
+[1mdiff --git a/static/postlist.css b/static/postlist.css[m
+[1mindex f74dc1c..ae14d0d 100644[m
+[1m--- a/static/postlist.css[m
+[1m+++ b/static/postlist.css[m
+[36m@@ -4,7 +4,8 @@[m [mul {[m
+     padding: 0;[m
+ }[m
+ [m
+[31m-.select_date {[m
+[32m+[m[32m.select_date:hover {[m
+[32m+[m[32m    color: rgba(66,133,244,0.149)[m
+ }[m
+ [m
+ .select_date > p {[m

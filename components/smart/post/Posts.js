@@ -45,7 +45,13 @@ class Posts extends Component {
             //     desc: '팀에 새로 가입하고 싶은 사람들의 게시물입니다.',
             // },
         ],
-        selectedDayNumber: 0,
+        selectedDay: {
+            YYYY: `${moment().add(0, 'd').format("YYYY")}`,
+            MM: `${moment().add(0, 'd').format("MM")}`,
+            DD: `${moment().add(0, 'd').format("DD")}`,
+            dddd: `${moment().add(0, 'd').format("dddd")}`,
+            type: 'today',
+        },
         renderFilterList: [],
 
     }
@@ -93,58 +99,21 @@ class Posts extends Component {
         return this.state;
     }
 
-    getDate = (number) => {
-        const date = [];
+    handleDateFilter = (value) => {
+        console.log(`value`, value);
 
-        let dateFilterOption = {
-            today: {
-                backgroundColor: "rgba(66,133,244,0.149)",
-                color: "#1e88e5",
-            },
-            default: {
-                backgroundColor: "white",
-                color: "#212121",
-            },
-
-            selected: {
-                backgroundColor: "rgba(66,133,244,0.149)",
-                color: "#1e88e5",
-            }
-        }
-
-        for (let i = 0; i < number; i += 1) {
-            let DD = moment().add(i, 'd').format("D일")
-            let dddd = moment().add(i, 'd').format("dddd")
-            let type = "";
-
-            type = i === 0 ? "today": "default";
-            date.push({DD, dddd, type});
-        }
-
-        return date.map(data => {
-            return (
-                <div
-                    className="select_date"
-                    style={{
-                        display: 'flex',
-                        flexDirection: 'column',
-                        alignItems: 'center',
-                        width: `${100/number}%`,
-                        backgroundColor: `${dateFilterOption[data.type].backgroundColor}`,
-                        color: `${dateFilterOption[data.type].color}`,
-                        cursor: 'pointer',
-                    }}
-                >
-                    <p>{data.DD}</p>
-                    <p>{this.convertDay(data.dddd)}</p>
-                </div>
-            )
+        this.setState(prevState => {
+            let newDate = Object.assign({}, value);
+            newDate.type = 'selected';
+            return { selectedDay: newDate };
         })
-    }
 
-    handleDateFilter = () => {
-        e.preventDefault();
-        
+        // this.setState(prevState => ({
+        //     selectedDay: {                   // object that we want to update
+        //         ...prevState.selectedDay,    // keep all other key-value pairs
+        //         type: 'selected'       // update the value of specific key
+        //     }
+        // }))
     }
     
     render() {
@@ -186,12 +155,12 @@ class Posts extends Component {
                     <PostList
                         renderPosts={this.renderPosts}
                         user={this.props.user}
-                        posts={this.props.posts}
+                        allPosts={this.props.allPosts}
                         postList={postList}
                         selectedFilter={selectedFilter}
                         convertDay={this.convertDay}
-                        selectedDayNumber={this.props.selectedDayNumber}
-                        getDate={this.getDate}
+                        selectedDay={this.state.selectedDay}
+                        handleDateFilter={this.handleDateFilter}
                     />
                  </div>
             </div>

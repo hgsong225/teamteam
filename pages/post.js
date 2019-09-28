@@ -20,7 +20,7 @@ class Post extends Component {
     state = {
         user: null,
         selectedLocation: {},
-        posts: [],
+        allPosts: [],
         didYouGetResponseWithPostsFromServer: false,
     }
     
@@ -95,7 +95,7 @@ class Post extends Component {
             console.log(checkSigungu);
             // if (!checkSigungu) {
             //     return self.setState({
-            //         posts: [],
+            //         allPosts: [],
             //     });
             // }
             const params = {
@@ -107,7 +107,7 @@ class Post extends Component {
             })
             .then((res) => {
                 self.setState({
-                    posts: res.data,
+                    allPosts: res.data,
                     didYouGetResponseWithPostsFromServer: true,
                 })
                 console.log(res.data);
@@ -120,7 +120,7 @@ class Post extends Component {
 
     render() {
         console.log('post.js에서 render() 실행');
-        const { user, selectedLocation, posts, myMatch, myApplicationMatch } = this.state;
+        const { user, selectedLocation, allPosts, myMatch, myApplicationMatch } = this.state;
         const { url, router } = this.props;
 
         return (
@@ -137,7 +137,7 @@ class Post extends Component {
                         url={url}
                         user={user}
                         selectedLocation={selectedLocation}
-                        posts={posts}
+                        allPosts={allPosts}
                     />
                     : <p>loading...</p>
                 }
