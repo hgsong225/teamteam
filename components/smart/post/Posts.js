@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
-import axios from 'axios';
-import Router from 'next/router';
 const querystring = require('querystring');
+import moment from 'moment';
 
 import fb from '../../../config/firebase';
 
@@ -17,7 +16,6 @@ class Posts extends Component {
 
     state = {
         user: null,
-        depositor: '',
         willBeAppliedMatch: [],
         postList: [],
         selectedFilter: '전체', // default: 전체
@@ -47,7 +45,9 @@ class Posts extends Component {
             //     desc: '팀에 새로 가입하고 싶은 사람들의 게시물입니다.',
             // },
         ],
+        selectedDayNumber: 0,
         renderFilterList: [],
+
     }
 
     componentDidMount() {
@@ -75,8 +75,76 @@ class Posts extends Component {
         });
     }
 
+    convertDay = (day) => {
+        const dayOfTheWeek = {
+            Sunday: '일',
+            Monday: '월',
+            Tuesday: '화',
+            Wednesday: '수',
+            Thursday: '목',
+            Friday: '금',
+            Saturday: '토'
+        };
+
+        return dayOfTheWeek[day];
+    }
+
     getState = () => {
         return this.state;
+    }
+
+    getDate = (number) => {
+        const date = [];
+
+        let dateFilterOption = {
+            today: {
+                backgroundColor: "rgba(66,133,244,0.149)",
+                color: "#1e88e5",
+            },
+            default: {
+                backgroundColor: "white",
+                color: "#212121",
+            },
+
+            selected: {
+                backgroundColor: "rgba(66,133,244,0.149)",
+                color: "#1e88e5",
+            }
+        }
+
+        for (let i = 0; i < number; i += 1) {
+            let DD = moment().add(i, 'd').format("D일")
+            let dddd = moment().add(i, 'd').format("dddd")
+            let type = "";
+
+            type = i === 0 ? "today": "default";
+            date.push({DD, dddd, type});
+        }
+
+        return date.map(data => {
+            return (
+                <div
+                    className="select_date"
+                    style={{
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: 'center',
+                        width: `${100/number}%`,
+                        backgroundColor: `${dateFilterOption[data.type].backgroundColor}`,
+                        color: `${dateFilterOption[data.type].color}`,
+                        cursor: 'pointer',
+                    }}
+                >
+                    <p>{data.DD}</p>
+                    <p>{this.convertDay(data.dddd)}</p>
+                </div>
+            )
+        })
+    }
+
+    handleDateFilter = () => {
+        e.preventDefault();
+        
     }
     
     render() {
@@ -117,12 +185,13 @@ class Posts extends Component {
                     />
                     <PostList
                         renderPosts={this.renderPosts}
-                        applyMatch={this.applyMatch}
                         user={this.props.user}
                         posts={this.props.posts}
                         postList={postList}
                         selectedFilter={selectedFilter}
-                        depositor={this.props.depositor}
+                        convertDay={this.convertDay}
+                        selectedDayNumber={this.props.selectedDayNumber}
+                        getDate={this.getDate}
                     />
                  </div>
                 { // 나중에 지역 세분화 할 때 사용
@@ -137,7 +206,6 @@ class Posts extends Component {
                     // />
                     // <PostList
                     //     renderPosts={this.renderPosts}
-                    //     applyMatch={this.applyMatch}
                     //     user={this.props.user}
                     //     posts={this.props.posts}
                     //     postList={postList}
@@ -158,7 +226,6 @@ class Posts extends Component {
                 //         />
                 //         <PostList
                 //             renderPosts={this.renderPosts}
-                //             applyMatch={this.applyMatch}
                 //             user={this.props.user}
                 //             posts={this.props.posts}
                 //             postList={postList}
