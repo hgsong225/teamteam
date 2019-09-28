@@ -33,7 +33,7 @@ export default (req, res) => {
                         WHERE sido_name = '${sido_name}'
                         AND sigungu_name = '${sigungu_name}'
                         )
-                    AND apply_status ='신청가능'
+                    AND apply_status ='신청가능' and DATE(start_time) = '${start_time}'
                     ORDER BY create_time DESC;
                     `
                     : `
@@ -44,7 +44,7 @@ export default (req, res) => {
                     ON p.idpost = post_has_location.post_idpost
                     LEFT JOIN location
                     ON location_idlocation = idlocation
-                    WHERE sido_name = '${sido_name}' and DATE(start_time) = '${start_time}'
+                    WHERE sido_name = '${sido_name}' and DATE(start_time) = '${start_time}' AND apply_status ='신청가능'
                     ORDER BY create_time DESC;
                     `;
         
