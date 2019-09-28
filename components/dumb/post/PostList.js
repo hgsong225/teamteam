@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import Link from 'next/link';
 import Head from 'next/head';
 import moment from 'moment';
+import { withRouter } from 'next/router';
 
 const applyStatusOption = {
     신청가능: {
@@ -83,6 +84,55 @@ class PostList extends Component {
         return dayOfTheWeek[day];
     }
 
+    getDate = (number) => {
+        const date = [];
+
+        let dateFilterOption = {
+            today: {
+                backgroundColor: "rgba(66,133,244,0.149)",
+                color: "#1e88e5",
+            },
+            default: {
+                backgroundColor: "white",
+                color: "#212121",
+            },
+
+            selected: {
+                backgroundColor: "rgba(66,133,244,0.149)",
+                color: "#1e88e5",
+            }
+        }
+
+        for (let i = 0; i < number; i += 1) {
+            let DD = moment().add(i, 'd').format("D일")
+            let dddd = moment().add(i, 'd').format("dddd")
+            let type = "";
+
+            type = i === 0 ? "today": "default";
+            date.push({DD, dddd, type});
+        }
+
+        return date.map(data => {
+            return (
+                <div
+                    className="select_date"
+                    style={{
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: 'center',
+                        width: `${100/number}%`,
+                        backgroundColor: `${dateFilterOption[data.type].backgroundColor}`,
+                        color: `${dateFilterOption[data.type].color}`,
+                        cursor: 'pointer',
+                    }}
+                >
+                    <p>{data.DD}</p>
+                    <p>{this.convertDay(data.dddd)}</p>
+                </div>
+            )
+        })
+    }
+
     render() {
         console.log('PostList에서 render 실행');
         const { posts, selectedFilter } = this.props;
@@ -92,6 +142,17 @@ class PostList extends Component {
                 <Head>
                     <link href="../../static/postlist.css" rel="stylesheet" />
                 </Head>
+                <div
+                    style={{
+                        display: 'flex',
+                        alignContent: 'center',
+                        justifyContent: 'space-between'
+                    }}
+                >
+                    {
+                        this.getDate(7)
+                    }
+                </div>
                 <ul>
                     {
                         posts.length > 0 ? posts.sort(this.dateAscendingOrder).map(
