@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import Router from 'next/router';
 import Head from 'next/head';
 import axios from 'axios';
+import moment from 'moment';
 
 import fb from '../../config/firebase';
 import location from '../../config/location.json';
@@ -339,6 +340,12 @@ class CreateMatch extends Component {
             
             let deposit_account = new_deposit_account;
 
+            let start_time = moment.utc(new Date(`${match_date} ${match_start_time}`)).format();
+            let end_time = moment.utc(new Date(`${match_date} ${match_end_time}`)).format();
+
+            console.log(`start_time`, start_time);
+            console.log(`end_time`, end_time);
+
             const data = {
                 uid: user.uid,
                 selected_sports_category,
@@ -346,8 +353,8 @@ class CreateMatch extends Component {
                 total_guests_to_need,
                 selected_location,
                 match_date,
-                match_start_time,
-                match_end_time,
+                match_start_time: start_time,
+                match_end_time: end_time,
                 match_time_type,
                 selected_place: selected_place[0],
                 phone,

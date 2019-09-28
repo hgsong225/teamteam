@@ -113,12 +113,15 @@ class PostList extends Component {
         const { selectedDay: { YYYY, MM, DD, type} } = this.props;
         let today = '';
 
-        let selectedDateTemp = [YYYY, MM, DD];
+        let selectedDate = [YYYY, MM - 1, DD];
 
-        var selectedDate = moment(selectedDateTemp);
-        var startDate = moment(moment.parseZone(startTime).local().format('YYYY MM DD').split(' '));
-        const result = selectedDate.diff(startDate, 'days') // 1
+        let selectedDateTemp = moment(selectedDate);
+        let startDate = moment.parseZone(startTime).local().format('YYYY MM DD').split(' ');
+        let startDateTemp = moment([startDate[0], startDate[1] - 1, startDate[2]]);
+        const result = selectedDateTemp.diff(startDateTemp, 'days') // 1
 
+        console.log(selectedDateTemp);
+        console.log(startDateTemp);
 
 
         today = result === 0 ? true : false;
@@ -133,7 +136,6 @@ class PostList extends Component {
     render() {
         console.log('PostList에서 render 실행');
         const { allPosts, selectedFilter } = this.props;
-
         return (
             <div>
                 <Head>
