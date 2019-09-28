@@ -76,7 +76,6 @@ class PostList extends Component {
             let dddd = moment().add(i, 'd').format("dddd")
             let type = "default";
 
-            // type = i === 0 ? "today": "default";
             date.push({
                 YYYY,
                 MM,
@@ -151,29 +150,13 @@ class PostList extends Component {
                         this.getDate(7)
                     }
                 </div>
-                <ul>
+                <ul style={{marginTop: '2rem'}}>
                     {
                         allPosts.length > 0 ? allPosts.sort(this.dateAscendingOrder).map(
                             (post, i) => {
                                 if (selectedFilter == '전체' && post.idmatch != null && this.compareMatchDate(post.start_time)) {
-                                    const start_year = new Date(post.start_time).getFullYear();
-                                    const start_month = new Date(post.start_time).getMonth();
-                                    const start_date = new Date(post.start_time).getDate();
-                                    const isSameDate = i >= 1
-                                    ? (new Date(start_year, start_month, start_date).getTime() == new Date(new Date(allPosts[i - 1].start_time).getFullYear(), new Date(allPosts[i - 1].start_time).getMonth(), new Date(allPosts[i - 1].start_time).getDate()).getTime())
-                                    : false;
-                
                                     return (
                                             <li className="match-list">
-                                                {
-                                                    isSameDate == true
-                                                    ? true
-                                                    :
-
-                                                    <h3 className="match_date">
-                                                        {`${moment.parseZone(post.start_time).local().format('MM월 DD일')} ${this.props.convertDay(moment.parseZone(post.start_time).local().format('dddd'))}요일`}
-                                                    </h3>
-                                                }
                                                 <Link
                                                     prefetch
                                                     key={post.idpost}
@@ -186,7 +169,7 @@ class PostList extends Component {
                                                         <div className="match-place">
                                                             <p className="place">{post.place_name}</p>
                                                             <p className="match-type">
-                                                                <span className="">{post.sports_category}</span> {post.match_type} : {post.match_type}       {post.total_guests_available}명남음!
+                                                                <span className="">{post.sido_name} {post.sigungu_name} {post.sports_category} {post.match_type} : {post.match_type}       {post.total_guests_available}명남음!</span>
                                                             </p>
                                                         </div>
                                                         <div className="match-apply">
@@ -210,7 +193,7 @@ class PostList extends Component {
                                                             }
                                                             {
                                                                 // 신청하기 (로그인유저) - 인원 마감된 경기
-                                                                this.props.user !== null // check signed in
+                                                                this.props.user !== null // check s igned in
                                                                 && (post.hostID !== this.props.user.data[0].iduser) // check match host 'false'
                                                                 && (post.apply_status === "인원마감") //check guest full 'true'
                                                                     &&

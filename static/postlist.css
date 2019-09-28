@@ -13,6 +13,10 @@ ul {
     margin-block-end: 0.5rem;
 }
 
+.match-list {
+    margin-top: 1rem;    
+}
+
 .match {
     display: flex;
     justify-content: space-around;
@@ -20,7 +24,6 @@ ul {
     height: 5rem;
     padding: 6px 0;
     background-color: #eeeeee;
-    margin-bottom: 1rem;
     align-items: center;
     transition: box-shadow .2s;
 }
