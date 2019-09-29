@@ -145,11 +145,22 @@ export default () => (
             opacity: 0;
             transition: .5s ease-out;
         }
+        @media screen and (max-width: 600px) {
+            .button, a.button {
+                padding: 0.5rem 1rem;
+            }
+        }
         @media screen and (max-width: 414px) {
             html {
                 font-size: 14px;
             }
+            .button, a.button {
+                padding: 0.5rem 0.5rem;
+            }
         }
+
+
+
         @media screen and (min-width: 1201px) {
             .mask.toggle {
                 display: none !important;
