@@ -90,7 +90,7 @@ class PostList extends Component {
             return (
                 <div
                     className="select_date"
-                    onClick={() => this.props.handleDateFilter(data)}
+                    onClick={() => this.props.handleDateFilter(data, this.props.url.pathname === '/' ? 'start' : 'location')}
                     style={{
                         display: 'flex',
                         flexDirection: 'column',
@@ -134,7 +134,7 @@ class PostList extends Component {
                     {
                         allPosts.length > 0 ? allPosts.sort(this.dateAscendingOrder).map(
                             (post, i) => {
-                                if (selectedFilter == '전체' && post.idmatch != null && this.props.compareMatchDate(post.start_time)) {
+                                if (selectedFilter == '전체' && post.idmatch != null) {
                                     return (
                                             <li className="match-list">
                                                 <Link

@@ -99,7 +99,16 @@ class Posts extends Component {
         return this.state;
     }
 
-    handleDateFilter = (selectedDay) => {
+    handleDateFilter = (selectedDay, based) => {
+        const matchBased = {
+            location: {
+                getMatch: this.props.getLocationBasedPosts,
+            },
+            start: {
+                getMatch: this.props.getStartTimeBasedPosts
+            }
+        }
+        
         console.log(`selectedDay`, selectedDay);
 
         this.setState(prevState => {
@@ -108,10 +117,10 @@ class Posts extends Component {
             return { selectedDay: newDate };
         }, () => {
             let start_time = `${selectedDay.YYYY}-${selectedDay.MM}-${selectedDay.DD}`;
-            let addedSelectedLocation = Object.assign(this.props.selectedLocation, { start_time });
-            this.props.getLocationBasedPosts(addedSelectedLocation);
-        })
+            let params = Object.assign(this.props.selectedLocation, { start_time });
 
+            matchBased[based].getMatch(params);
+        })
     }
 
     compareMatchDate = (startTime) => {
@@ -170,6 +179,7 @@ class Posts extends Component {
                         renderFilterList={renderFilterList}
                     />
                     <PostList
+                        url={this.props.url}
                         renderPosts={this.renderPosts}
                         user={this.props.user}
                         allPosts={this.props.allPosts}
