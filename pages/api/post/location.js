@@ -44,7 +44,8 @@ export default (req, res) => {
                     ON p.idpost = post_has_location.post_idpost
                     LEFT JOIN location
                     ON location_idlocation = idlocation
-                    WHERE sido_name = '${sido_name}' and DATE(start_time) = '${start_time}' AND apply_status ='신청가능'
+                    WHERE sido_name = '${sido_name}' AND DATE(start_time) = '${start_time}'
+                        AND (apply_status ='신청가능' OR apply_status ='인원마감')
                     ORDER BY create_time DESC;
                     `;
         
