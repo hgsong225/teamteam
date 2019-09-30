@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import moment from 'moment';
 
-import PostList from '../../dumb/post/postlist';
+import PostList from '../../dumb/post/PostList';
 
 class Home extends Component {
     static defaultProps = {
