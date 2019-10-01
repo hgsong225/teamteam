@@ -14,7 +14,7 @@ export default (req, res) => {
     switch (method) {
         case 'GET':
         // Get data from your database
-            const query = `SELECT * FROM location order by sido_code asc, sigungu_name asc;`;
+            const query = `SELECT * FROM location order by sido_order asc;`;
 
             pool.getConnection(async (err, connection) => {
                 if (err) throw err; // not connected!

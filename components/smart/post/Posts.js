@@ -163,7 +163,7 @@ class Posts extends Component {
                         font-size: 1rem;
                     }
                 `}</style>
-                <h2 className="title">경기</h2>
+                <h2 className="title">매치</h2>
                 <p
                     className="sub-title"
                     name='mainTitle'

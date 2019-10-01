@@ -223,7 +223,9 @@ class PostList extends Component {
                                                         <div className="match-place">
                                                             <p className="place">{post.place_name}</p>
                                                             <div className="match-type">
-                                                                <Tag color="gold">{post.sido_name}</Tag> {post.sigungu_name} {post.sports_category} {post.match_type} : {post.match_type}       {post.total_guests_available}명남음!
+                                                                <Tag color="purple">{post.sido_name}·{post.sigungu_name}</Tag>
+                                                                <Tag color="blue">{post.sports_category} {post.match_type} : {post.match_type}</Tag>
+                                                                <Tag color="red">{post.total_guests_available}명남음!</Tag>
                                                             </div>
                                                         </div>
                                                         <div className="match-apply">

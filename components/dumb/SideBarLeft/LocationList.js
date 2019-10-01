@@ -66,12 +66,15 @@ class LocationList extends Component {
                 return location;
             }
         });
+
         const processedLocation = [];
         Sido.forEach(
             (sido, i) => {
                 processedLocation.push({
                     sido_name: sido.sido_name,
                     sido_code: sido.sido_code,
+                    display_name: sido.display_name,
+                    same_area: sido.same_area,
                     sigungus: [],
                 })
                 locations.forEach(location => {
@@ -79,6 +82,8 @@ class LocationList extends Component {
                         processedLocation[i].sigungus.push({
                             sigungu_name: location.sigungu_name,
                             sigungu_code: location.sigungu_code,
+                            display_name: sido.display_name,
+                            same_area: sido.same_area,
                         })
                     }
                 });
@@ -101,7 +106,7 @@ class LocationList extends Component {
                                     <a
                                         onClick={this.selectSido}
                                     >
-                                        {location.sido_name}
+                                        {location.display_name}
                                     </a>
                                 </Link>
                             }
