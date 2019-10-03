@@ -140,7 +140,13 @@ class Post extends Component {
     render() {
         console.log('post.js에서 render() 실행');
         const { user, selectedLocation, allPosts, myMatch, myApplicationMatch } = this.state;
-        const { url, router } = this.props;
+        const { url, router, query } = this.props;
+
+        let target;
+
+        if (router.query.hasOwnProperty('sigungu_name')) target = `${router.query.location} ${router.query.sigungu_name}`; // 시군구가 있을 떄
+        else if (router.query.hasOwnProperty('location') && !router.query.hasOwnProperty('area')) target = `${router.query.location}`; // 시도만 있을 때
+        else if (router.query.hasOwnProperty('area') && !router.query.hasOwnProperty('sigungu_name')) target = `${router.query.area}`; // 시군구는 없고 area를 포함 할 때
 
         return (
             <Layout
@@ -148,7 +154,7 @@ class Post extends Component {
                 selectedLocation={selectedLocation}
             >
                 <Head>
-                    <title>팀팀 | 매치찾기 - {router.query.location}</title>
+                    <title>팀팀 | 매치찾기 - {target}</title>
                 </Head>
                 {
                     this.state.didYouGetResponseWithPostsFromServer === true

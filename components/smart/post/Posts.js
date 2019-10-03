@@ -154,9 +154,14 @@ class Posts extends Component {
     render() {
         console.log('Posts에서 render() 실행');
         const { postList, filterList, selectedFilter, renderFilterList } = this.state;
-        const { url, selectedLocation } = this.props;
+        const { url, selectedLocation, router } = this.props;
         console.log('url in postjs', url);
         console.log('this props in Post js', this.props);
+        let target;
+
+        if (router.query.hasOwnProperty('sigungu_name')) target = `${selectedLocation.display_name || router.query.location} ${router.query.sigungu_name}`; // 시군구가 있을 떄
+        else if (router.query.hasOwnProperty('location') && !router.query.hasOwnProperty('area')) target = `${selectedLocation.display_name || router.query.location}`; // 시도만 있을 때
+        else if (router.query.hasOwnProperty('area') && !router.query.hasOwnProperty('sigungu_name')) target = `${router.query.area}`; // 시군구는 없고 area를 포함 할 때
 
         return (
             <div className="posts-container">
@@ -177,7 +182,8 @@ class Posts extends Component {
                     className="sub-title"
                     name='mainTitle'
                 >
-                    {url.query.sigungu ? url.query.location + ' ' : url.query.location}{url.query.sigungu}
+                    {target}
+                    {/* {url.query.sigungu ? url.query.location + ' ' : url.query.location}{url.query.sigungu} */}
                 </p>
                 <div className="posts-sub-container">
                     <PostFilter
