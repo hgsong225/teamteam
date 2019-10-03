@@ -162,7 +162,7 @@ class PostList extends Component {
                                                         <div className="match-place">
                                                             <p className="place">{post.place_name}</p>
                                                             <div className="match-type">
-                                                                <Tag color="purple">{post.location[0].display_name}·{post.location[0].sigungu_name}</Tag>
+                                                                <Tag color="purple">{post.address.split(' ')[0]}·{post.address.split(' ')[1]}</Tag>
                                                                 <Tag color="blue">{post.sports_category} {post.match_type} : {post.match_type}</Tag>
                                                                 <Tag color="red">{post.total_guests_available}명남음!</Tag>
                                                             </div>
