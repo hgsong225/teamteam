@@ -10,6 +10,7 @@ import {
     Tag
   } from 'antd'
 import { withRouter } from 'next/router';
+import Column from 'antd/lib/table/Column';
 
 const FormItem = Form.Item
 const Option = Select.Option
@@ -33,9 +34,13 @@ const applyStatusOption = {
 }
 
 const styles = {
-    button: {
-        color: "#2196f3",
-    },
+    nomatch: {
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'center',
+        alignItems: 'center',
+        height: '500px',
+    }
 }
 
 class PostList extends Component {
@@ -241,7 +246,10 @@ class PostList extends Component {
                                 }
                             }
                         )
-                        : <p>경기가 없습니다.</p>
+                        : <div style={styles.nomatch}>
+                            <p>경기가 없습니다.</p>
+                            <Button>경기 만들기</Button>
+                        </div>
                     }
                 </ul>
             </div>
