@@ -6,7 +6,7 @@ import {
     AccordionItemBody,
 } from 'react-accessible-accordion';
 import Link from 'next/link';
-import axios from 'axios';
+import { withRouter } from 'next/router'
 
 // 'Minimal' theme - hide/show the AccordionBody component:
 // import 'react-accessible-accordion/dist/minimal-example.css';/
@@ -36,9 +36,14 @@ class LocationList extends Component {
     }
 
     selectSido = async (location) => {
-        const type = 'area';
-        
-        this.props.selectLocation(location, type);
+        const { query } = this.props.router;
+        let target;
+
+        if (query.hasOwnProperty('sigungu_name')) target = 'sigungu';
+        else if (query.hasOwnProperty('location') && !query.hasOwnProperty('area')) target = 'sido';
+        else if (query.hasOwnProperty('area') && !query.hasOwnProperty('sigungu_name')) target = 'area';
+
+        this.props.selectLocation(location, target);
     }
 
     selectSigungu = async (sido, sigungu) => {
@@ -49,11 +54,6 @@ class LocationList extends Component {
         this.props.selectLocation(selectedLocation);
     }
 
-    selectedMenu = () => {
-        const { selectedLocation } = this.props;
-
-        
-    }
 
     render() {
         console.log('LocationList에서 render 실행');
@@ -170,5 +170,5 @@ class LocationList extends Component {
 
 }
 
-export default LocationList;
+export default withRouter(LocationList);
   
