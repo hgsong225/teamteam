@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 const querystring = require('querystring');
 import moment from 'moment';
+import { withRouter } from 'next/router'
 
 import fb from '../../../config/firebase';
 
@@ -100,6 +101,7 @@ class Posts extends Component {
     }
 
     handleDateFilter = (selectedDay, based) => {
+        const { query } = this.props.router;
         const matchBased = {
             location: {
                 getMatch: this.props.getLocationBasedPosts,
@@ -118,8 +120,15 @@ class Posts extends Component {
         }, () => {
             let start_time = `${selectedDay.YYYY}-${selectedDay.MM}-${selectedDay.DD}`;
             let params = Object.assign(this.props.selectedLocation, { start_time });
+            let target;
 
-            matchBased[based].getMatch(params);
+            if (query.hasOwnProperty('sigungu_name')) target = 'sigungu';
+            else if (query.hasOwnProperty('location') && !query.hasOwnProperty('area')) target = 'sido';
+            else if (query.hasOwnProperty('area') && !query.hasOwnProperty('sigungu_name')) target = 'area';    
+
+            console.log(`target`, target);
+
+            matchBased[based].getMatch(params, target);
         })
     }
 
@@ -196,4 +205,4 @@ class Posts extends Component {
     }
 }
 
-export default Posts;
+export default withRouter(Posts);

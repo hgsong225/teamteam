@@ -3,6 +3,7 @@ import Head from 'next/head';
 import Router from 'next/router';
 import { withRouter } from 'next/router'
 import axios from 'axios';
+import moment from 'moment';
 
 import fb from '../config/firebase';
 
@@ -25,13 +26,27 @@ class Post extends Component {
     }
     
     componentDidMount() {
+        const { query } = this.props.router;
         console.log('post.js 에서 componentDidMount 실행');
-        const selectedLocation = {
-            sido_name: this.props.url.query.location,
-            sigungu_name: this.props.url.query.sigungu,
-        };
         this.authListener();
-        this.selectLocation(selectedLocation);
+        const selectedLocation = {
+            sido_name: this.props.router.query.location,
+            sigungu_name: this.props.router.query.sigungu,
+            area: this.props.router.query.area,
+            start_time: `${moment().add(0, 'd').format("YYYY")}-${moment().add(0, 'd').format("MM")}-${moment().add(0, 'd').format("DD")}`,
+        };
+
+        let target;
+
+        if (query.hasOwnProperty('sigungu_name')) target = 'sigungu';
+        else if (query.hasOwnProperty('location') && !query.hasOwnProperty('area')) target = 'sido';
+        else if (query.hasOwnProperty('area') && !query.hasOwnProperty('sigungu_name')) target = 'area';
+
+        console.log(`target`, target);
+
+
+        this.selectLocation(selectedLocation, target);
+
     }
 
     isEmptyObj = (obj) => {
@@ -74,16 +89,16 @@ class Post extends Component {
         return this.state;
     }
 
-    selectLocation = async (selectedLocation) => {
+    selectLocation = async (selectedLocation, target) => {
         await this.setState({ selectedLocation });
         const state = await this.getState();
         await console.log('123123123123', state);
-        await this.getLocationBasedPosts(this.state.selectedLocation);
+        await this.getLocationBasedPosts(this.state.selectedLocation, target);
         const abc = await this.getState();
         await console.log('다음', abc);
     }
 
-    getLocationBasedPosts = async (selectedLocation) => {
+    getLocationBasedPosts = async (selectedLocation, target) => {
         console.log('getLocationBasedPosts 실행');
         console.log(selectedLocation);
 
@@ -102,7 +117,9 @@ class Post extends Component {
             const params = {
                 sido_name,
                 sigungu_name,
+                area: selectedLocation.area,
                 start_time,
+                target,
             };
             axios.get(`/api/post/location`, {
                 params,

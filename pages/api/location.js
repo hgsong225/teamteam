@@ -1,3 +1,6 @@
+import { database } from 'firebase';
+import { number } from 'prop-types';
+
 const mysql = require('mysql');
 
 const db = require('../../config/db.js');
@@ -14,13 +17,18 @@ export default (req, res) => {
     switch (method) {
         case 'GET':
         // Get data from your database
-            const query = `SELECT * FROM location order by sido_order asc;`;
+            const data = req.query;
+            const target = data.target;
+
+            const targetOptions = {
+                all: `SELECT * FROM location order by sido_order asc;`,
+            }
 
             pool.getConnection(async (err, connection) => {
                 if (err) throw err; // not connected!
               
                 // Use the connection
-                connection.query(query, (error, results, fields) => {
+                connection.query(targetOptions[target], (error, results, fields) => {
 
                     res.send(results);
               

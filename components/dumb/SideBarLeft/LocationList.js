@@ -35,13 +35,10 @@ class LocationList extends Component {
         console.log(this.props);
     }
 
-    selectSido = async (e) => {
-        const selectedLocation = {
-            sido_name: e.target.innerText,
-        }
-        console.log('asdfasdf', selectedLocation, this.props);
+    selectSido = async (location) => {
+        const type = 'area';
         
-        this.props.selectLocation(selectedLocation);
+        this.props.selectLocation(location, type);
     }
 
     selectSigungu = async (sido, sigungu) => {
@@ -74,7 +71,7 @@ class LocationList extends Component {
                     sido_name: sido.sido_name,
                     sido_code: sido.sido_code,
                     display_name: sido.display_name,
-                    same_area: sido.same_area,
+                    area: sido.area,
                     sigungus: [],
                 })
                 locations.forEach(location => {
@@ -83,7 +80,7 @@ class LocationList extends Component {
                             sigungu_name: location.sigungu_name,
                             sigungu_code: location.sigungu_code,
                             display_name: sido.display_name,
-                            same_area: sido.same_area,
+                            area: sido.area,
                         })
                     }
                 });
@@ -101,10 +98,20 @@ class LocationList extends Component {
                         <AccordionItemTitle>
                             {
                                 <Link
-                                    href={{ pathname: '/post', query: { location: location.sido_name }}}
+                                    href={{ pathname: '/post', query: { location: location.sido_name, }}}
                                 >
                                     <a
-                                        onClick={this.selectSido}
+                                        onClick={() => this.selectSido({
+                                            display_name: location.display_name,
+                                            idlocation: location.idlocation,
+                                            area: location.area,
+                                            sido_code: location.sido_code,
+                                            sido_name: location.sido_name,
+                                            sido_order: location.sido_order,
+                                            sigungu_code: location.sigungu_code,
+                                            sigungu_name: location.sigungu_name,
+                                            sigungu_order: location.sigungu_order,
+                                        })}
                                     >
                                         {location.display_name}
                                     </a>

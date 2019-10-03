@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import moment from 'moment';
+import { withRouter } from 'next/router'
 
 import PostList from '../../dumb/post/PostList';
 
@@ -34,6 +35,7 @@ class Home extends Component {
     }
 
     handleDateFilter = (selectedDay, based) => {
+        const { query } = this.props.router;
         const matchBased = {
             location: {
                 getMatch: this.props.getLocationBasedPosts,
@@ -50,8 +52,14 @@ class Home extends Component {
         }, () => {
             let start_time = `${selectedDay.YYYY}-${selectedDay.MM}-${selectedDay.DD}`;
             let params = { start_time }
+            let target;
 
-            matchBased[based].getMatch(params);
+            if (query.hasOwnProperty('sigungu_name')) target = 'sigungu_name';
+            else if (query.hasOwnProperty('location') && !query.hasOwnProperty('area')) target = 'location';
+            else if (query.hasOwnProperty('area') && !query.hasOwnProperty('sigungu_name')) target = 'area';
+
+            console.log(`target`, target);
+            matchBased[based].getMatch(params, target);
         })
     }
 
@@ -105,4 +113,4 @@ class Home extends Component {
     }
 }
 
-export default Home;
+export default withRouter(Home);
