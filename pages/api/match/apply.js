@@ -39,6 +39,8 @@ export default (req, res) => {
                         res.status(500).json({ err: err.toString() });
                     } else {
                         const data = req.body.data;
+                        console.log(`data`, data);
+                        console.log(`body`, body);
 
                         const access_token = body.response.access_token;
                         // token, imp_uid 기반하여 해당 결제정보 받아오기
@@ -90,7 +92,9 @@ export default (req, res) => {
                                             guests_to_play,
                                             commission_rate, 
                                             commission,
-                                            order_number)
+                                            order_number,
+                                            imp_uid,
+                                            merchant_uid)
                                     VALUES  (${data.idmatch},
                                             ${data.iduser}, 
                                             NOW(),
@@ -103,7 +107,9 @@ export default (req, res) => {
                                             '${data.guests_to_play}',
                                             '${commission_rate}',
                                             '${commission}',
-                                            '${data.order_number}');
+                                            '${data.order_number}',
+                                            '${data.rsp.imp_uid}',
+                                            '${data.rsp.merchant_uid}');
                                     `;
 
                                     /*
