@@ -187,7 +187,7 @@ class Me extends Component {
                             <link href="../static/match-me.css" rel="stylesheet" />
                         </Head>
                         <div className="title-box">
-                            <h3 className="title">내 경기</h3>
+                            <header className="title">내 경기</header>
                         </div>
                         <div className="match-me page-notice-box">
                             <p className="match-me-notice-type">공지</p>

@@ -171,7 +171,9 @@ class Posts extends Component {
                         max-width: 720px;
                     }
                     .title {
-
+                        margin-top: 2rem;
+                        margin-bottom: 2rem;
+                        font-size: 2rem;
                     }
                     .sub-title{
                         font-size: 1rem;

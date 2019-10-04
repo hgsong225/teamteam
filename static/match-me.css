@@ -3,10 +3,11 @@
     margin-bottom: 2rem;
 }
 .title {
-    font-size: 2rem;
-    margin: 0;
+    margin-top: 2rem;
     margin-bottom: 2rem;
+    font-size: 2rem;
 }
+
 .sub-title{
     font-size: 1rem;
 }
