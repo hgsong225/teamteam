@@ -7,6 +7,7 @@ import fb from '../config/firebase';
 
 import Layout from '../components/layout/Layout';
 import Home from '../components/smart/home/Home';
+import Loading from '../components/dumb/loading';
 
 class Index extends Component {
     state = {
@@ -150,7 +151,7 @@ class Index extends Component {
                         getStartTimeBasedPosts={this.getStartTimeBasedPosts}
                         allPosts={allPosts}
                     />
-                    : <p>loading...</p>
+                    : <Loading />
                 }
             </Layout>
         );

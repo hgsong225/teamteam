@@ -10,7 +10,6 @@ import {
     Tag
   } from 'antd'
 import { withRouter } from 'next/router';
-import Column from 'antd/lib/table/Column';
 
 const FormItem = Form.Item
 const Option = Select.Option

@@ -9,6 +9,7 @@ import fb from '../config/firebase';
 
 import Layout from '../components/layout/Layout';
 import Posts from '../components/smart/post/Posts';
+import Loading from '../components/dumb/loading';
 
 
 class Post extends Component {
@@ -165,7 +166,7 @@ class Post extends Component {
                         getLocationBasedPosts={this.getLocationBasedPosts}
                         allPosts={allPosts}
                     />
-                    : <p>loading...</p>
+                    :  <Loading />
                 }
 
             </Layout>
