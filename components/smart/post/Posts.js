@@ -177,7 +177,7 @@ class Posts extends Component {
                         font-size: 1rem;
                     }
                 `}</style>
-                <h2 className="title">매치</h2>
+                <header className="title">매치</header>
                 <p
                     className="sub-title"
                     name='mainTitle'

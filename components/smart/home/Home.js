@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import Head from 'next/head';
 import moment from 'moment';
 import { withRouter } from 'next/router'
 
@@ -93,7 +94,10 @@ class Home extends Component {
                         max-width: 720px;
                     }
                 `}</style>
-                <h2 className="title">WELCOME TO TEAMTEAM !</h2>
+                <Head>
+                    <link href="../../../static/home.css" rel="stylesheet" />
+                </Head>
+                <header className="title">WELCOME TO TEAMTEAM !</header>
                 <p>
                     나에게 알맞는 매치를 신청하세요!
                 </p>

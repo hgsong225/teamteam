@@ -90,7 +90,7 @@ class Layout extends Component {
                     }
                     main {
                         flex: 7;
-                        padding:10px;
+                        padding: 1rem 1rem;
                     }
                     @media screen and (max-width: 375px) {
                         .sidebar-left-container {
@@ -115,9 +115,6 @@ class Layout extends Component {
                         .content {
                             margin-left: 0;
                             margin-right: 0;
-                        }
-                        main {
-                            padding: 0 8px;
                         }
                     }
                 `}</style>

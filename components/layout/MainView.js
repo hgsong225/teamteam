@@ -52,6 +52,7 @@ class MainView extends Component {
                     aside {
                     }
                     main {
+                        padding: 1rem;
                     }
                     
                     @media screen and (max-width: 375px) {
@@ -116,7 +117,7 @@ class MainView extends Component {
                             margin-right: 0;
                         }
                         main {
-                            padding: 0 8px;
+                            padding: 1rem;
                         }
                     }
                 `}</style>
