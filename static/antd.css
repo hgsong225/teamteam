@@ -194,6 +194,7 @@ figure {
   margin: 0 0 1em;
 }
 img {
+  box-sizing: content-box;
   vertical-align: middle;
   border-style: none;
 }
