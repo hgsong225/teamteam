@@ -38,7 +38,7 @@ const styles = {
         flexDirection: 'column',
         justifyContent: 'center',
         alignItems: 'center',
-        height: '500px',
+        height: '300px',
     }
 }
 
