@@ -6,7 +6,7 @@ const connection = mysql.createConnection(db);
 
 export default (req, res) => {
     const {
-    method
+        method
     } = req
 
     switch (method) {

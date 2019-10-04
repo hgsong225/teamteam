@@ -9,6 +9,37 @@ import fb from '../../config/firebase';
 import Layout from '../../components/layout/Layout';
 import Loading from '../../components/dumb/Loading';
 
+const refundOptions = {
+    normal: {
+        twentyFourAgo: {
+            type: 'standard',
+            description: '경기시작 24시간 이전 취소',
+            rate: 1,
+        },
+        twelveToTwentyFour: {
+            type: 'null',
+            description: '경기시작 12 ~ 24시간 이내 취소',
+            rate: 0.5,
+        },
+        sixToTwelve: {
+            type: 'null',
+            description: '경기시작 6 ~ 12시간 이내 취소',
+            rate: 0.25,
+        },
+        twoToSix: {
+            type: 'null',
+            description: '경기시작 2 ~ 6시간 이내 취소',
+            rate: 0.1,
+        },
+        zeroToTwo: {
+            type: 'null',
+            description: '경기시작 2시간 이내 취소',
+            rate: 0,
+        },
+        
+    }
+};
+
 class Me extends Component {
     state = {
         user: null,
@@ -103,22 +134,59 @@ class Me extends Component {
             console.log(err);
         })
     }
+  
+    // now = 현재 시간, target = 시작 시간 (비교 대상), type = 반환 할 시간 형식, option_type = 환불 정책 강도 선택
+    refundCalculator = (now, target, amount, type, option_type) => {
+        // compare with mileseconds.
+        let diff = target.diff(now);
+        let option;
+        console.log(`diff`, diff);
+    
+        if (option_type === 'normal') {
+            if (diff >= 86400000) option = 'twentyFourAgo';
+            if (diff >= 43200000 && diff < 86400000) option = 'twelveToTwentyFour';
+            if (diff >= 21600000 && diff < 43200000) option = 'sixToTwelve';
+            if (diff >= 7200000 && diff < 21600000) option = 'twoToSix';
+            if (diff < 7200000) option = 'zeroToTwo';
+        }
+    
+        let res = {
+            option_type,
+            option,
+            body: refundOptions[option_type][option],
+            amount: refundOptions[option_type][option].rate * amount
+        };
+    
+        return res;
+    }
 
     cancelApply = (e) => {
-        e.preventDefault();
         const { user } = this.state;
-        const idmatch = e.target.getAttribute('value');
-        axios.post(`/api/match/apply/cancel`, {
-            data: {
-                uid: user.uid,
-                idmatch,
-            }
-        })
-        .then((res) => {
-            console.log(res.data);
-            e.preventDefulat();
-        })
-        .catch((err) => console.log(err));
+
+        let confirm = window.confirm("정말로 신청을 취소하시겠습니까?");
+
+
+        if (confirm) {
+            const dataset = e.target.dataset;
+            let now = moment();
+            let start = moment(dataset.start_time);
+            const refundOption = this.refundCalculator(now, start, dataset.amount, 'mileseconds', 'normal');
+    
+            axios.post(`/api/match/apply/test`, {
+                data: {
+                    uid: user.uid,
+                    idmatch: dataset.idmatch,
+                    order_number: dataset.order_number,
+                    refundOption,
+                }
+            })
+            .then((res) => {
+                console.log(res.data);
+                e.preventDefault();
+            })
+            .catch((err) => console.log(err));
+        }
+        e.preventDefault();
     }
 
     handleEdit = (e) => { // 경기 수정 버튼
@@ -276,9 +344,13 @@ class Me extends Component {
                                                                     <p className="applicant-status">{post.applicant_status}</p>
                                                                     <p
                                                                         className="match-me-cancel-apply"
+                                                                        onClick={this.cancelApply}
                                                                         name="신청취소"
                                                                         type="submit"
-                                                                        value={post.idmatch}
+                                                                        data-idmatch={post.idmatch}
+                                                                        data-order_number={post.order_number}
+                                                                        data-start_time={post.start_time}
+                                                                        data-amount={post.amount_of_payment}
                                                                         style={{ width: "100%" }}
                                                                     >신청 취소</p>
                                                                 </div>
