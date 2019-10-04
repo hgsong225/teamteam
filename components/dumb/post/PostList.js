@@ -247,7 +247,16 @@ class PostList extends Component {
                         )
                         : <div style={styles.nomatch}>
                             <p>경기가 없습니다.</p>
-                            <Button>경기 만들기</Button>
+                            <Button>
+                                <Link
+                                    prefetch
+                                    href={{ pathname: '/match/create'}}
+                                >
+                                    <a>
+                                        경기 만들기
+                                    </a>
+                                </Link>
+                            </Button>
                         </div>
                     }
                 </ul>
