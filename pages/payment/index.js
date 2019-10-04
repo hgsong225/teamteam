@@ -9,6 +9,7 @@ import fb from '../../config/firebase';
 import imp from '../../config/iamport';
 
 import MainView from '../../components/layout/MainView';
+import Loading from '../../components/dumb/Loading';
 
 class Payment extends Component {
     state = {
@@ -385,7 +386,7 @@ class Payment extends Component {
                                     </div>
                                 </main>
                             </div>
-                            : 'loading'
+                            : <Loading />
                         }
                     </div>
             </div>

@@ -7,6 +7,7 @@ import axios from 'axios';
 import fb from '../../config/firebase';
 
 import MainView from '../../components/layout/MainView';
+import Loading from '../../components/dumb/Loading';
 
 class PaymentComplete extends Component {
     state = {
@@ -198,7 +199,7 @@ class PaymentComplete extends Component {
                                     </div>
                                 </main>
                             </div>
-                            : 'loading'
+                            : <Loading />
                         }
                     </div>
             </div>
