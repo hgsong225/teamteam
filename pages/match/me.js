@@ -7,6 +7,7 @@ import moment from 'moment';
 
 import fb from '../../config/firebase';
 import Layout from '../../components/layout/Layout';
+import Loading from '../../components/dumb/Loading';
 
 class Me extends Component {
     state = {
@@ -197,7 +198,7 @@ class Me extends Component {
                             <p className="match-me-notice-desc">
                                 입금 계좌: 신한 110-439-532672 팀팀
                             </p>
-                        </div> 
+                        </div>
                         <ul>
                             {
                                 this.state.posts !== undefined && this.state.posts.sort(this.dateAscendingOrder).map((post, i) => {

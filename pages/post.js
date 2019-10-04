@@ -9,7 +9,7 @@ import fb from '../config/firebase';
 
 import Layout from '../components/layout/Layout';
 import Posts from '../components/smart/post/Posts';
-import Loading from '../components/dumb/loading';
+import Loading from '../components/dumb/Loading';
 
 
 class Post extends Component {

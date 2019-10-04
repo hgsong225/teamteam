@@ -7,7 +7,7 @@ import fb from '../config/firebase';
 
 import Layout from '../components/layout/Layout';
 import Home from '../components/smart/home/Home';
-import Loading from '../components/dumb/loading';
+import Loading from '../components/dumb/Loading';
 
 class Index extends Component {
     state = {

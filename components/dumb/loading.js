@@ -12,7 +12,7 @@ const styles = {
     }
 }
 
-const View = ({children}) => {
+const Loading = ({children}) => {
     return (
             <div style={styles.container}>
                 <Spin indicator={antIcon} />
@@ -20,4 +20,4 @@ const View = ({children}) => {
     );
 };
 
-export default View;
+export default Loading;
