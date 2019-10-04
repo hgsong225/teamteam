@@ -55,7 +55,7 @@ ul {
     width: 45%;
     height: 80%;
     padding: 0 6px;
-    justify-content: center;
+    justify-content: space-evenly;
     flex-direction: column;
     color: #212121;
 }
