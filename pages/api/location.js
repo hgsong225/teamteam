@@ -19,6 +19,7 @@ export default (req, res) => {
         // Get data from your database
             const data = req.query;
             const target = data.target;
+            console.log(`target`, target);
 
             const targetOptions = {
                 all: `SELECT * FROM location order by sido_order asc;`,
