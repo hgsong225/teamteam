@@ -25,11 +25,14 @@ export default (req, res) => {
                 all: `SELECT * FROM location order by sido_order asc;`,
             }
 
+            const query = targetOptions[target];
+            console.log(`query`, query);
+
             pool.getConnection(async (err, connection) => {
                 if (err) throw err; // not connected!
               
                 // Use the connection
-                connection.query(targetOptions[target], (error, results, fields) => {
+                connection.query('SELECT * FROM location order by sido_order asc;', (error, results, fields) => {
 
                     res.send(results);
               
