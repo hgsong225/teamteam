@@ -4,6 +4,11 @@ import Router from 'next/router';
 import { withRouter } from 'next/router'
 import axios from 'axios';
 import moment from 'moment';
+import {
+    Select,
+    Button,
+  } from 'antd';
+const { Option } = Select;
 
 import fb from '../../config/firebase';
 import imp from '../../config/iamport';
@@ -115,22 +120,20 @@ class Payment extends Component {
         .catch((err) => console.log(err));
     }
 
-    handleChange = (e) => {
-        e.preventDefault();
+    handleCPayMethodChange = (value) => {
+        this.setState({
+            pay_method: value,
+        });
+    }
 
-        if (e.target.name === "guests_to_play") {
-            const guests_to_play = e.target.value;
-            const total_price = guests_to_play * this.state.match[0].match_fee;
-            console.log(`total_price`, total_price);
-            this.setState({
-                guests_to_play,
-                total_price,
-            });
-        } else {
-            this.setState({
-                [e.target.name]: e.target.value,
-            });
-        }
+    handleGuestNumberChange = (value) => {
+        const guests_to_play = value;
+        const total_price = guests_to_play * this.state.match[0].match_fee;
+        console.log(`total_price`, total_price);
+        this.setState({
+            guests_to_play,
+            total_price,
+        });
     }
 
     handlePay = (e) => {
@@ -243,7 +246,7 @@ class Payment extends Component {
 
         for (i = 1; i <= num; i += 1) {
             total_guests_available_array.push(
-                <option key={num}>{i}</option>
+                <Option key={num} value={i}>{i}</Option>
             )
         }
         
@@ -261,6 +264,7 @@ class Payment extends Component {
                 <Head>
                     <title>팀팀 | 결제</title>
                     <link href="../../static/payment-index.css" rel="stylesheet" />
+                    <link href="../../static/antd.css" rel="stylesheet" />
                     <script type="text/javascript" src="https://code.jquery.com/jquery-1.12.4.min.js" ></script>
                     <script type="text/javascript" src="https://cdn.iamport.kr/js/iamport.payment-1.1.5.js"></script>
                 </Head>
@@ -275,86 +279,103 @@ class Payment extends Component {
                                 </header>
                                 <main>
                                     <div className="payment_section_container">
-                                        <h3 className="">경기 상세</h3>
-                                        <section className="">
-                                            <div className="">
-                                                <div className="">
-                                                    <div className="">
-                                                       <p className="">경기번호</p>
+                                        <div className="section_title_box">
+                                            <h3 className="section_title">경기 상세</h3>
+                                        </div>
+                                        <section className="payment_section">
+                                            <div className="payment_section_contents">
+                                                <div className="payment_section_definition_contents">
+                                                    <div className="payment_section_definition">
+                                                       <p className="definition_word">경기번호</p>
+                                                       <p className="">1234-56-78</p>
                                                     </div>
                                                 </div>
-                                                <div className="">
-                                                    <div className="">
-                                                       <p className="">종목 | 유형</p>
+                                                <div className="payment_section_definition_contents">
+                                                    <div className="payment_section_definition">
+                                                       <p className="definition_word">종목 | 유형</p>
                                                        <p>{match[0].sports_category} | {match[0].match_type} : {match[0].match_type}</p>
                                                     </div>
                                                 </div>
-                                                <div className="">
-                                                    <div className="">
-                                                       <p className="">참가비</p>
-                                                       <p>{match[0].match_fee}</p>
-                                                    </div>
-                                                </div>
-                                                <div className="">
-                                                    <div className="">
-                                                       <p className="">일시</p>
+                                                <div className="payment_section_definition_contents">
+                                                    <div className="payment_section_definition">
+                                                       <p className="definition_word">일시</p>
                                                        <p>시작: {match[0].start_time} 종료: {match[0].end_time} (2시간)</p>
                                                     </div>
                                                 </div>
-                                                <div className="">
-                                                    <div className="">
-                                                       <p className="">장소</p>
+                                                <div className="payment_section_definition_contents">
+                                                    <div className="payment_section_definition">
+                                                       <p className="definition_word">장소</p>
                                                        <p>{match[0].place_name}</p>
                                                     </div>
-                                                    <div className="">
-                                                       <p className="">주소</p>
+                                                    <div className="payment_section_definition">
+                                                       <p className="definition_word">주소</p>
                                                        <p>{match[0].address}</p>
                                                     </div>
                                                 </div>
                                             </div>
                                         </section>
                                     </div>
-                                    <div className="">
-                                        <h3 className="">결제</h3>
-                                        <section className="">
-                                            <div className="">
-                                                <select
-                                                    onChange={this.handleChange}
+                                    <div className="payment_section_container">
+                                        <div className="section_title_box">
+                                            <h3 className="section_title">결제</h3>
+                                        </div>
+                                        <section className="payment_section">
+                                            <div className="payment_section_contents">
+                                                <Select
+                                                    onChange={this.handleCPayMethodChange}
                                                     name="pay_method"
+                                                    defaultValue="card"
+                                                    style={{ width: "100%" }}
                                                 >
-                                                    <option value="card">신용/체크카드 결제</option>
-                                                </select>
+                                                    <Option value="card">신용/체크카드 결제</Option>
+                                                    <Option value="caddrd">신용/체ddfsdf크카드 결제</Option>
+                                                </Select>
                                             </div>
                                         </section>
                                     </div>
                                     <div className="payment_section_container">
-                                        <h3 className="">총 인원</h3>
-                                        <section className="">
-                                            <div className="">
-                                                <div className="">
-                                                    <div className="">
-                                                       <p className="">인원 수</p>
-                                                       <p className="">최대 {match[0].total_guests_available}명까지 신청/결제 할 수 있습니다.</p>
-                                                       <select
-                                                           onChange={this.handleChange}
+                                        <div className="section_title_box">
+                                            <h3 className="section_title">총 인원 - 최대 {match[0].total_guests_available}명 선택 가능</h3>
+                                        </div>
+                                        <section className="payment_section">
+                                            <div className="payment_section_contents">
+                                                <div className="payment_section_definition_contents">
+                                                    <div className="payment_section_definition">
+                                                       <p className="definition_word">인원 수</p>
+                                                       <Select
+                                                           onChange={this.handleGuestNumberChange}
                                                            name="guests_to_play"
+                                                           style={{ width: "25%" }}
                                                        >
                                                            {total_guests_available_array}
-                                                       </select>
-                                                       <p>{guests_to_play}</p>
+                                                       </Select>
                                                     </div>
                                                 </div>
                                             </div>
                                         </section>
                                     </div>
                                     <div className="payment_section_container">
-                                        <h3 className="">TOTAL</h3>
-                                        <section className="">
-                                            <div className="">
-                                                <div className="">
-                                                    <div className="">
-                                                       <p className="">총 금액</p>
-                                                       <p>{total_price}</p>
+                                        <div className="section_title_box">
+                                            <h3 className="section_title">TOTAL - {guests_to_play}명</h3>
+                                        </div>
+                                        <section className="payment_section">
+                                            <div className="payment_section_contents">
+                                                <div className="payment_section_definition_contents">
+                                                    <div className="payment_section_definition">
+                                                        <p className="definition_word">가격</p>
+                                                        <p>{match[0].match_fee}원</p>
+                                                    </div>
+                                                </div>
+                                                <div className="payment_section_definition_contents">
+                                                    <div className="payment_section_definition">
+                                                        <p className="definition_word">게스트 수</p>
+                                                        <p>{guests_to_play}명</p>
+                                                    </div>
+                                                </div>
+                                                <div className="payment_section_definition_contents">
+                                                    <div className="payment_section_definition">
+                                                        <p className="definition_word">총 금액</p>
+                                                        <p>{total_price}원</p>
                                                     </div>
                                                 </div>
                                             </div>
@@ -372,18 +393,23 @@ class Payment extends Component {
                                         </section>
                                     </div>
                                     <div>
-                                        <section className="">
-                                            <div>
-                                                <button
+                                                <Button
+                                                    type="primary"
+                                                    block
                                                     className="button"
                                                     onClick={this.handlePay}
                                                     value={match[0].idmatch}
                                                 >
                                                     결제하기
-                                                </button>
+                                                </Button>
+                                                {/* <button
+                                                    className="button"
+                                                    onClick={this.handlePay}
+                                                    value={match[0].idmatch}
+                                                >
+                                                    결제하기
+                                                </button> */}
                                             </div>
-                                        </section>
-                                    </div>
                                 </main>
                             </div>
                             : <Loading />
