@@ -21,31 +21,31 @@ class SideBarLeft extends Component {
     }
 
     getAllLocation = () => {
-        // const params = {
-        //     target: 'all',
-        // };
-        // axios.get(`/api/location`, {
-        //     params,
-        // })
-        // .then((res) => {
-        //     console.log(res.data);
-        //     this.setState({
-        //         locations: res.data,
-        //     });
-        // })
-        // .catch((error) => {
-        //     console.log(error);
-        // });
-
-        fetch(`/api/location`)
-        .then(res => res.json())
-        .then(data => {
-            console.log(data);
+        const params = {
+            target: 'all',
+        };
+        axios.get(`/api/location`, {
+            params,
+        })
+        .then((res) => {
+            console.log(res.data);
             this.setState({
-                locations: data,
+                locations: res.data,
             });
         })
-        .catch(err => console.error(err));
+        .catch((error) => {
+            console.log(error);
+        });
+
+        // fetch(`/api/location`)
+        // .then(res => res.json())
+        // .then(data => {
+        //     console.log(data);
+        //     this.setState({
+        //         locations: data,
+        //     });
+        // })
+        // .catch(err => console.error(err));
     }
 
     render() {
