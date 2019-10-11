@@ -316,11 +316,23 @@ class Match extends Component {
         const container = document.getElementById('map');
         daum.maps.load(() => {
             const options = {
-                center: new daum.maps.LatLng(lon, lat),
+                center: new daum.maps.LatLng(lon, lat), // 지도의 중심좌표
+                draggable: false,
                 level: 3
             };
     
             const map = new daum.maps.Map(container, options);
+
+            // 마커가 표시될 위치입니다 
+            const markerPosition  = new kakao.maps.LatLng(lon, lat); 
+
+            // 마커를 생성합니다
+            const marker = new kakao.maps.Marker({
+                position: markerPosition
+            });
+
+            // 마커가 지도 위에 표시되도록 설정합니다
+            marker.setMap(map);
         });
     }
 
