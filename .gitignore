@@ -85,7 +85,7 @@ typings/
 .dynamodb/
 
 # configuration
-config/
+# config/
 
 # test file
 /momenttest.js
